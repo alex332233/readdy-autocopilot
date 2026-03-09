@@ -1,0 +1,58 @@
+export const servicesData = [
+  {
+    number: '01',
+    icon: 'ri-heart-pulse-line',
+    title: '本草・歸元',
+    subtitle: '內科體質調理',
+    description: '針對呼吸道修復(長新冠)、自律神經失調(失眠焦慮)、消化機能(胃食道逆流)與泌尿系統進行深層淨化與平衡。',
+  },
+  {
+    number: '02',
+    icon: 'ri-moon-line',
+    title: '月・悅・圓',
+    subtitle: '全方位婦科',
+    description: '涵蓋月經調律、暖宮溫養、備孕生機(結合人工生殖調理)、產後坐月子復元及熟齡更年期自在調理。',
+  },
+  {
+    number: '03',
+    icon: 'ri-seedling-line',
+    title: '小苗・茁壯',
+    subtitle: '兒少生長發育',
+    description: '專注於開胃健脾、舒敏抗戰(過敏體質)、改善夜尿與提升專注力的聰明開竅方案。',
+  },
+  {
+    number: '04',
+    icon: 'ri-sparkling-2-line',
+    title: '肌膚・煥采',
+    subtitle: '中醫美學皮膚科',
+    description: '透過內在疏肝活血與外在美顏針,解決青春痘、濕疹蕁麻疹及暗沉斑點,還原肌膚潤白光透。',
+  },
+  {
+    number: '05',
+    icon: 'ri-contrast-drop-2-line',
+    title: '御顏・緊緻',
+    subtitle: '艾苜特色療程',
+    description: '運用精微針法刺激面部經絡與筋膜層,促進膠原蛋白新生,改善法令紋與輪廓鬆弛,無需手術達到自然拉提效果。',
+  },
+  {
+    number: '06',
+    icon: 'ri-body-scan-line',
+    title: '輕盈・體雕',
+    subtitle: '艾苜特色療程',
+    description: '透過穴位埋線技術持續刺激經絡,加速脂肪分解與代謝循環,針對局部頑固脂肪進行精準雕塑,打造健康勻稱身形。',
+  },
+  {
+    number: '07',
+    icon: 'ri-line-chart-line',
+    title: '登峰・轉骨',
+    subtitle: '艾苜特色療程',
+    description: '把握青春期黃金生長期,結合雷射針灸刺激生長板活性,搭配個人化中藥方劑調理脾胃與腎氣,全方位促進骨骼發育與身高增長。',
+  },
+  {
+    number: '08',
+    icon: 'ri-eye-line',
+    title: '明眸・亮視',
+    subtitle: '艾苜特色療程',
+    description: '針對長時間使用3C產品造成的眼睛疲勞、乾澀與視力模糊,運用眼周特定穴位針灸改善眼部血液循環,有效延緩近視加深。',
+  },
+];

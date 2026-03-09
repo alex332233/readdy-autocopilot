@@ -1,0 +1,25 @@
+export default function CTASection() {
+  const scrollToBooking = () => {
+    window.REACT_APP_NAVIGATE('/#booking');
+  };
+
+  return (
+    <section className="py-20 bg-gradient-to-br from-[#cd9651] to-[#b8843f]">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+          您也想擁有健康的身體嗎？
+        </h2>
+        <p className="text-lg text-white/90 mb-8 leading-relaxed">
+          每個人的體質不同，需要的調理方式也不同<br />
+          讓我們的專業醫師為您量身打造專屬的治療計畫
+        </p>
+        <button
+          onClick={scrollToBooking}
+          className="px-8 py-4 bg-white text-[#cd9651] rounded-full font-bold text-base hover:bg-gray-50 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer whitespace-nowrap"
+        >
+          立即預約諮詢
+        </button>
+      </div>
+    </section>
+  );
+}
