@@ -1,8 +1,12 @@
 
 import { useEffect, useState } from 'react';
+import { useRouteLoaderData } from 'react-router-dom';
+import type { HomePageContent } from '../../../sanity/types';
 
 export default function HeroSection() {
   const [mounted, setMounted] = useState(false);
+  const loaderData = useRouteLoaderData('home') as HomePageContent | undefined;
+  const content = loaderData?.hero;
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 80);
@@ -23,6 +27,14 @@ export default function HeroSection() {
     if (element) element.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const onCtaClick = () => {
+    if (content?.ctaTarget === 'about') {
+      scrollToAbout();
+      return;
+    }
+    scrollToBooking();
+  };
+
   return (
     <section className="relative min-h-screen w-full overflow-hidden bg-[#f8f6f1]">
       {/* 右側圖片 */}
@@ -30,9 +42,12 @@ export default function HeroSection() {
         className={`absolute right-0 top-0 w-[55%] h-full ${base} duration-1000 ${mounted ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}
       >
         <img
-          alt="艾草意象"
+          alt={content?.heroImageAlt || '艾草意象'}
           className="w-full h-full object-cover object-center"
-          src="https://static.readdy.ai/image/8d6cf5771052b01e9700d88a6623b6b6/86c1fda8d4a973044d459bcf3069ab1e.png"
+          src={
+            content?.heroImageUrl ||
+            'https://static.readdy.ai/image/8d6cf5771052b01e9700d88a6623b6b6/86c1fda8d4a973044d459bcf3069ab1e.png'
+          }
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#f8f6f1] via-[#f8f6f1]/40 to-transparent"></div>
       </div>
@@ -45,21 +60,20 @@ export default function HeroSection() {
             style={{ fontFamily: "'Noto Serif TC', serif", transitionDelay: '200ms' }}
           >
             <span className="block text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.4] tracking-[0.08em] text-stone-800">
-              以艾醫身
+              {content?.titleLine1 || '以艾醫身'}
             </span>
             <span className="block text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.4] tracking-[0.08em] mt-2 text-stone-800">
-              以苜養心
+              {content?.titleLine2 || '以苜養心'}
             </span>
           </h1>
 
           {/* 副標題 */}
           <p
-            className={`text-base md:text-lg text-stone-500 font-light tracking-[0.05em] leading-[2] mb-12 max-w-md ${base} duration-700 ${mounted ? visible : hidden}`}
+            className={`text-base md:text-lg text-stone-500 font-light tracking-[0.05em] leading-[2] mb-12 max-w-md whitespace-pre-line ${base} duration-700 ${mounted ? visible : hidden}`}
             style={{ transitionDelay: '400ms' }}
           >
-            在這裡,我們用溫柔的雙手與傳承千年的智慧,
-            <br />
-            守護妳與家人的每一刻健康時光
+            {content?.subtitle ||
+              `在這裡,我們用溫柔的雙手與傳承千年的智慧,\n守護妳與家人的每一刻健康時光`}
           </p>
 
           {/* CTA 按鈕 */}
@@ -67,9 +81,9 @@ export default function HeroSection() {
             className={`${base} duration-700 ${mounted ? visible : hidden}`}
             style={{ transitionDelay: '600ms' }}
           >
-            <button onClick={scrollToBooking} className="group inline-flex items-center cursor-pointer">
+            <button onClick={onCtaClick} className="group inline-flex items-center cursor-pointer">
               <span className="text-[15px] font-medium text-[#cd9651] tracking-[0.1em] relative">
-                立即預約諮詢
+                {content?.ctaText || '立即預約諮詢'}
                 <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#cd9651] scale-x-100 group-hover:scale-x-0 transition-transform duration-300 origin-right"></span>
                 <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#4a5d4a] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
               </span>

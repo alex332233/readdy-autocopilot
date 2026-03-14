@@ -1,5 +1,6 @@
 import { lazy } from 'react';
 import { RouteObject } from 'react-router-dom';
+import { fetchHomePageContent } from '../sanity/fetchHomeHero';
 
 const HomePage = lazy(() => import('../pages/home/page'));
 const TreatmentsPage = lazy(() => import('../pages/treatments/page'));
@@ -15,7 +16,9 @@ const NotFoundPage = lazy(() => import('../pages/NotFound'));
 
 const routes: RouteObject[] = [
   {
+    id: 'home',
     path: '/',
+    loader: fetchHomePageContent,
     element: <HomePage />,
   },
   {
