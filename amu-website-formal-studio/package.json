@@ -1,0 +1,41 @@
+{
+  "name": "amu-website-formal-studio",
+  "private": true,
+  "version": "1.0.0",
+  "main": "package.json",
+  "license": "UNLICENSED",
+  "scripts": {
+    "dev": "sanity dev",
+    "start": "sanity start",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "seed:home": "node ./scripts/seed-home-page.mjs",
+    "seed:featured": "sanity exec ./scripts/seed-featured-treatments.cli.mjs --with-user-token",
+    "seed:about": "sanity exec ./scripts/seed-about-page.cli.mjs --with-user-token",
+    "seed:insurance": "sanity exec ./scripts/seed-insurance-page.cli.mjs --with-user-token",
+    "seed:cases": "sanity exec ./scripts/seed-cases.cli.mjs --with-user-token",
+    "seed:team": "sanity exec ./scripts/seed-team.cli.mjs --with-user-token",
+    "seed:health-education": "sanity exec ./scripts/seed-health-education.cli.mjs --with-user-token",
+    "seed:site-settings": "sanity exec ./scripts/seed-site-settings.cli.mjs --with-user-token"
+  },
+  "dependencies": {
+    "@sanity/vision": "^5.14.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "sanity": "^5.14.1",
+    "styled-components": "^6.1.18"
+  },
+  "devDependencies": {
+    "@sanity/eslint-config-studio": "^6.0.0",
+    "@types/react": "^19.1.0",
+    "eslint": "^9.28.0",
+    "prettier": "^3.5.0",
+    "typescript": "^5.8.0"
+  },
+  "prettier": {
+    "semi": false,
+    "printWidth": 100,
+    "bracketSpacing": false,
+    "singleQuote": true
+  }
+}
