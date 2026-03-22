@@ -1,19 +1,12 @@
+import { useRouteLoaderData } from 'react-router-dom';
+import { getSiteSettingsDataAttribute } from '../../../sanity/dataAttributes';
+import { defaultSiteSettingsContent } from '../../../sanity/defaults/siteSettings';
+import { runSiteLink } from '../../../sanity/siteLinkActions';
+import type { SiteSettingsContent } from '../../../sanity/types';
 
 export default function Footer() {
-  const quickLinks = [
-    { name: '首頁', path: '/' },
-    { name: '療程介紹', path: '/treatments' },
-    { name: '關於艾苜', path: '/about' },
-    { name: '真實見證', path: '/cases' },
-    { name: '預約諮詢', path: '/#booking' },
-  ];
-
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  const siteSettings =
+    (useRouteLoaderData('root') as SiteSettingsContent | undefined) ?? defaultSiteSettingsContent;
 
   return (
     <footer className="bg-[#cd9651] text-white">
@@ -22,110 +15,78 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <div className="flex items-center mb-4">
               <img
-                alt="艾苜中醫診所"
+                alt={siteSettings.footerLogo.alt}
                 className="h-14 w-auto brightness-0 invert"
-                src="https://static.readdy.ai/image/8d6cf5771052b01e9700d88a6623b6b6/2d074e29a45efc84d09e4dff77e4bad7.png"
+                data-sanity-edit-group
+                data-sanity-edit-target
+                data-sanity={getSiteSettingsDataAttribute('footerLogo.url')}
+                src={siteSettings.footerLogo.url}
               />
             </div>
-            <p className="text-white/90 text-sm leading-relaxed">您與家人的專屬健康御守</p>
+            <p
+              className="text-white/90 text-sm leading-relaxed"
+              data-sanity={getSiteSettingsDataAttribute('footerTagline')}
+            >
+              {siteSettings.footerTagline}
+            </p>
           </div>
+
+          {siteSettings.footerLinkGroups.map((group, groupIndex) => (
+            <div key={`${group.title}-${groupIndex}`}>
+              <h3
+                className="text-lg font-semibold mb-4 text-white"
+                data-sanity={getSiteSettingsDataAttribute(`footerLinkGroups[${groupIndex}].title`)}
+              >
+                {group.title}
+              </h3>
+              <ul className="space-y-2">
+                {group.links.map((link, linkIndex) => (
+                  <li key={`${link.label}-${linkIndex}`}>
+                    <button
+                      onClick={() => runSiteLink(link)}
+                      className="text-white/90 hover:text-white transition-colors text-sm whitespace-nowrap cursor-pointer"
+                      data-sanity={getSiteSettingsDataAttribute(`footerLinkGroups[${groupIndex}].links[${linkIndex}].label`)}
+                    >
+                      {link.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+
           <div>
-            <h3 className="text-lg font-semibold mb-4 text-white">關於艾苜</h3>
-            <ul className="space-y-2">
-              <li>
-                <button
-                  onClick={() => scrollToSection('about')}
-                  className="text-white/90 hover:text-white transition-colors text-sm whitespace-nowrap cursor-pointer"
-                >
-                  診所介紹
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => scrollToSection('why-choose')}
-                  className="text-white/90 hover:text-white transition-colors text-sm whitespace-nowrap cursor-pointer"
-                >
-                  醫療理念
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => scrollToSection('team')}
-                  className="text-white/90 hover:text-white transition-colors text-sm whitespace-nowrap cursor-pointer"
-                >
-                  醫師團隊
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => scrollToSection('location')}
-                  className="text-white/90 hover:text-white transition-colors text-sm whitespace-nowrap cursor-pointer"
-                >
-                  聯絡我們
-                </button>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold mb-4 text-white">醫療服務</h3>
-            <ul className="space-y-2">
-              <li>
-                <button
-                  onClick={() => scrollToSection('services')}
-                  className="text-white/90 hover:text-white transition-colors text-sm whitespace-nowrap cursor-pointer"
-                >
-                  內科調理
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => scrollToSection('services')}
-                  className="text-white/90 hover:text-white transition-colors text-sm whitespace-nowrap cursor-pointer"
-                >
-                  婦科治療
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => scrollToSection('services')}
-                  className="text-white/90 hover:text-white transition-colors text-sm whitespace-nowrap cursor-pointer"
-                >
-                  兒科調理
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => scrollToSection('services')}
-                  className="text-white/90 hover:text-white transition-colors text-sm whitespace-nowrap cursor-pointer"
-                >
-                  美顏針灸
-                </button>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold mb-4 text-white">診所資訊</h3>
+            <h3
+              className="text-lg font-semibold mb-4 text-white"
+              data-sanity={getSiteSettingsDataAttribute('clinicInfoTitle')}
+            >
+              {siteSettings.clinicInfoTitle}
+            </h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-2">
                 <i className="ri-map-pin-line text-white mt-1"></i>
-                <span className="text-white/90 text-sm">704臺南市北區北安路一段239號</span>
+                <span className="text-white/90 text-sm" data-sanity={getSiteSettingsDataAttribute('address')}>
+                  {siteSettings.address}
+                </span>
               </li>
               <li className="flex items-center gap-2">
                 <i className="ri-phone-line text-white"></i>
                 <a
-                  href="tel:062520699"
+                  href={`tel:${siteSettings.phone.replace(/\s+/g, '')}`}
                   className="text-white/90 hover:text-white transition-colors text-sm whitespace-nowrap cursor-pointer"
+                  data-sanity={getSiteSettingsDataAttribute('phone')}
                 >
-                  06 252 0699
+                  {siteSettings.phone}
                 </a>
               </li>
               <li className="flex items-center gap-2">
                 <i className="ri-mail-line text-white"></i>
                 <a
-                  href="mailto:amulettecmc@gmail.com"
+                  href={`mailto:${siteSettings.email}`}
                   className="text-white/90 hover:text-white transition-colors text-sm whitespace-nowrap cursor-pointer"
+                  data-sanity={getSiteSettingsDataAttribute('email')}
                 >
-                  amulettecmc@gmail.com
+                  {siteSettings.email}
                 </a>
               </li>
             </ul>
@@ -133,32 +94,32 @@ export default function Footer() {
         </div>
         <div className="pt-8 border-t border-white/20">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-white/70 text-sm">© 2025 艾苜中醫診所. All rights reserved.</p>
+            <p className="text-white/70 text-sm" data-sanity={getSiteSettingsDataAttribute('copyright')}>
+              {siteSettings.copyright}
+            </p>
             <div className="flex items-center gap-3">
-              <a
-                href="https://www.instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 text-white transition-all duration-200 cursor-pointer"
-              >
-                <i className="ri-instagram-line text-lg"></i>
-              </a>
-              <a
-                href="https://www.facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 text-white transition-all duration-200 cursor-pointer"
-              >
-                <i className="ri-facebook-fill text-lg"></i>
-              </a>
+              {siteSettings.socialLinks.map((social, index) => (
+                <a
+                  key={`${social.platform}-${index}`}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.platform}
+                  className="w-9 h-9 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 text-white transition-all duration-200 cursor-pointer"
+                  data-sanity={getSiteSettingsDataAttribute(`socialLinks[${index}].url`)}
+                >
+                  <i className={`${social.icon} text-lg`}></i>
+                </a>
+              ))}
             </div>
             <a
-              href="https://readdy.ai/?ref=logo"
+              href={siteSettings.builderLink.target}
               target="_blank"
               rel="noopener noreferrer"
               className="text-white/70 hover:text-white transition-colors text-sm whitespace-nowrap cursor-pointer"
+              data-sanity={getSiteSettingsDataAttribute('builderLink.label')}
             >
-              Website Builder
+              {siteSettings.builderLink.label}
             </a>
           </div>
         </div>

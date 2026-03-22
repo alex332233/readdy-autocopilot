@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useHomePageContent } from '../useHomePageContent';
+import { getHomePageDataAttribute } from '../../../sanity/dataAttributes';
 
 export default function HeroSection() {
   const [mounted, setMounted] = useState(false);
+  const { hero } = useHomePageContent();
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 80);
@@ -23,6 +26,8 @@ export default function HeroSection() {
       {/* 右側圖片 */}
       <div
         className="absolute right-0 top-0 w-[55%] h-full"
+        data-sanity-edit-group
+        data-sanity-edit-target
         style={{
           opacity: mounted ? 1 : 0,
           transform: mounted ? 'translateX(0)' : 'translateX(10px)',
@@ -30,15 +35,16 @@ export default function HeroSection() {
         }}
       >
         <img
-          alt="艾草意象"
+          alt={hero.image.alt}
           className="w-full h-full object-cover object-center"
-          src="https://static.readdy.ai/image/8d6cf5771052b01e9700d88a6623b6b6/86c1fda8d4a973044d459bcf3069ab1e.png"
+          data-sanity={getHomePageDataAttribute('hero.image.url')}
+          src={hero.image.url}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#f8f6f1] via-[#f8f6f1]/40 to-transparent"></div>
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#f8f6f1] via-[#f8f6f1]/40 to-transparent"></div>
       </div>
 
-      <div className="relative z-10 min-h-screen flex flex-col justify-center px-8 sm:px-12 lg:px-28 xl:px-40">
-        <div className="max-w-xl">
+      <div className="pointer-events-none relative z-10 min-h-screen flex flex-col justify-center px-8 sm:px-12 lg:px-28 xl:px-40">
+        <div className="pointer-events-auto max-w-xl">
           {/* 主標題 */}
           <h1
             className="mb-8"
@@ -50,25 +56,23 @@ export default function HeroSection() {
             }}
           >
             <span className="block text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.4] tracking-[0.08em] text-stone-800">
-              以艾醫身
+              {hero.titleLine1}
             </span>
             <span className="block text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.4] tracking-[0.08em] mt-0 md:mt-2 text-stone-800">
-              以苜養心
+              {hero.titleLine2}
             </span>
           </h1>
 
           {/* 副標題 */}
           <p
-            className="text-base md:text-lg text-stone-500 font-light tracking-[0.05em] leading-[2] mb-12 max-w-md"
+            className="text-base md:text-lg text-stone-500 font-light tracking-[0.05em] leading-[2] mb-12 max-w-md whitespace-pre-line"
             style={{
               opacity: mounted ? 1 : 0,
               transform: mounted ? 'translateY(0)' : 'translateY(10px)',
               transition: 'opacity 1800ms cubic-bezier(0.16, 1, 0.3, 1) 550ms, transform 1800ms cubic-bezier(0.16, 1, 0.3, 1) 550ms',
             }}
           >
-            在這裡,我們用溫柔的雙手與傳承千年的智慧,
-            <br />
-            守護妳與家人的每一刻健康時光
+            {hero.subtitle}
           </p>
 
           {/* CTA 按鈕 */}
@@ -81,7 +85,7 @@ export default function HeroSection() {
           >
             <button onClick={scrollToBooking} className="group inline-flex items-center cursor-pointer">
               <span className="text-[15px] font-medium text-[#cd9651] tracking-[0.1em] relative">
-                立即預約諮詢
+                {hero.ctaText}
                 <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#cd9651] scale-x-100 group-hover:scale-x-0 transition-transform duration-300 origin-right"></span>
                 <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#4a5d4a] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
               </span>

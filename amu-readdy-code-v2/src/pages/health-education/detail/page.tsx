@@ -1,24 +1,27 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useLoaderData, useNavigate } from 'react-router-dom';
 import Navbar from '../../home/components/Navbar';
 import Footer from '../../home/components/Footer';
-import { healthEducationData } from '../../../mocks/health-education';
+import CTASection from '../../cases/components/CTASection';
+import {
+  getHealthEducationArticleDataAttribute,
+  getHealthEducationPageDataAttribute,
+} from '../../../sanity/dataAttributes';
+import type { HealthEducationArticleContent, HealthEducationPageContent } from '../../../sanity/types';
 
 export default function HealthEducationDetailPage() {
-  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
-
-  const article = healthEducationData.find(a => a.id === Number(id));
+  const data = useLoaderData() as { page: HealthEducationPageContent; article: HealthEducationArticleContent } | null;
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [id]);
+  }, []);
 
-  if (!article) {
+  if (!data) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -34,32 +37,34 @@ export default function HealthEducationDetailPage() {
     );
   }
 
+  const { page, article } = data;
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar scrolled={scrolled} />
 
-      {/* Hero 封面圖 */}
-      <div className="relative w-full h-[420px] mt-24 overflow-hidden">
+      <div className="relative w-full h-[420px] mt-24 overflow-hidden" data-sanity-edit-group data-sanity-edit-target>
         <img
-          src={article.coverImage}
-          alt={article.title}
+          src={article.coverImage.url}
+          alt={article.coverImage.alt || article.title}
           className="w-full h-full object-cover object-top"
+          data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'coverImage.url')}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 px-6 pb-10 max-w-3xl mx-auto">
-          <span className="inline-block text-[10px] font-semibold tracking-widest uppercase bg-[#cd9651] text-white px-3 py-1 rounded-sm mb-3">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 left-0 right-0 px-6 pb-10 max-w-3xl mx-auto pointer-events-none">
+          <span
+            className="inline-block text-[10px] font-semibold tracking-widest uppercase bg-[#cd9651] text-white px-3 py-1 rounded-sm mb-3"
+            data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'subcategory')}
+          >
             {article.subcategory}
           </span>
-          <h1 className="text-2xl md:text-3xl font-bold text-white leading-snug">
+          <h1 className="text-2xl md:text-3xl font-bold text-white leading-snug" data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'title')}>
             {article.title}
           </h1>
         </div>
       </div>
 
-      {/* 文章主體 */}
       <main className="max-w-3xl mx-auto px-6 py-14">
-
-        {/* 返回按鈕 + meta */}
         <div className="flex items-center justify-between mb-8">
           <button
             onClick={() => navigate('/health-education')}
@@ -71,73 +76,75 @@ export default function HealthEducationDetailPage() {
             返回健康教育列表
           </button>
           <div className="flex items-center gap-3">
-            <span className="text-[11px] text-gray-400 tracking-wide">{article.updatedDate}</span>
+            <span className="text-[11px] text-gray-400 tracking-wide" data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'updatedDate')}>
+              {article.updatedDate}
+            </span>
             <span className="text-gray-200">·</span>
             <div className="flex items-center gap-1">
               <div className="w-4 h-4 flex items-center justify-center">
                 <i className="ri-user-line text-[#cd9651]" style={{ fontSize: '12px' }}></i>
               </div>
-              <span className="text-[11px] text-[#cd9651] font-medium tracking-wide">{article.author}</span>
+              <span className="text-[11px] text-[#cd9651] font-medium tracking-wide" data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'author')}>
+                {article.author}
+              </span>
             </div>
           </div>
         </div>
 
-        {/* 文章 meta 資訊 */}
         <div className="flex items-center gap-4 mb-8 text-xs text-gray-400">
           <div className="flex items-center gap-1.5">
             <div className="w-4 h-4 flex items-center justify-center">
               <i className="ri-eye-line" style={{ fontSize: '13px' }}></i>
             </div>
-            <span>{article.views.toLocaleString()} 次閱讀</span>
+            <span data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'views')}>
+              {article.views.toLocaleString()} 次閱讀
+            </span>
           </div>
           <span className="text-gray-200">·</span>
           <div className="flex items-center gap-1.5">
             <div className="w-4 h-4 flex items-center justify-center">
               <i className="ri-time-line" style={{ fontSize: '13px' }}></i>
             </div>
-            <span>{article.readTime}</span>
+            <span data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'readTime')}>{article.readTime}</span>
           </div>
         </div>
 
-        {/* 摘要 */}
-        <p className="text-sm text-gray-500 leading-relaxed mb-10 border-l-2 border-[#cd9651]/30 pl-4">
+        <p className="text-sm text-gray-500 leading-relaxed mb-10 border-l-2 border-[#cd9651]/30 pl-4" data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'summary')}>
           {article.summary}
         </p>
 
-        {/* 文章內容段落 */}
         {article.content.map((section, idx) => (
           <div key={idx} className="mb-10">
-            <h2 className="text-lg font-bold text-gray-800 mb-4 tracking-wide">
+            <h2 className="text-lg font-bold text-gray-800 mb-4 tracking-wide" data-sanity={getHealthEducationArticleDataAttribute(article.articleId, `content[${idx}].heading`)}>
               {section.heading}
             </h2>
-            <p className="text-sm text-gray-600 leading-relaxed mb-4">
+            <p className="text-sm text-gray-600 leading-relaxed mb-4" data-sanity={getHealthEducationArticleDataAttribute(article.articleId, `content[${idx}].text`)}>
               {section.text}
             </p>
             {section.image && (
-              <div className="w-full h-[420px] rounded-xl overflow-hidden mb-4">
+              <div className="w-full h-[420px] rounded-xl overflow-hidden mb-4" data-sanity-edit-group data-sanity-edit-target>
                 <img
-                  src={section.image}
-                  alt={section.heading}
+                  src={section.image.url}
+                  alt={section.image.alt || section.heading}
                   className="w-full h-full object-cover object-top"
+                  data-sanity={getHealthEducationArticleDataAttribute(article.articleId, `content[${idx}].image.url`)}
                 />
               </div>
             )}
           </div>
         ))}
 
-        {/* 貼心小提醒 */}
         {article.tips && (
           <div className="border border-stone-100 rounded-xl p-6 mb-10">
-            <p className="text-xs font-semibold text-[#cd9651] tracking-widest mb-3 uppercase">
+            <p className="text-xs font-semibold text-[#cd9651] tracking-widest mb-3 uppercase" data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'tips.title')}>
               {article.tips.title}
             </p>
-            <p className="text-xs text-gray-500 leading-relaxed">
+            <p className="text-xs text-gray-500 leading-relaxed" data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'tips.content')}>
               {article.tips.content}
             </p>
           </div>
         )}
 
-        {/* 延伸閱讀 */}
         {article.references && article.references.length > 0 && (
           <div className="border-t border-gray-100 pt-6 mb-8">
             <p className="text-xs font-semibold text-gray-300 tracking-widest mb-3 uppercase">延伸閱讀</p>
@@ -145,7 +152,7 @@ export default function HealthEducationDetailPage() {
               {article.references.map((ref, idx) => (
                 <a
                   key={idx}
-                  href={ref.url}
+                  href={ref.href}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-[#cd9651] transition-colors cursor-pointer"
@@ -153,26 +160,27 @@ export default function HealthEducationDetailPage() {
                   <div className="w-4 h-4 flex items-center justify-center flex-shrink-0">
                     <i className="ri-link text-xs"></i>
                   </div>
-                  <span className="underline underline-offset-2 break-all">{ref.label}</span>
+                  <span className="underline underline-offset-2 break-all" data-sanity={getHealthEducationArticleDataAttribute(article.articleId, `references[${idx}].text`)}>
+                    {ref.text}
+                  </span>
                 </a>
               ))}
             </div>
           </div>
         )}
 
-        {/* 標籤 */}
         <div className="flex flex-wrap gap-2 mb-8">
           {article.tags.map((tag, idx) => (
             <span
               key={idx}
               className="text-[11px] text-gray-400 tracking-wide bg-gray-50 px-2.5 py-1 rounded-full"
+              data-sanity={getHealthEducationArticleDataAttribute(article.articleId, `tags[${idx}]`)}
             >
               #{tag}
             </span>
           ))}
         </div>
 
-        {/* 返回按鈕 */}
         <div className="border-t border-gray-100 pt-6">
           <button
             onClick={() => navigate('/health-education')}
@@ -186,6 +194,13 @@ export default function HealthEducationDetailPage() {
         </div>
       </main>
 
+      <CTASection
+        title={page.ctaTitle}
+        description={page.ctaDescription}
+        buttonText={page.ctaButtonText}
+        enableVisualEditing
+        getDataAttribute={getHealthEducationPageDataAttribute}
+      />
       <Footer />
     </div>
   );

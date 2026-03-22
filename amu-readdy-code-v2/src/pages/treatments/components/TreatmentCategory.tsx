@@ -18,9 +18,11 @@ interface CategoryProps {
     treatments: Treatment[];
   };
   index: number;
+  dataPathPrefix?: string;
+  getDataAttribute?: (path: string) => string;
 }
 
-export default function TreatmentCategory({ category, index }: CategoryProps) {
+export default function TreatmentCategory({ category, index, dataPathPrefix, getDataAttribute }: CategoryProps) {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
   const toggleExpand = (idx: number) => {
@@ -38,9 +40,16 @@ export default function TreatmentCategory({ category, index }: CategoryProps) {
         </div>
         <div>
           <h3 className="text-2xl lg:text-3xl font-serif font-bold text-gray-800 mb-1">
-            {category.title}
+            <span data-sanity={dataPathPrefix && getDataAttribute ? getDataAttribute(`${dataPathPrefix}.title`) : undefined}>
+              {category.title}
+            </span>
           </h3>
-          <p className="text-sm text-gray-500 italic">({category.englishTitle})</p>
+          <p
+            className="text-sm text-gray-500 italic"
+            data-sanity={dataPathPrefix && getDataAttribute ? getDataAttribute(`${dataPathPrefix}.englishTitle`) : undefined}
+          >
+            ({category.englishTitle})
+          </p>
         </div>
       </div>
 
@@ -49,6 +58,7 @@ export default function TreatmentCategory({ category, index }: CategoryProps) {
           <span 
             className="inline-block px-4 py-1 rounded-full text-sm font-semibold text-white"
             style={{ backgroundColor: category.color }}
+            data-sanity={dataPathPrefix && getDataAttribute ? getDataAttribute(`${dataPathPrefix}.subtitle`) : undefined}
           >
             {category.subtitle}
           </span>
@@ -63,6 +73,8 @@ export default function TreatmentCategory({ category, index }: CategoryProps) {
             color={category.color}
             isExpanded={expandedIndex === idx}
             onToggle={() => toggleExpand(idx)}
+            dataPathPrefix={dataPathPrefix ? `${dataPathPrefix}.treatments[${idx}]` : undefined}
+            getDataAttribute={getDataAttribute}
           />
         ))}
       </div>

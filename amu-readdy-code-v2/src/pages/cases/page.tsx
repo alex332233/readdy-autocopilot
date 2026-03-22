@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
+import { useLoaderData } from 'react-router-dom';
 import Navbar from '../home/components/Navbar';
 import Footer from '../home/components/Footer';
 import HeroSection from './components/HeroSection';
 import BlogCard from './components/BlogCard';
 import CTASection from './components/CTASection';
 import FadeIn from '../../components/base/FadeIn';
-import { casesData } from '../../mocks/cases';
-
-const allCategories = ['全部', ...Array.from(new Set(casesData.map(c => c.category)))];
+import type { CasesPageContent } from '../../sanity/types';
 
 export default function CasesPage() {
+  const content = useLoaderData() as CasesPageContent;
   const [scrolled, setScrolled] = useState(false);
   const [activeCategory, setActiveCategory] = useState('全部');
 
@@ -19,14 +19,13 @@ export default function CasesPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const filtered = activeCategory === '全部'
-    ? casesData
-    : casesData.filter(c => c.category === activeCategory);
+  const allCategories = ['全部', ...Array.from(new Set(content.articles.map((c) => c.category)))];
+  const filtered = activeCategory === '全部' ? content.articles : content.articles.filter((c) => c.category === activeCategory);
 
   return (
     <div className="min-h-screen bg-white">
       <Navbar scrolled={scrolled} />
-      <HeroSection />
+      <HeroSection title={content.heroTitle} subtitle={content.heroSubtitle} />
 
       {/* 篩選標籤 */}
       <section className="pt-12 pb-2">
@@ -54,7 +53,7 @@ export default function CasesPage() {
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
             {filtered.map((caseItem, index) => (
-              <FadeIn key={caseItem.id} delay={index * 120} direction="up" duration={1600}>
+              <FadeIn key={caseItem.caseId} delay={index * 120} direction="up" duration={1600}>
                 <BlogCard caseData={caseItem} />
               </FadeIn>
             ))}
@@ -62,7 +61,12 @@ export default function CasesPage() {
         </div>
       </section>
 
-      <CTASection />
+      <CTASection
+        title={content.ctaTitle}
+        description={content.ctaDescription}
+        buttonText={content.ctaButtonText}
+        enableVisualEditing
+      />
       <Footer />
     </div>
   );

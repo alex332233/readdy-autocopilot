@@ -1,13 +1,15 @@
-
-import { useState, useEffect, useRef } from 'react';
+import { createRef, useState, useEffect, useMemo } from 'react';
+import { useLoaderData } from 'react-router-dom';
 import Navbar from '../home/components/Navbar';
 import Footer from '../home/components/Footer';
 import HeroSection from './components/HeroSection';
 import CategoryOverviewSection from './components/CategoryOverviewSection';
 import TreatmentCategory from '../treatments/components/TreatmentCategory';
-import { treatmentsData } from '../../mocks/treatments';
+import type { InsurancePageContent } from '../../sanity/types';
+import { getInsurancePageDataAttribute } from '../../sanity/dataAttributes';
 
 export default function InsurancePage() {
+  const content = useLoaderData() as InsurancePageContent;
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -18,31 +20,30 @@ export default function InsurancePage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // 前5個為健保項目：內科、婦科、兒少、皮膚科、針灸
-  const insuranceTreatments = treatmentsData.slice(0, 5);
-
-  // 每個分類對應的 ref，供總覽卡片點擊後滑動定位
-  const categoryRefs = [
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-  ];
+  // 詳細分類內容現已正式納入 insurancePage，避免設計確認獨立後仍依賴舊 mock 資料來源。
+  const categoryRefs = useMemo(
+    () => content.detailedCategories.map(() => createRef<HTMLDivElement>()),
+    [content.detailedCategories],
+  );
 
   return (
     <div className="relative">
       <Navbar scrolled={scrolled} />
       <main>
-        <HeroSection />
-        <CategoryOverviewSection categoryRefs={categoryRefs} />
+        <HeroSection title={content.heroTitle} subtitle={content.heroSubtitle} />
+        <CategoryOverviewSection categoryRefs={categoryRefs} categories={content.overviewCards} />
 
         {/* 健保項目列表 */}
         <section className="py-20 bg-gradient-to-b from-white to-[#f8f6f1]">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            {insuranceTreatments.map((category, index) => (
+            {content.detailedCategories.map((category, index) => (
               <div key={index} ref={categoryRefs[index]}>
-                <TreatmentCategory category={category} index={index} />
+                <TreatmentCategory
+                  category={category}
+                  index={index}
+                  dataPathPrefix={`detailedCategories[${index}]`}
+                  getDataAttribute={getInsurancePageDataAttribute}
+                />
               </div>
             ))}
           </div>

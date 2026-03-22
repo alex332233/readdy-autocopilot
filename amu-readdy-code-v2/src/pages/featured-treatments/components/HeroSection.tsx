@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
+import { getFeaturedTreatmentsPageDataAttribute } from '../../../sanity/dataAttributes';
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  title: string;
+  description: string;
+}
+
+export default function HeroSection({ title, description }: HeroSectionProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -20,11 +26,16 @@ export default function HeroSection() {
         <h1
           className="text-4xl lg:text-5xl font-bold text-[#cd9651] mb-4 leading-tight"
           style={{ fontFamily: "'Noto Serif TC', serif", ...fadeUp(100) }}
+          data-sanity={getFeaturedTreatmentsPageDataAttribute('heroTitle')}
         >
-          特色療程
+          {title}
         </h1>
-        <p className="text-base text-gray-600 max-w-lg leading-relaxed" style={fadeUp(300)}>
-          結合傳統中醫智慧與現代醫學技術，為您量身打造專屬調理方案
+        <p
+          className="text-base text-gray-600 max-w-lg leading-relaxed"
+          style={fadeUp(300)}
+          data-sanity={getFeaturedTreatmentsPageDataAttribute('heroDescription')}
+        >
+          {description}
         </p>
       </div>
     </section>

@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
+import { getTeamPageDataAttribute } from '../../../sanity/dataAttributes';
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  title: string;
+  subtitle: string;
+}
+
+export default function HeroSection({ title, subtitle }: HeroSectionProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -20,11 +26,16 @@ export default function HeroSection() {
         <h1
           className="text-4xl lg:text-5xl font-bold text-[#cd9651] mb-4 leading-tight"
           style={{ fontFamily: "'Noto Serif TC', serif", ...fadeUp(100) }}
+          data-sanity={getTeamPageDataAttribute('heroTitle')}
         >
-          醫師團隊
+          {title}
         </h1>
-        <p className="text-base text-gray-600 max-w-lg leading-relaxed" style={fadeUp(300)}>
-          三位專業中醫師，各擅其長，以豐富的臨床經驗與現代醫學知識，為您提供全方位的健康照護。
+        <p
+          className="text-base text-gray-600 max-w-lg leading-relaxed"
+          style={fadeUp(300)}
+          data-sanity={getTeamPageDataAttribute('heroSubtitle')}
+        >
+          {subtitle}
         </p>
       </div>
     </section>

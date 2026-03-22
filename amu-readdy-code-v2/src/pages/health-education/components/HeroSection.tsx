@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
+import { getHealthEducationPageDataAttribute } from '../../../sanity/dataAttributes';
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  title: string;
+  subtitle: string;
+}
+
+export default function HeroSection({ title, subtitle }: HeroSectionProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -20,11 +26,16 @@ export default function HeroSection() {
         <h1
           className="text-4xl lg:text-5xl font-bold text-gray-800 mb-4 leading-tight"
           style={{ fontFamily: "'Noto Serif TC', serif", ...fadeUp(100) }}
+          data-sanity={getHealthEducationPageDataAttribute('heroTitle')}
         >
-          衛教資訊
+          {title}
         </h1>
-        <p className="text-sm text-gray-500 max-w-lg leading-relaxed tracking-wide" style={fadeUp(300)}>
-          專業醫師撰寫，讓您更了解中醫調理的知識與日常保健之道
+        <p
+          className="text-sm text-gray-500 max-w-lg leading-relaxed tracking-wide"
+          style={fadeUp(300)}
+          data-sanity={getHealthEducationPageDataAttribute('heroSubtitle')}
+        >
+          {subtitle}
         </p>
       </div>
     </section>

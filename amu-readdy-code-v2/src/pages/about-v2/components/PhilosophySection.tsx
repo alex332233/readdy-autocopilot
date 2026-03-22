@@ -1,34 +1,9 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import FadeIn from '../../../components/base/FadeIn';
+import type {AboutPhilosophyCard} from '../../../sanity/types';
+import {getAboutPageDataAttribute} from '../../../sanity/dataAttributes';
 
-const cards = [
-  {
-    number: '01',
-    icon: 'ri-shield-check-line',
-    title: 'Amulette 般的守護',
-    description: '以「護身符」為名，落實「治未病」哲學。在亞健康階段即介入調理，為身體築起第一道防線。',
-  },
-  {
-    number: '02',
-    icon: 'ri-scales-3-line',
-    title: '理性與感性的平衡',
-    description: '融合中醫陰陽智慧與現代醫學觀點，不談玄學，只專注於幫身體找回「動態平衡」。',
-  },
-  {
-    number: '03',
-    icon: 'ri-heart-line',
-    title: '妳是家庭的核心',
-    description: '專注於 20-50 歲女性的生命歷程。我們先照顧好身為「家庭支柱」的妳，讓妳有餘力去愛妳所愛的人。',
-  },
-  {
-    number: '04',
-    icon: 'ri-group-line',
-    title: '全家人的醫療團隊',
-    description: '以婦兒科的細膩為起點，延伸至結構、內科與全人照護，提供「從女生到全家」的完整健康對策。',
-  },
-];
-
-export default function PhilosophySection() {
+export default function PhilosophySection({title, cards}: {title: string; cards: AboutPhilosophyCard[]}) {
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
@@ -38,19 +13,20 @@ export default function PhilosophySection() {
           <div className="text-center mb-20">
             <h2
               className="text-3xl lg:text-4xl font-serif"
+              data-sanity={getAboutPageDataAttribute('philosophyTitle')}
               style={{
                 color: '#3e3a39',
                 WebkitFontSmoothing: 'antialiased',
                 MozOsxFontSmoothing: 'grayscale',
               }}
             >
-              艾與苜：剛柔並濟的醫學智慧
+              {title}
             </h2>
           </div>
         </FadeIn>
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {cards.map((card, i) => (
-            <FadeIn key={i} delay={i * 220} direction="up" duration={1600} className="h-full">
+            <FadeIn key={`${card.title}-${i}`} delay={i * 220} direction="up" duration={1600} className="h-full">
               <div
                 className="relative h-full bg-white rounded-2xl p-7 border border-[#e8ddd0] hover:border-[#cd9651] hover:shadow-lg transition-all duration-300 cursor-pointer group"
                 onMouseEnter={() => setHovered(i)}
@@ -58,7 +34,8 @@ export default function PhilosophySection() {
               >
                 <span
                   className="text-xs tracking-[0.2em] text-[#cd9651] font-medium block mb-4"
-                  style={{ WebkitFontSmoothing: 'antialiased', MozOsxFontSmoothing: 'grayscale' }}
+                  data-sanity={getAboutPageDataAttribute(`philosophyCards[${i}].number`)}
+                  style={{WebkitFontSmoothing: 'antialiased', MozOsxFontSmoothing: 'grayscale'}}
                 >
                   {card.number}
                 </span>
@@ -67,6 +44,7 @@ export default function PhilosophySection() {
                 </div>
                 <h3
                   className="text-base font-serif leading-snug mb-3"
+                  data-sanity={getAboutPageDataAttribute(`philosophyCards[${i}].title`)}
                   style={{
                     color: '#3e3a39',
                     WebkitFontSmoothing: 'antialiased',
@@ -78,6 +56,7 @@ export default function PhilosophySection() {
                 <div className={`h-px bg-[#cd9651] mb-3 transition-all duration-300 ${hovered === i ? 'w-10' : 'w-6'}`}></div>
                 <p
                   className="text-xs leading-relaxed"
+                  data-sanity={getAboutPageDataAttribute(`philosophyCards[${i}].description`)}
                   style={{
                     color: '#3e3a39',
                     WebkitFontSmoothing: 'antialiased',

@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import FadeIn from '../../../components/base/FadeIn';
-import { faqData } from '../../../mocks/faq';
+import { useHomePageContent } from '../useHomePageContent';
 
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const { faq } = useHomePageContent();
 
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
@@ -17,10 +18,10 @@ export default function FAQSection() {
           <FadeIn direction="up" delay={0} className="lg:col-span-2">
             <div className="lg:sticky lg:top-32">
               <h2 className="text-4xl lg:text-5xl font-serif font-bold text-[#cd9651] leading-tight mb-6">
-                常見<br />問題
+                {faq.titleLine1}<br />{faq.titleLine2}
               </h2>
               <p className="text-sm text-slate-500 leading-relaxed">
-                我們整理了最常被問到的問題，希望能幫助您更了解我們的服務。
+                {faq.description}
               </p>
             </div>
           </FadeIn>
@@ -28,7 +29,7 @@ export default function FAQSection() {
           {/* 右側問答列表 */}
           <div className="lg:col-span-3">
             <div className="divide-y divide-[#ddd5c5]">
-              {faqData.map((faq, index) => (
+              {faq.items.map((item, index) => (
                 <FadeIn key={index} direction="up" delay={index * 80} threshold={0.06}>
                   <div className="py-6">
                     <button
@@ -40,7 +41,7 @@ export default function FAQSection() {
                           {String(index + 1).padStart(2, '0')}
                         </span>
                         <span className="font-medium text-slate-800 text-base leading-relaxed group-hover:text-[#cd9651] transition-colors duration-200">
-                          {faq.question}
+                          {item.question}
                         </span>
                       </div>
                       <div className="w-7 h-7 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -58,7 +59,7 @@ export default function FAQSection() {
                       }`}
                     >
                       <div className="pl-10">
-                        <p className="text-slate-600 leading-relaxed text-sm">{faq.answer}</p>
+                        <p className="text-slate-600 leading-relaxed text-sm">{item.answer}</p>
                       </div>
                     </div>
                   </div>

@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
+// This slider intentionally stays static for now.
+// The design is still likely to change, so we are not mapping it into Sanity / Presentation yet.
 const slides = [
   {
     id: 1,

@@ -12,9 +12,18 @@ interface TreatmentItemProps {
   color: string;
   isExpanded: boolean;
   onToggle: () => void;
+  dataPathPrefix?: string;
+  getDataAttribute?: (path: string) => string;
 }
 
-export default function TreatmentItem({ treatment, color, isExpanded, onToggle }: TreatmentItemProps) {
+export default function TreatmentItem({
+  treatment,
+  color,
+  isExpanded,
+  onToggle,
+  dataPathPrefix,
+  getDataAttribute,
+}: TreatmentItemProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const [contentHeight, setContentHeight] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -68,6 +77,7 @@ export default function TreatmentItem({ treatment, color, isExpanded, onToggle }
             <h4
               className="text-base lg:text-lg font-serif font-semibold transition-colors duration-200"
               style={{ color: isExpanded ? color : '#374151' }}
+              data-sanity={dataPathPrefix && getDataAttribute ? getDataAttribute(`${dataPathPrefix}.title`) : undefined}
             >
               {treatment.title}
             </h4>
@@ -108,7 +118,10 @@ export default function TreatmentItem({ treatment, color, isExpanded, onToggle }
           }}
         >
           {/* 說明文字 */}
-          <p className="text-sm lg:text-base text-gray-600 leading-relaxed mb-4">
+          <p
+            className="text-sm lg:text-base text-gray-600 leading-relaxed mb-4"
+            data-sanity={dataPathPrefix && getDataAttribute ? getDataAttribute(`${dataPathPrefix}.description`) : undefined}
+          >
             {treatment.description}
           </p>
 
@@ -118,6 +131,9 @@ export default function TreatmentItem({ treatment, color, isExpanded, onToggle }
               <span
                 key={tagIdx}
                 className="px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 hover:opacity-80"
+                data-sanity={
+                  dataPathPrefix && getDataAttribute ? getDataAttribute(`${dataPathPrefix}.tags[${tagIdx}]`) : undefined
+                }
                 style={{
                   backgroundColor: `${color}18`,
                   color,

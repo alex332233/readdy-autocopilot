@@ -1,32 +1,18 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useLoaderData, useNavigate, useParams } from 'react-router-dom';
 import Navbar from '../../home/components/Navbar';
 import Footer from '../../home/components/Footer';
 import CTASection from '../components/CTASection';
-import { casesData } from '../../../mocks/cases';
-
-const cardImages: Record<number, string> = {
-  1: 'https://readdy.ai/api/search-image?query=peaceful%20bedroom%20scene%20with%20soft%20warm%20lighting%20traditional%20Chinese%20medicine%20herbs%20on%20bedside%20table%20calm%20serene%20atmosphere%20minimal%20clean%20background%20neutral%20tones&width=1200&height=500&seq=blog1cover&orientation=landscape',
-  2: 'https://readdy.ai/api/search-image?query=traditional%20Chinese%20medicine%20herbs%20and%20acupuncture%20needles%20arranged%20neatly%20on%20clean%20white%20surface%20warm%20natural%20lighting%20minimal%20aesthetic%20background&width=1200&height=500&seq=blog2cover&orientation=landscape',
-  3: 'https://readdy.ai/api/search-image?query=delicate%20pink%20cherry%20blossom%20flowers%20soft%20bokeh%20background%20warm%20pastel%20tones%20hopeful%20and%20gentle%20atmosphere%20minimal%20clean%20style&width=1200&height=500&seq=blog3cover&orientation=landscape',
-  4: 'https://readdy.ai/api/search-image?query=soft%20morning%20light%20through%20window%20with%20green%20plant%20on%20windowsill%20calm%20hopeful%20atmosphere%20warm%20neutral%20tones%20minimal%20clean%20background&width=1200&height=500&seq=blog4cover&orientation=landscape',
-  5: 'https://readdy.ai/api/search-image?query=fresh%20herbal%20tea%20in%20ceramic%20cup%20with%20dried%20herbs%20scattered%20around%20warm%20natural%20light%20wooden%20table%20minimal%20clean%20background%20wellness%20theme&width=1200&height=500&seq=blog5cover&orientation=landscape',
-};
-
-const dateMap: Record<number, string> = {
-  1: 'January 4, 2023',
-  2: 'January 4, 2023',
-  3: 'January 4, 2023',
-  4: 'January 4, 2023',
-  5: 'January 4, 2023',
-};
+import type { CaseArticleContent, CasesPageContent } from '../../../sanity/types';
+import { getCaseArticleDataAttribute } from '../../../sanity/dataAttributes';
 
 export default function CaseDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
 
-  const caseData = casesData.find(c => c.id === Number(id));
+  const content = useLoaderData() as { page: CasesPageContent; article: CaseArticleContent } | null;
+  const caseData = content?.article || null;
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -51,26 +37,27 @@ export default function CaseDetailPage() {
     );
   }
 
-  const img = cardImages[caseData.id];
-  const date = dateMap[caseData.id];
-
   return (
     <div className="min-h-screen bg-white">
       <Navbar scrolled={scrolled} />
 
       {/* Hero 封面圖 */}
-      <div className="relative w-full h-[420px] mt-24 overflow-hidden">
+      <div className="relative w-full h-[420px] mt-24 overflow-hidden" data-sanity-edit-group data-sanity-edit-target>
         <img
-          src={img}
+          src={caseData.coverImage.url}
           alt={caseData.title}
           className="w-full h-full object-cover object-top"
+          data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'coverImage.url')}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 px-6 pb-10 max-w-3xl mx-auto">
-          <span className="inline-block text-[10px] font-semibold tracking-widest uppercase bg-[#cd9651] text-white px-3 py-1 rounded-sm mb-3">
+          <span
+            className="inline-block text-[10px] font-semibold tracking-widest uppercase bg-[#cd9651] text-white px-3 py-1 rounded-sm mb-3"
+            data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'category')}
+          >
             {caseData.category}
           </span>
-          <h1 className="text-2xl md:text-3xl font-bold text-white leading-snug">
+          <h1 className="text-2xl md:text-3xl font-bold text-white leading-snug" data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'title')}>
             {caseData.title}
           </h1>
         </div>
@@ -91,19 +78,26 @@ export default function CaseDetailPage() {
             返回案例列表
           </button>
           <div className="flex items-center gap-3">
-            <span className="text-[11px] text-gray-400 tracking-wide">{date}</span>
+            <span className="text-[11px] text-gray-400 tracking-wide" data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'publishDate')}>
+              {caseData.publishDate}
+            </span>
             <span className="text-gray-200">·</span>
             <div className="flex items-center gap-1">
               <div className="w-4 h-4 flex items-center justify-center">
                 <i className="ri-user-line text-[#cd9651]" style={{ fontSize: '12px' }}></i>
               </div>
-              <span className="text-[11px] text-[#cd9651] font-medium tracking-wide">{caseData.doctor}</span>
+              <span className="text-[11px] text-[#cd9651] font-medium tracking-wide" data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'doctor')}>
+                {caseData.doctor}
+              </span>
             </div>
           </div>
         </div>
 
         {/* 描述 */}
-        <p className="text-sm text-gray-500 leading-relaxed mb-10 border-l-2 border-[#cd9651]/30 pl-4">
+        <p
+          className="text-sm text-gray-500 leading-relaxed mb-10 border-l-2 border-[#cd9651]/30 pl-4"
+          data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'description')}
+        >
           {caseData.description}
         </p>
 
@@ -113,7 +107,9 @@ export default function CaseDetailPage() {
           <div className="bg-[#fdf8f8] rounded-xl p-6">
             <div className="flex items-center gap-2 mb-4">
               <span className="w-2 h-2 rounded-full bg-red-300 flex-shrink-0"></span>
-              <span className="text-sm font-bold text-gray-700 tracking-widest">治療前症狀</span>
+              <span className="text-sm font-bold text-gray-700 tracking-widest" data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'before.title')}>
+                {caseData.before.title}
+              </span>
             </div>
             <ul className="space-y-2.5">
               {caseData.before.items.map((item, idx) => (
@@ -121,7 +117,9 @@ export default function CaseDetailPage() {
                   <div className="w-4 h-4 flex items-center justify-center flex-shrink-0 mt-0.5">
                     <i className="ri-subtract-line text-red-300 text-sm"></i>
                   </div>
-                  <span className="text-xs text-gray-600 leading-relaxed">{item}</span>
+                  <span className="text-xs text-gray-600 leading-relaxed" data-sanity={getCaseArticleDataAttribute(caseData.caseId, `before.items[${idx}]`)}>
+                    {item}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -131,19 +129,28 @@ export default function CaseDetailPage() {
           <div className="bg-[#f7fdf9] rounded-xl p-6">
             <div className="flex items-center gap-2 mb-4">
               <span className="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"></span>
-              <span className="text-sm font-bold text-gray-700 tracking-widest">治療後成果</span>
+              <span className="text-sm font-bold text-gray-700 tracking-widest" data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'after.title')}>
+                {caseData.after.title}
+              </span>
             </div>
             <div className="space-y-4">
               {caseData.after.phases.map((phase, idx) => (
                 <div key={idx}>
-                  <span className="text-xs text-emerald-600 font-semibold mb-2 block">{phase.period}</span>
+                  <span className="text-xs text-emerald-600 font-semibold mb-2 block" data-sanity={getCaseArticleDataAttribute(caseData.caseId, `after.phases[${idx}].period`)}>
+                    {phase.period}
+                  </span>
                   <ul className="space-y-1.5">
                     {phase.improvements.map((item, impIdx) => (
                       <li key={impIdx} className="flex items-start gap-2">
                         <div className="w-4 h-4 flex items-center justify-center flex-shrink-0 mt-0.5">
                           <i className="ri-check-line text-emerald-400 text-sm"></i>
                         </div>
-                        <span className="text-xs text-gray-600 leading-relaxed">{item}</span>
+                        <span
+                          className="text-xs text-gray-600 leading-relaxed"
+                          data-sanity={getCaseArticleDataAttribute(caseData.caseId, `after.phases[${idx}].improvements[${impIdx}]`)}
+                        >
+                          {item}
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -158,16 +165,23 @@ export default function CaseDetailPage() {
           <div className="w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">
             <i className="ri-double-quotes-l text-[#cd9651] text-xl"></i>
           </div>
-          <p className="text-sm text-gray-600 leading-relaxed italic">{caseData.conclusion}</p>
+          <p className="text-sm text-gray-600 leading-relaxed italic" data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'conclusion')}>
+            {caseData.conclusion}
+          </p>
         </div>
 
         {/* 貼心小提醒 / 醫學小知識 */}
         {(caseData.tips || caseData.medicalInfo) && (
           <div className="border border-stone-100 rounded-xl p-6 mb-10">
             <p className="text-xs font-semibold text-[#cd9651] tracking-widest mb-3 uppercase">
-              {caseData.tips?.title || caseData.medicalInfo?.title}
+              <span data-sanity={getCaseArticleDataAttribute(caseData.caseId, caseData.tips ? 'tips.title' : 'medicalInfo.title')}>
+                {caseData.tips?.title || caseData.medicalInfo?.title}
+              </span>
             </p>
-            <p className="text-xs text-gray-500 leading-relaxed">
+            <p
+              className="text-xs text-gray-500 leading-relaxed"
+              data-sanity={getCaseArticleDataAttribute(caseData.caseId, caseData.tips ? 'tips.content' : 'medicalInfo.content')}
+            >
               {caseData.tips?.content || caseData.medicalInfo?.content}
             </p>
           </div>
@@ -189,7 +203,9 @@ export default function CaseDetailPage() {
                   <div className="w-4 h-4 flex items-center justify-center flex-shrink-0">
                     <i className="ri-link text-xs"></i>
                   </div>
-                  <span className="underline underline-offset-2 break-all">{ref}</span>
+                  <span className="underline underline-offset-2 break-all" data-sanity={getCaseArticleDataAttribute(caseData.caseId, `references[${idx}]`)}>
+                    {ref}
+                  </span>
                 </a>
               ))}
             </div>
@@ -203,7 +219,7 @@ export default function CaseDetailPage() {
               key={idx}
               className="text-[11px] text-gray-400 tracking-wide bg-gray-50 px-2.5 py-1 rounded-full"
             >
-              #{tag}
+              <span data-sanity={getCaseArticleDataAttribute(caseData.caseId, `tags[${idx}]`)}>#{tag}</span>
             </span>
           ))}
         </div>
@@ -224,6 +240,7 @@ export default function CaseDetailPage() {
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-xs text-gray-400 hover:text-[#1877F2] transition-colors cursor-pointer"
+            data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'fbLink')}
           >
             <div className="w-4 h-4 flex items-center justify-center">
               <i className="ri-facebook-fill text-base"></i>
@@ -233,7 +250,12 @@ export default function CaseDetailPage() {
         </div>
       </main>
 
-      <CTASection />
+      <CTASection
+        title={content?.page.ctaTitle || '您也想擁有健康的身體嗎？'}
+        description={content?.page.ctaDescription || '每個人的體質不同，需要的調理方式也不同\n讓我們的專業醫師為您量身打造專屬的治療計畫'}
+        buttonText={content?.page.ctaButtonText || '立即預約諮詢'}
+        enableVisualEditing
+      />
       <Footer />
     </div>
   );

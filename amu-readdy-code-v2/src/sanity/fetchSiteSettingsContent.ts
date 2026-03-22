@@ -1,0 +1,104 @@
+import {sanityClient} from './client';
+import {defaultSiteSettingsContent} from './defaults/siteSettings';
+import {siteSettingsQuery} from './queries';
+import type {
+  FooterLinkGroupContent,
+  SanityImage,
+  SiteLinkContent,
+  SiteNavItemContent,
+  SiteSettingsContent,
+  SocialLinkContent,
+} from './types';
+
+const mergeImage = (incoming: unknown, fallback: SanityImage): SanityImage => {
+  const image = incoming as Partial<SanityImage> | null;
+  return {
+    url: image?.url || fallback.url,
+    alt: image?.alt || fallback.alt,
+  };
+};
+
+const mergeSiteLink = (incoming: unknown, fallback?: SiteLinkContent): SiteLinkContent => {
+  const link = incoming as Partial<SiteLinkContent> | null;
+  return {
+    label: link?.label || fallback?.label || '',
+    kind: link?.kind || fallback?.kind || 'route',
+    target: link?.target || fallback?.target || '',
+  };
+};
+
+const mergeNavItem = (incoming: unknown, fallback?: SiteNavItemContent): SiteNavItemContent => {
+  const item = incoming as Partial<SiteNavItemContent> | null;
+  const children = Array.isArray(item?.children) && item.children.length > 0
+    ? item.children.map((child, index) => mergeSiteLink(child, fallback?.children?.[index]))
+    : fallback?.children;
+
+  return {
+    label: item?.label || fallback?.label || '',
+    kind: item?.kind || fallback?.kind || 'route',
+    target: item?.target || fallback?.target || '',
+    ...(children && children.length > 0 ? {children} : {}),
+  };
+};
+
+const mergeFooterGroup = (incoming: unknown, fallback?: FooterLinkGroupContent): FooterLinkGroupContent => {
+  const group = incoming as Partial<FooterLinkGroupContent> | null;
+  return {
+    title: group?.title || fallback?.title || '',
+    links:
+      Array.isArray(group?.links) && group.links.length > 0
+        ? group.links.map((link, index) => mergeSiteLink(link, fallback?.links?.[index]))
+        : fallback?.links || [],
+  };
+};
+
+const mergeSocialLink = (incoming: unknown, fallback?: SocialLinkContent): SocialLinkContent => {
+  const link = incoming as Partial<SocialLinkContent> | null;
+  return {
+    platform: link?.platform || fallback?.platform || '',
+    icon: link?.icon || fallback?.icon || '',
+    url: link?.url || fallback?.url || '',
+  };
+};
+
+const mergeSiteSettings = (incoming: unknown): SiteSettingsContent => {
+  const settings = incoming as Partial<SiteSettingsContent> | null;
+  const fallback = defaultSiteSettingsContent;
+  return {
+    title: settings?.title || fallback.title,
+    headerLogo: mergeImage(settings?.headerLogo, fallback.headerLogo),
+    headerNavItems:
+      Array.isArray(settings?.headerNavItems) && settings.headerNavItems.length > 0
+        ? settings.headerNavItems.map((item, index) => mergeNavItem(item, fallback.headerNavItems[index]))
+        : fallback.headerNavItems,
+    headerCta: mergeSiteLink(settings?.headerCta, fallback.headerCta),
+    footerLogo: mergeImage(settings?.footerLogo, fallback.footerLogo),
+    footerTagline: settings?.footerTagline || fallback.footerTagline,
+    footerLinkGroups:
+      Array.isArray(settings?.footerLinkGroups) && settings.footerLinkGroups.length > 0
+        ? settings.footerLinkGroups.map((group, index) => mergeFooterGroup(group, fallback.footerLinkGroups[index]))
+        : fallback.footerLinkGroups,
+    clinicInfoTitle: settings?.clinicInfoTitle || fallback.clinicInfoTitle,
+    address: settings?.address || fallback.address,
+    phone: settings?.phone || fallback.phone,
+    email: settings?.email || fallback.email,
+    socialLinks:
+      Array.isArray(settings?.socialLinks) && settings.socialLinks.length > 0
+        ? settings.socialLinks.map((link, index) => mergeSocialLink(link, fallback.socialLinks[index]))
+        : fallback.socialLinks,
+    copyright: settings?.copyright || fallback.copyright,
+    builderLink: mergeSiteLink(settings?.builderLink, fallback.builderLink),
+  };
+};
+
+export async function fetchSiteSettingsContent(): Promise<SiteSettingsContent> {
+  if (!sanityClient) return defaultSiteSettingsContent;
+
+  try {
+    const data = await sanityClient.fetch(siteSettingsQuery);
+    return mergeSiteSettings(data);
+  } catch (error) {
+    console.error('Failed to fetch site settings content from Sanity', error);
+    return defaultSiteSettingsContent;
+  }
+}

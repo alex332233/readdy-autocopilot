@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import FadeIn from '../../../components/base/FadeIn';
-import { testimonialsData } from '../../../mocks/testimonials';
+import { useHomePageContent } from '../useHomePageContent';
 
 const avatarImages: Record<number, string> = {
   0: 'https://readdy.ai/api/search-image?query=portrait%20of%20a%20professional%20asian%20woman%20in%20her%20thirties%20smiling%20warmly%20at%20camera%20soft%20studio%20lighting%20clean%20white%20background%20minimal%20style&width=320&height=320&seq=testimonial_avatar_0&orientation=squarish',
@@ -13,6 +13,7 @@ const avatarImages: Record<number, string> = {
 
 export default function TestimonialsSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { testimonials } = useHomePageContent();
 
   const scroll = (dir: 'left' | 'right') => {
     if (!scrollRef.current) return;
@@ -26,10 +27,10 @@ export default function TestimonialsSection() {
         <FadeIn direction="up" delay={0}>
           <div className="text-center mb-14">
             <h2 className="text-3xl lg:text-4xl font-serif font-bold mb-4 text-[#cd9651]">
-              真實見證
+              {testimonials.title}
             </h2>
             <p className="text-base text-slate-500 max-w-xl mx-auto leading-relaxed">
-              來自真實患者的治療心得與推薦
+              {testimonials.description}
             </p>
           </div>
         </FadeIn>
@@ -51,7 +52,7 @@ export default function TestimonialsSection() {
               className="flex gap-5 overflow-x-auto pb-4 scroll-smooth"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
-              {testimonialsData.map((testimonial, index) => (
+              {testimonials.items.map((testimonial, index) => (
                 <div
                   key={index}
                   className="flex-shrink-0 w-72 bg-white rounded-2xl p-6 border border-stone-100 shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col gap-4"
@@ -117,7 +118,7 @@ export default function TestimonialsSection() {
           {/* 查看更多按鈕 */}
           <div className="text-center mt-8">
             <button className="inline-flex items-center px-6 py-3 bg-[#cd9651] hover:bg-[#b8843d] text-white rounded-full font-semibold transition-colors duration-300 whitespace-nowrap cursor-pointer text-sm">
-              查看更多評價
+              {testimonials.ctaText}
               <i className="ri-external-link-line ml-2"></i>
             </button>
           </div>

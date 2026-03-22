@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
+import {getInsurancePageDataAttribute} from '../../../sanity/dataAttributes';
 
-export default function HeroSection() {
+export default function HeroSection({title, subtitle}: {title: string; subtitle: string}) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -19,12 +20,17 @@ export default function HeroSection() {
       <div className="max-w-7xl mx-auto px-6 py-20 flex flex-col items-center text-center">
         <h1
           className="text-4xl lg:text-5xl font-bold text-[#cd9651] mb-4 leading-tight"
-          style={{ fontFamily: "'Noto Serif TC', serif", ...fadeUp(100) }}
+          data-sanity={getInsurancePageDataAttribute('heroTitle')}
+          style={{fontFamily: "'Noto Serif TC', serif", ...fadeUp(100)}}
         >
-          健保項目
+          {title}
         </h1>
-        <p className="text-base text-gray-600 max-w-lg leading-relaxed" style={fadeUp(300)}>
-          以千年中醫智慧，守護您的健康人生
+        <p
+          className="text-base text-gray-600 max-w-lg leading-relaxed"
+          data-sanity={getInsurancePageDataAttribute('heroSubtitle')}
+          style={fadeUp(300)}
+        >
+          {subtitle}
         </p>
       </div>
     </section>

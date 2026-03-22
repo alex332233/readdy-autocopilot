@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
+import { getCasesPageDataAttribute } from '../../../sanity/dataAttributes';
 
-export default function HeroSection() {
+interface Props {
+  title: string;
+  subtitle: string;
+}
+
+export default function HeroSection({ title, subtitle }: Props) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -20,11 +26,16 @@ export default function HeroSection() {
         <h1
           className="text-4xl lg:text-5xl font-bold text-[#cd9651] mb-4 leading-tight"
           style={{ fontFamily: "'Noto Serif TC', serif", ...fadeUp(100) }}
+          data-sanity={getCasesPageDataAttribute('heroTitle')}
         >
-          真實見證
+          {title}
         </h1>
-        <p className="text-base text-gray-600 max-w-lg leading-relaxed" style={fadeUp(300)}>
-          每一個康復的故事，都是我們持續前進的動力
+        <p
+          className="text-base text-gray-600 max-w-lg leading-relaxed"
+          style={fadeUp(300)}
+          data-sanity={getCasesPageDataAttribute('heroSubtitle')}
+        >
+          {subtitle}
         </p>
       </div>
     </section>

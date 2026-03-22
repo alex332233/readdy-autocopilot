@@ -1,5 +1,14 @@
 import { lazy } from 'react';
 import { RouteObject } from 'react-router-dom';
+import { fetchAboutPageContent } from '../sanity/fetchAboutPageContent';
+import { fetchCaseArticleContent, fetchCasesPageContent } from '../sanity/fetchCasesContent';
+import { fetchFeaturedTreatmentDetailContent, fetchFeaturedTreatmentsPageContent } from '../sanity/fetchFeaturedTreatmentsContent';
+import { fetchHealthEducationArticleContent, fetchHealthEducationPageContent } from '../sanity/fetchHealthEducationContent';
+import { fetchHomePageContent } from '../sanity/fetchHomePageContent';
+import { fetchInsurancePageContent } from '../sanity/fetchInsurancePageContent';
+import { fetchSiteSettingsContent } from '../sanity/fetchSiteSettingsContent';
+import { fetchTeamPageContent } from '../sanity/fetchTeamContent';
+import RootLayout from './RootLayout';
 
 const HomePage = lazy(() => import('../pages/home/page'));
 const TreatmentsPage = lazy(() => import('../pages/treatments/page'));
@@ -9,64 +18,83 @@ const CasesPage = lazy(() => import('../pages/cases/page'));
 const CaseDetailPage = lazy(() => import('../pages/cases/detail/page'));
 const InsurancePage = lazy(() => import('../pages/insurance/page'));
 const FeaturedTreatmentsPage = lazy(() => import('../pages/featured-treatments/page'));
-const FacialDetailPage = lazy(() => import('../pages/featured-treatments/facial/page'));
-const GrowthDetailPage = lazy(() => import('../pages/featured-treatments/growth/page'));
+const FeaturedTreatmentDetailPage = lazy(() => import('../pages/featured-treatments/DetailPage'));
 const HealthEducationPage = lazy(() => import('../pages/health-education/page'));
 const HealthEducationDetailPage = lazy(() => import('../pages/health-education/detail/page'));
 const NotFoundPage = lazy(() => import('../pages/NotFound'));
 
 const routes: RouteObject[] = [
   {
-    path: '/',
-    element: <HomePage />,
-  },
-  {
-    path: '/treatments',
-    element: <TreatmentsPage />,
-  },
-  {
-    path: '/insurance',
-    element: <InsurancePage />,
-  },
-  {
-    path: '/featured-treatments',
-    element: <FeaturedTreatmentsPage />,
-  },
-  {
-    path: '/featured-treatments/facial',
-    element: <FacialDetailPage />,
-  },
-  {
-    path: '/featured-treatments/growth',
-    element: <GrowthDetailPage />,
-  },
-  {
-    path: '/about',
-    element: <AboutPage />,
-  },
-  {
-    path: '/cases',
-    element: <CasesPage />,
-  },
-  {
-    path: '/cases/:id',
-    element: <CaseDetailPage />,
-  },
-  {
-    path: '/team',
-    element: <TeamPage />,
-  },
-  {
-    path: '/health-education',
-    element: <HealthEducationPage />,
-  },
-  {
-    path: '/health-education/:id',
-    element: <HealthEducationDetailPage />,
-  },
-  {
-    path: '*',
-    element: <NotFoundPage />,
+    id: 'root',
+    loader: fetchSiteSettingsContent,
+    element: <RootLayout />,
+    children: [
+      {
+        path: '/',
+        id: 'home',
+        loader: fetchHomePageContent,
+        element: <HomePage />,
+      },
+      {
+        path: '/treatments',
+        element: <TreatmentsPage />,
+      },
+      {
+        path: '/insurance',
+        id: 'insurance',
+        loader: fetchInsurancePageContent,
+        element: <InsurancePage />,
+      },
+      {
+        path: '/featured-treatments',
+        id: 'featuredTreatments',
+        loader: fetchFeaturedTreatmentsPageContent,
+        element: <FeaturedTreatmentsPage />,
+      },
+      {
+        path: '/featured-treatments/:slug',
+        loader: fetchFeaturedTreatmentDetailContent,
+        element: <FeaturedTreatmentDetailPage />,
+      },
+      {
+        path: '/about',
+        id: 'about',
+        loader: fetchAboutPageContent,
+        element: <AboutPage />,
+      },
+      {
+        path: '/cases',
+        id: 'cases',
+        loader: fetchCasesPageContent,
+        element: <CasesPage />,
+      },
+      {
+        path: '/cases/:id',
+        loader: fetchCaseArticleContent,
+        element: <CaseDetailPage />,
+      },
+      {
+        path: '/team',
+        id: 'team',
+        loader: fetchTeamPageContent,
+        element: <TeamPage />,
+      },
+      {
+        path: '/health-education',
+        id: 'healthEducation',
+        loader: fetchHealthEducationPageContent,
+        element: <HealthEducationPage />,
+      },
+      {
+        path: '/health-education/:id',
+        loader: fetchHealthEducationArticleContent,
+        element: <HealthEducationDetailPage />,
+      },
+      {
+        path: '*',
+        element: <NotFoundPage />,
+      },
+    ],
   },
 ];
 
