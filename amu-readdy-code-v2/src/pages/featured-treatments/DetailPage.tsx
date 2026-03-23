@@ -75,7 +75,7 @@ export default function FeaturedTreatmentDetailPage() {
                     <div className="mb-16 grid grid-cols-1 lg:grid-cols-2 gap-0 rounded-2xl overflow-hidden shadow-sm border border-[#ede8df]">
                       {section.layout === 'imageText' && section.image && (
                         <div className="relative min-h-[320px] lg:min-h-0 order-2 lg:order-1" data-sanity-edit-group data-sanity-edit-target>
-                          <img src={section.image.url} alt={section.image.alt} className="absolute inset-0 w-full h-full object-cover object-top" data-sanity={getFeaturedTreatmentDetailDataAttribute(detail.slug, `sections[${sectionIndex}].image.url`)} />
+                          <img src={section.image.url} alt={section.image.alt} className="absolute inset-0 w-full h-full object-cover object-top" data-sanity={getFeaturedTreatmentDetailDataAttribute(detail.slug, `sections[${sectionIndex}].image`)} />
                           <div className="pointer-events-none absolute inset-0 bg-gradient-to-l from-white/20 to-transparent" />
                         </div>
                       )}
@@ -120,7 +120,7 @@ export default function FeaturedTreatmentDetailPage() {
                       </div>
                       {section.layout === 'textImage' && section.image && (
                         <div className="relative min-h-[320px] lg:min-h-0" data-sanity-edit-group data-sanity-edit-target>
-                          <img src={section.image.url} alt={section.image.alt} className="absolute inset-0 w-full h-full object-cover object-top" data-sanity={getFeaturedTreatmentDetailDataAttribute(detail.slug, `sections[${sectionIndex}].image.url`)} />
+                          <img src={section.image.url} alt={section.image.alt} className="absolute inset-0 w-full h-full object-cover object-top" data-sanity={getFeaturedTreatmentDetailDataAttribute(detail.slug, `sections[${sectionIndex}].image`)} />
                           <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white/20 to-transparent" />
                         </div>
                       )}

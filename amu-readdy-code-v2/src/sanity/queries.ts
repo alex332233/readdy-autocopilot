@@ -287,7 +287,10 @@ export const featuredTreatmentDetailQuery = groq`
       eyebrow,
       content,
       additionalContent,
-      image,
+      "image": {
+        "url": image.asset->url,
+        "alt": image.alt
+      },
       items[]{subtitle, text},
       cases[]{label, text}
     },
