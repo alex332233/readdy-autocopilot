@@ -16,7 +16,14 @@ export const healthEducationArticle = defineType({
     defineField({name: 'readTime', title: '閱讀時間', type: 'string', validation: (Rule) => Rule.required()}),
     defineField({name: 'views', title: '瀏覽次數', type: 'number', validation: (Rule) => Rule.required()}),
     defineField({name: 'summary', title: '摘要', type: 'text', rows: 4, validation: (Rule) => Rule.required()}),
-    defineField({name: 'coverImage', title: '封面圖', type: 'externalImage', validation: (Rule) => Rule.required()}),
+    defineField({
+      name: 'coverImage',
+      title: '封面圖',
+      type: 'image',
+      options: {hotspot: true},
+      fields: [defineField({name: 'alt', title: '替代文字', type: 'string'})],
+      validation: (Rule) => Rule.required(),
+    }),
     defineField({
       name: 'content',
       title: '文章段落',

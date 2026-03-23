@@ -19,7 +19,7 @@ export default function ArticleCard({ article, index = 0 }: ArticleCardProps) {
             src={article.coverImage.url}
             alt={article.coverImage.alt || article.title}
             className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-            data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'coverImage.url')}
+            data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'coverImage')}
           />
           <span
             className="absolute top-3 right-3 text-[10px] font-semibold tracking-widest uppercase bg-white/90 text-[#cd9651] px-2.5 py-1 rounded-sm"

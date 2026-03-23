@@ -491,3 +491,32 @@
   - 可以在 migration 後增加一個檢查：
     - 搜尋是否仍存在舊 `_id` 命名樣式
     - 確認畫面上 click 進去的文件 `_id` 與前端 query 實際讀到的 `_id` 一致
+
+## 20. Vercel 正式部署串 Sanity 時，要把「Root Directory、env、CORS」當成同一組驗證
+
+- 現象：
+  - Vercel production deploy 成功，但正式站仍可能打不開
+  - 常見症狀包括：
+    - `projectId can only contain only a-z, 0-9 and dashes`
+    - `blocked by CORS policy`
+    - 正式 alias 打不開，但 preview 正常
+- 這次實際踩到的根因有三層：
+  1. `Root Directory` 設定後，CLI 若仍在子目錄執行，會再套一次路徑，導致找不到 build 目錄
+  2. 第一次用 CLI 寫入 Vercel env 時，值可能被帶入額外字元，導致前端 runtime 讀到錯誤的 `projectId`
+  3. 正式 Vercel 網域沒有同步加進 Sanity CORS，導致正式站 query 被擋
+- 這次處理：
+  1. 在 Vercel project 設定 `Root Directory = amu-readdy-code-v2`
+  2. 改在 repo 根目錄執行：
+     - `npx vercel --prod --yes`
+  3. 用 `--force --value` 重寫 production env
+  4. 把正式 Vercel 網域與 production deployment 網域都加入 Sanity CORS
+- 後續自動化建議：
+  - 對正式部署要有一套固定驗證順序：
+    1. 確認 `Root Directory`
+    2. 確認 Vercel env 寫入的是乾淨值
+    3. 執行 production deploy
+    4. 將正式 domain 同步加入 Sanity CORS
+    5. 用正式 alias 驗一次首頁與共用 `siteSettings` query
+  - 不要只看 build 是否成功，還要驗：
+    - runtime 是否能成功 query Sanity
+    - 正式 alias 是否已真正可用

@@ -150,7 +150,10 @@ export const healthEducationPageQuery = groq`
       readTime,
       views,
       summary,
-      coverImage,
+      "coverImage": {
+        "url": coverImage.asset->url,
+        "alt": coverImage.alt
+      },
       content,
       tips,
       references
@@ -171,7 +174,10 @@ export const healthEducationArticleQuery = groq`
     readTime,
     views,
     summary,
-    coverImage,
+    "coverImage": {
+      "url": coverImage.asset->url,
+      "alt": coverImage.alt
+    },
     content,
     tips,
     references
