@@ -89,7 +89,10 @@ export const casesPageQuery = groq`
       doctor,
       fbLink,
       publishDate,
-      coverImage,
+      "coverImage": {
+        "url": coverImage.asset->url,
+        "alt": coverImage.alt
+      },
       description,
       before,
       after,
@@ -193,7 +196,10 @@ export const caseArticleQuery = groq`
     doctor,
     fbLink,
     publishDate,
-    coverImage,
+    "coverImage": {
+      "url": coverImage.asset->url,
+      "alt": coverImage.alt
+    },
     description,
     before,
     after,

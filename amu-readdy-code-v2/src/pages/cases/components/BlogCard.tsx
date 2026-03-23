@@ -20,7 +20,7 @@ export default function BlogCard({ caseData }: BlogCardProps) {
           src={caseData.coverImage.url}
           alt={caseData.title}
           className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-          data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'coverImage.url')}
+          data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'coverImage')}
         />
         <span
           className="absolute top-3 right-3 text-[10px] font-semibold tracking-widest uppercase bg-white/90 text-[#cd9651] px-2.5 py-1 rounded-sm"

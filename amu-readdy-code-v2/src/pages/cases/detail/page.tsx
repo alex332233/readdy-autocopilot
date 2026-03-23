@@ -47,7 +47,7 @@ export default function CaseDetailPage() {
           src={caseData.coverImage.url}
           alt={caseData.title}
           className="w-full h-full object-cover object-top"
-          data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'coverImage.url')}
+          data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'coverImage')}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 px-6 pb-10 max-w-3xl mx-auto">
