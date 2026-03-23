@@ -47,7 +47,7 @@ export default function TeamSection() {
                   src={team.image.url}
                   alt={team.image.alt}
                   className="w-full h-full object-cover object-top transition-transform duration-700 ease-out hover:scale-105"
-                  data-sanity={getHomePageDataAttribute('team.image.url')}
+                  data-sanity={getHomePageDataAttribute('team.image')}
                 />
                 {/* 底部漸層名牌 */}
                 <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent px-8 py-6">

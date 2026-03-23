@@ -18,9 +18,9 @@ export default function ClinicGallerySection() {
           >
             <img
               src={gallery.images[0].url}
-              alt={gallery.images[0].label}
+              alt={gallery.images[0].alt || gallery.images[0].label}
               className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 block"
-              data-sanity={getHomePageDataAttribute('gallery.images[0].url')}
+              data-sanity={getHomePageDataAttribute('gallery.images[0].image')}
             />
           </div>
           <div className="pointer-events-none absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-500" />
@@ -47,9 +47,9 @@ export default function ClinicGallerySection() {
               >
                 <img
                   src={img.url}
-                  alt={img.label}
+                  alt={img.alt || img.label}
                   className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 block"
-                  data-sanity={getHomePageDataAttribute(`gallery.images[${i + 1}].url`)}
+                  data-sanity={getHomePageDataAttribute(`gallery.images[${i + 1}].image`)}
                 />
               </div>
               <div className="pointer-events-none absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-500" />

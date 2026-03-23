@@ -2,34 +2,34 @@ import {defineField, defineType} from 'sanity'
 
 export const aboutPage = defineType({
   name: 'aboutPage',
-  title: 'About Page',
+  title: '關於頁',
   type: 'document',
   fields: [
-    defineField({name: 'title', title: 'Document title', type: 'string', initialValue: '關於艾苜'}),
-    defineField({name: 'summary', title: 'Summary', type: 'text', rows: 4}),
-    defineField({name: 'originStory', title: 'Origin Story', type: 'aboutOriginStory'}),
+    defineField({name: 'title', title: '文件名稱', type: 'string', initialValue: '關於艾苜'}),
+    defineField({name: 'summary', title: '頁面摘要', type: 'text', rows: 4}),
+    defineField({name: 'originStory', title: '品牌起源', type: 'aboutOriginStory'}),
     defineField({
       name: 'philosophyTitle',
-      title: 'Philosophy Title',
+      title: '理念標題',
       type: 'string',
     }),
     defineField({
       name: 'philosophyCards',
-      title: 'Philosophy Cards',
+      title: '理念卡片',
       type: 'array',
       of: [{type: 'aboutPhilosophyCard'}],
     }),
     defineField({
       name: 'coreValues',
-      title: 'Core Values',
+      title: '核心價值',
       type: 'array',
       of: [{type: 'aboutCoreValue'}],
     }),
-    defineField({name: 'branchesTitle', title: 'Branches Title', type: 'string'}),
-    defineField({name: 'branchesSubtitle', title: 'Branches Subtitle', type: 'text', rows: 3}),
+    defineField({name: 'branchesTitle', title: '分院標題', type: 'string'}),
+    defineField({name: 'branchesSubtitle', title: '分院副標題', type: 'text', rows: 3}),
     defineField({
       name: 'branches',
-      title: 'Branches',
+      title: '分院資訊',
       type: 'array',
       of: [{type: 'aboutBranch'}],
     }),
@@ -39,8 +39,8 @@ export const aboutPage = defineType({
     select: {title: 'title'},
     prepare(selection) {
       return {
-        title: selection.title || 'About Page',
-        subtitle: 'Skeleton only',
+        title: selection.title || '關於艾苜',
+        subtitle: '單例文件',
       }
     },
   },

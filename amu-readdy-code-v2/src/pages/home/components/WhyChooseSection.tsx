@@ -73,7 +73,7 @@ export default function WhyChooseSection() {
               <img
                 alt={whyChoose.image.alt}
                 className="w-full object-cover object-top absolute inset-0"
-                data-sanity={getHomePageDataAttribute('whyChoose.image.url')}
+                data-sanity={getHomePageDataAttribute('whyChoose.image')}
                 style={{
                   height: 'calc(100% + 80px)',
                   top: '-40px',

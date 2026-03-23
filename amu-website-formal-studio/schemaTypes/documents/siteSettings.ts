@@ -64,7 +64,7 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: 'email',
-      title: 'Email',
+      title: '電子信箱',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),

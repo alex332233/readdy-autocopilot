@@ -1,31 +1,69 @@
-import {createClient} from '@sanity/client'
+import {getCliClient} from 'sanity/cli'
 import {homePageSeed} from '../seed/homePageSeed.mjs'
 
-const projectId = process.env.SANITY_STUDIO_PROJECT_ID
-const dataset = process.env.SANITY_STUDIO_DATASET || 'production'
-const token = process.env.SANITY_AUTH_TOKEN
-const apiVersion = process.env.SANITY_API_VERSION || '2025-01-01'
-
-if (!projectId) {
-  console.error('Missing SANITY_STUDIO_PROJECT_ID')
-  process.exit(1)
-}
-
-if (!token) {
-  console.error('Missing SANITY_AUTH_TOKEN')
-  process.exit(1)
-}
-
-const client = createClient({
-  projectId,
-  dataset,
-  apiVersion,
-  token,
-  useCdn: false,
-})
+const client = getCliClient({apiVersion: '2025-01-01'})
 
 async function main() {
-  const result = await client.createOrReplace(homePageSeed)
+  const uploadImageFromUrl = async (url, alt, filename) => {
+    const response = await fetch(url)
+    if (!response.ok) {
+      throw new Error(`Failed to download homepage image ${filename}: ${response.status} ${response.statusText}`)
+    }
+
+    const contentType = response.headers.get('content-type') || 'image/jpeg'
+    const extension = contentType.split('/')[1]?.split(';')[0] || 'jpg'
+    const arrayBuffer = await response.arrayBuffer()
+    const buffer = Buffer.from(arrayBuffer)
+
+    const asset = await client.assets.upload('image', buffer, {
+      filename: `${filename}.${extension}`,
+      contentType,
+    })
+
+    return {
+      _type: 'image',
+      asset: {
+        _type: 'reference',
+        _ref: asset._id,
+      },
+      alt,
+    }
+  }
+
+  const result = await client.createOrReplace({
+    ...homePageSeed,
+    hero: {
+      ...homePageSeed.hero,
+      image: await uploadImageFromUrl(homePageSeed.hero.image.url, homePageSeed.hero.image.alt, 'home-hero'),
+    },
+    about: {
+      ...homePageSeed.about,
+      image: await uploadImageFromUrl(homePageSeed.about.image.url, homePageSeed.about.image.alt, 'home-about'),
+    },
+    whyChoose: {
+      ...homePageSeed.whyChoose,
+      image: await uploadImageFromUrl(
+        homePageSeed.whyChoose.image.url,
+        homePageSeed.whyChoose.image.alt,
+        'home-why-choose',
+      ),
+    },
+    team: {
+      ...homePageSeed.team,
+      image: await uploadImageFromUrl(homePageSeed.team.image.url, homePageSeed.team.image.alt, 'home-team'),
+    },
+    gallery: {
+      ...homePageSeed.gallery,
+      images: await Promise.all(
+        homePageSeed.gallery.images.map(async (image, index) => ({
+          _key: image._key,
+          image: await uploadImageFromUrl(image.image.url, image.image.alt, `home-gallery-${index + 1}`),
+          label: image.label,
+          labelZh: image.labelZh,
+        })),
+      ),
+    },
+  })
   console.log(`Seeded homePage: ${result._id}`)
 }
 

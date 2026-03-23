@@ -87,7 +87,7 @@ export default function AboutSection() {
             <img
               alt={about.image.alt}
               className="w-full h-full object-cover object-top"
-              data-sanity={getHomePageDataAttribute('about.image.url')}
+              data-sanity={getHomePageDataAttribute('about.image')}
               src={about.image.url}
             />
           </div>

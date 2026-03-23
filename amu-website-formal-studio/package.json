@@ -9,7 +9,7 @@
     "start": "sanity start",
     "build": "sanity build",
     "deploy": "sanity deploy",
-    "seed:home": "node ./scripts/seed-home-page.mjs",
+    "seed:home": "sanity exec ./scripts/seed-home-page.mjs --with-user-token",
     "seed:featured": "sanity exec ./scripts/seed-featured-treatments.cli.mjs --with-user-token",
     "seed:about": "sanity exec ./scripts/seed-about-page.cli.mjs --with-user-token",
     "seed:insurance": "sanity exec ./scripts/seed-insurance-page.cli.mjs --with-user-token",

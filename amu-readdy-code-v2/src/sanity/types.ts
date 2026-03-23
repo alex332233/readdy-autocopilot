@@ -372,6 +372,7 @@ export interface HomeFaqContent {
 
 export interface GalleryImage {
   url: string;
+  alt?: string;
   label: string;
   labelZh: string;
 }

@@ -9,6 +9,7 @@ export const homePageSeed = {
     ctaText: '立即預約諮詢',
     ctaTarget: 'booking',
     image: {
+      _type: 'externalImage',
       url: 'https://static.readdy.ai/image/8d6cf5771052b01e9700d88a6623b6b6/86c1fda8d4a973044d459bcf3069ab1e.png',
       alt: '艾草意象',
     },
@@ -34,6 +35,7 @@ export const homePageSeed = {
     ctaText: '關於艾苜中醫診所',
     ctaTarget: 'services',
     image: {
+      _type: 'externalImage',
       url: 'https://readdy.ai/api/search-image?query=Elegant%20traditional%20Chinese%20medicine%20clinic%20interior%20with%20warm%20wooden%20shelves%20displaying%20ceramic%20herb%20jars%20and%20dried%20herbs%2C%20soft%20natural%20lighting%20through%20window%2C%20modern%20minimalist%20design%20combined%20with%20traditional%20elements%2C%20peaceful%20and%20professional%20atmosphere%2C%20warm%20earth%20tones%2C%20clean%20aesthetic&width=800&height=1000&seq=about-clinic-002&orientation=portrait',
       alt: '艾苜中醫診所環境',
     },
@@ -119,6 +121,7 @@ export const homePageSeed = {
     ctaText: '立即預約諮詢',
     ctaTarget: 'booking',
     image: {
+      _type: 'externalImage',
       url: 'https://readdy.ai/api/search-image?query=Modern%20Chinese%20medicine%20consultation%20room%20with%20professional%20female%20doctor%20and%20patient%20having%20warm%20conversation%2C%20elegant%20minimalist%20interior%20design%20with%20natural%20wood%20elements%20and%20soft%20lighting%2C%20peaceful%20healing%20atmosphere%2C%20contemporary%20medical%20practice%20combined%20with%20traditional%20wisdom&width=800&height=1000&seq=why-choose-new-003&orientation=portrait',
       alt: '艾苜中醫診療情境',
     },
@@ -134,6 +137,7 @@ export const homePageSeed = {
       {_key: 'doctor-03', name: '吳雅筠 醫師', title: '婦科・兒科・物理治療'},
     ],
     image: {
+      _type: 'externalImage',
       url: 'https://readdy.ai/api/search-image?query=Three%20professional%20Chinese%20medicine%20doctors%20group%20portrait%20in%20white%20medical%20coats%20standing%20together%20in%20a%20modern%20bright%20clinic%20interior%20warm%20natural%20lighting%20elegant%20minimalist%20background%20all%20smiling%20confidently%20high%20quality%20professional%20medical%20team%20photography%20warm%20tones&width=900&height=600&seq=team-group-photo-clinic&orientation=landscape',
       alt: '艾苜中醫診所醫師團隊',
     },
@@ -234,19 +238,31 @@ export const homePageSeed = {
     images: [
       {
         _key: 'gallery-01',
-        url: 'https://readdy.ai/api/search-image?query=modern%20traditional%20chinese%20medicine%20clinic%20interior%20warm%20lighting%20wooden%20furniture%20elegant%20reception%20area%20soft%20beige%20tones%20plants%20decoration%20professional%20medical%20environment%20cozy%20atmosphere%20high%20end%20aesthetic&width=800&height=900&seq=gallery_left_main&orientation=portrait',
+        image: {
+          _type: 'externalImage',
+          url: 'https://readdy.ai/api/search-image?query=modern%20traditional%20chinese%20medicine%20clinic%20interior%20warm%20lighting%20wooden%20furniture%20elegant%20reception%20area%20soft%20beige%20tones%20plants%20decoration%20professional%20medical%20environment%20cozy%20atmosphere%20high%20end%20aesthetic&width=800&height=900&seq=gallery_left_main&orientation=portrait',
+          alt: '診所空間',
+        },
         label: 'Clinic Space',
         labelZh: '診所空間',
       },
       {
         _key: 'gallery-02',
-        url: 'https://readdy.ai/api/search-image?query=chinese%20medicine%20consultation%20room%20doctor%20patient%20warm%20wooden%20desk%20herbal%20medicine%20bottles%20soft%20natural%20light%20professional%20calm%20atmosphere%20elegant%20interior%20design&width=800&height=440&seq=gallery_right_top&orientation=landscape',
+        image: {
+          _type: 'externalImage',
+          url: 'https://readdy.ai/api/search-image?query=chinese%20medicine%20consultation%20room%20doctor%20patient%20warm%20wooden%20desk%20herbal%20medicine%20bottles%20soft%20natural%20light%20professional%20calm%20atmosphere%20elegant%20interior%20design&width=800&height=440&seq=gallery_right_top&orientation=landscape',
+          alt: '診療室',
+        },
         label: 'Consultation Room',
         labelZh: '診療室',
       },
       {
         _key: 'gallery-03',
-        url: 'https://readdy.ai/api/search-image?query=acupuncture%20treatment%20room%20clean%20white%20bed%20soft%20lighting%20relaxing%20spa%20like%20atmosphere%20traditional%20chinese%20medicine%20clinic%20peaceful%20serene%20environment%20warm%20tones&width=800&height=440&seq=gallery_right_bottom&orientation=landscape',
+        image: {
+          _type: 'externalImage',
+          url: 'https://readdy.ai/api/search-image?query=acupuncture%20treatment%20room%20clean%20white%20bed%20soft%20lighting%20relaxing%20spa%20like%20atmosphere%20traditional%20chinese%20medicine%20clinic%20peaceful%20serene%20environment%20warm%20tones&width=800&height=440&seq=gallery_right_bottom&orientation=landscape',
+          alt: '治療室',
+        },
         label: 'Treatment Room',
         labelZh: '治療室',
       },

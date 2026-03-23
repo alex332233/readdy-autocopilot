@@ -194,6 +194,7 @@ const mergeGalleryImage = (incoming: unknown, fallback?: GalleryImage): GalleryI
   const item = incoming as Partial<GalleryImage> | null;
   return {
     url: item?.url || fallback?.url || '',
+    alt: item?.alt || fallback?.alt || '',
     label: item?.label || fallback?.label || '',
     labelZh: item?.labelZh || fallback?.labelZh || '',
   };

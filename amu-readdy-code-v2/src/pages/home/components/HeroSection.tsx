@@ -37,7 +37,7 @@ export default function HeroSection() {
         <img
           alt={hero.image.alt}
           className="w-full h-full object-cover object-center"
-          data-sanity={getHomePageDataAttribute('hero.image.url')}
+          data-sanity={getHomePageDataAttribute('hero.image')}
           src={hero.image.url}
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#f8f6f1] via-[#f8f6f1]/40 to-transparent"></div>

@@ -212,15 +212,46 @@ export const caseArticleQuery = groq`
 
 export const homePageQuery = groq`
   *[_type == "homePage"][0]{
-    hero,
-    about,
+    "hero": {
+      ...hero,
+      "image": {
+        "url": hero.image.asset->url,
+        "alt": hero.image.alt
+      }
+    },
+    "about": {
+      ...about,
+      "image": {
+        "url": about.image.asset->url,
+        "alt": about.image.alt
+      }
+    },
     services,
-    whyChoose,
-    team,
+    "whyChoose": {
+      ...whyChoose,
+      "image": {
+        "url": whyChoose.image.asset->url,
+        "alt": whyChoose.image.alt
+      }
+    },
+    "team": {
+      ...team,
+      "image": {
+        "url": team.image.asset->url,
+        "alt": team.image.alt
+      }
+    },
     process,
     booking,
     faq,
-    gallery,
+    "gallery": {
+      "images": gallery.images[]{
+        "url": image.asset->url,
+        "alt": image.alt,
+        label,
+        labelZh
+      }
+    },
     testimonials
   }
 `;
