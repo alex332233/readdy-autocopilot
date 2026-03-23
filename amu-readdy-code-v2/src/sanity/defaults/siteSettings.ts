@@ -63,7 +63,5 @@ export const defaultSiteSettingsContent: SiteSettingsContent = {
   copyright: '© 2025 艾苜中醫診所. All rights reserved.',
   builderLink: {
     label: 'Website Builder',
-    kind: 'external',
-    target: 'https://readdy.ai/?ref=logo',
   },
 };

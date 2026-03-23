@@ -67,6 +67,6 @@ export const siteSettingsSeed = {
   builderLink: {
     label: 'Website Builder',
     kind: 'external',
-    target: 'https://readdy.ai/?ref=logo',
+    target: '',
   },
 }

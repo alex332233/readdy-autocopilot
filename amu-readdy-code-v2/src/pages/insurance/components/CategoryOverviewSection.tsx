@@ -40,7 +40,7 @@ export default function CategoryOverviewSection({categoryRefs, categories}: Prop
                   alt={cat.image.alt}
                   className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700"
                   style={{transform: hoveredIndex === index ? 'scale(1.05)' : 'scale(1)'}}
-                  data-sanity={getInsurancePageDataAttribute(`overviewCards[${index}].image.url`)}
+                  data-sanity={getInsurancePageDataAttribute(`overviewCards[${index}].image`)}
                 />
               </div>
 

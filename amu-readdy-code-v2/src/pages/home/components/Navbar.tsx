@@ -49,7 +49,7 @@ export default function Navbar({ scrolled }: NavbarProps) {
                 className="w-auto max-w-[220px] object-contain transition-all duration-500 h-14"
                 data-sanity-edit-group
                 data-sanity-edit-target
-                data-sanity={getSiteSettingsDataAttribute('headerLogo.url')}
+                data-sanity={getSiteSettingsDataAttribute('headerLogo')}
                 src={siteSettings.headerLogo.url}
               />
             </button>

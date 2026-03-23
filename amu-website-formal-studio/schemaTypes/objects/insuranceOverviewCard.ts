@@ -2,15 +2,21 @@ import {defineField, defineType} from 'sanity'
 
 export const insuranceOverviewCard = defineType({
   name: 'insuranceOverviewCard',
-  title: 'Insurance Overview Card',
+  title: '健保總覽卡片',
   type: 'object',
   fields: [
-    defineField({name: 'title', title: 'Title', type: 'string'}),
-    defineField({name: 'englishTitle', title: 'English Title', type: 'string'}),
-    defineField({name: 'subtitle', title: 'Subtitle', type: 'string'}),
-    defineField({name: 'icon', title: 'Icon', type: 'string'}),
-    defineField({name: 'anchorId', title: 'Anchor ID', type: 'string'}),
-    defineField({name: 'image', title: 'Image', type: 'externalImage'}),
+    defineField({name: 'title', title: '標題', type: 'string'}),
+    defineField({name: 'englishTitle', title: '英文標題', type: 'string'}),
+    defineField({name: 'subtitle', title: '副標題', type: 'string'}),
+    defineField({name: 'icon', title: '圖示', type: 'string'}),
+    defineField({name: 'anchorId', title: '錨點 ID', type: 'string'}),
+    defineField({
+      name: 'image',
+      title: '圖片',
+      type: 'image',
+      options: {hotspot: true},
+      fields: [defineField({name: 'alt', title: '替代文字', type: 'string'})],
+    }),
   ],
   preview: {
     select: {title: 'title', subtitle: 'englishTitle', media: 'image'},

@@ -19,7 +19,7 @@ export default function Footer() {
                 className="h-14 w-auto brightness-0 invert"
                 data-sanity-edit-group
                 data-sanity-edit-target
-                data-sanity={getSiteSettingsDataAttribute('footerLogo.url')}
+                data-sanity={getSiteSettingsDataAttribute('footerLogo')}
                 src={siteSettings.footerLogo.url}
               />
             </div>
@@ -112,15 +112,12 @@ export default function Footer() {
                 </a>
               ))}
             </div>
-            <a
-              href={siteSettings.builderLink.target}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white/70 hover:text-white transition-colors text-sm whitespace-nowrap cursor-pointer"
+            <span
+              className="text-white/70 text-sm whitespace-nowrap"
               data-sanity={getSiteSettingsDataAttribute('builderLink.label')}
             >
               {siteSettings.builderLink.label}
-            </a>
+            </span>
           </div>
         </div>
       </div>

@@ -135,7 +135,7 @@ const mergeProcessStep = (incoming: unknown, fallback?: HomeProcessStep): HomePr
     step: step?.step || fallback?.step || '',
     title: step?.title || fallback?.title || '',
     description: step?.description || fallback?.description || '',
-    image: step?.image || fallback?.image || '',
+    image: mergeImage(step?.image, fallback?.image),
   };
 };
 

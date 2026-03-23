@@ -67,8 +67,8 @@ export default function ProcessSection() {
               data-sanity-edit-target
             >
               <img
-                src={current.image}
-                alt={current.title}
+                src={current.image.url}
+                alt={current.image.alt || current.title}
                 className="w-full h-full object-cover object-top"
                 data-sanity={getHomePageDataAttribute(`process.steps[${activeStep}].image`)}
               />

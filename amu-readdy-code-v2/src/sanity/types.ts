@@ -226,7 +226,9 @@ export interface SiteSettingsContent {
   email: string;
   socialLinks: SocialLinkContent[];
   copyright: string;
-  builderLink: SiteLinkContent;
+  builderLink: {
+    label: string;
+  };
 }
 
 export interface HealthEducationCategory {
@@ -334,7 +336,7 @@ export interface HomeProcessStep {
   step: string;
   title: string;
   description: string;
-  image: string;
+  image: SanityImage;
 }
 
 export interface HomeProcessContent {

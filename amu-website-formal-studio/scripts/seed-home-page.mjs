@@ -52,6 +52,15 @@ async function main() {
       ...homePageSeed.team,
       image: await uploadImageFromUrl(homePageSeed.team.image.url, homePageSeed.team.image.alt, 'home-team'),
     },
+    process: {
+      ...homePageSeed.process,
+      steps: await Promise.all(
+        homePageSeed.process.steps.map(async (step, index) => ({
+          ...step,
+          image: await uploadImageFromUrl(step.image.url, step.image.alt, `home-process-${index + 1}`),
+        })),
+      ),
+    },
     gallery: {
       ...homePageSeed.gallery,
       images: await Promise.all(

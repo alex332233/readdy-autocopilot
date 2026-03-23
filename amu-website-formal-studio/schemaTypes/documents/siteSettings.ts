@@ -9,7 +9,9 @@ export const siteSettings = defineType({
     defineField({
       name: 'headerLogo',
       title: 'Header Logo',
-      type: 'externalImage',
+      type: 'image',
+      options: {hotspot: true},
+      fields: [defineField({name: 'alt', title: '替代文字', type: 'string'})],
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -28,7 +30,9 @@ export const siteSettings = defineType({
     defineField({
       name: 'footerLogo',
       title: 'Footer Logo',
-      type: 'externalImage',
+      type: 'image',
+      options: {hotspot: true},
+      fields: [defineField({name: 'alt', title: '替代文字', type: 'string'})],
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -83,8 +87,18 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: 'builderLink',
-      title: '右下角品牌連結',
-      type: 'siteLink',
+      title: '右下角文字',
+      type: 'object',
+      fields: [
+        defineField({
+          name: 'label',
+          title: '文字',
+          type: 'string',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({name: 'kind', title: '連結類型', type: 'string', hidden: true, initialValue: 'external'}),
+        defineField({name: 'target', title: '目標值', type: 'string', hidden: true}),
+      ],
       validation: (Rule) => Rule.required(),
     }),
   ],

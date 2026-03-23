@@ -87,7 +87,9 @@ const mergeSiteSettings = (incoming: unknown): SiteSettingsContent => {
         ? settings.socialLinks.map((link, index) => mergeSocialLink(link, fallback.socialLinks[index]))
         : fallback.socialLinks,
     copyright: settings?.copyright || fallback.copyright,
-    builderLink: mergeSiteLink(settings?.builderLink, fallback.builderLink),
+    builderLink: {
+      label: settings?.builderLink?.label || fallback.builderLink.label,
+    },
   };
 };
 

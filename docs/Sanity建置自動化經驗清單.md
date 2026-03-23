@@ -259,6 +259,85 @@
     - item subtitle / text
     - case label / text
 
+## 16. 圖片欄位從外部 URL 遷移到 Sanity image asset 時，最好採用「先 schema、再 seed 遷移、再前端 query」的固定順序
+
+- 現象：
+  - 一開始多數圖片欄位都只是 `externalImage.url`
+  - 對開發很快，但正式交付後，設計師或客戶無法直接在 Studio 上傳圖片，只能貼網址
+  - 外部圖片來源也容易失效，像 `readdy.ai` 的圖片就曾經出現 404
+- 這次實際驗證過的區塊：
+  - `doctorProfile.image`
+  - `healthEducationArticle.coverImage`
+  - `caseArticle.coverImage`
+  - `homePage` 主視覺與首頁主要圖片
+  - `featuredTreatmentDetail.sections[].image`
+  - `insurancePage.overviewCards[].image`
+- 這次有效的固定順序：
+  1. 先把 schema 欄位型別從外部 URL 改成 `image`
+  2. 保留 `alt` 為 image field 的附屬欄位
+  3. 寫 seed / migration script：
+     - 下載舊的外部圖片
+     - 上傳到 Sanity asset
+     - 寫回 image reference
+  4. 前端 query 改成投影：
+     - `image.asset->url`
+     - `image.alt`
+  5. 畫面上的 `data-sanity` 由 `.image.url` 改成整個 `.image`
+  6. 最後重新 deploy Studio，讓表單欄位變成可直接上傳
+- 後續自動化建議：
+  - 圖片遷移不要一開始就全站一起做，先挑高頻會換圖的區塊逐步遷移
+  - 每一種頁系統都沿用同一種 migration 腳本模式，避免每頁各寫一套
+  - 如果 migration script 要抓外部圖片，執行環境要先確認網路與權限，否則會在下載圖片時失敗
+
+## 17. `.` 與 `-` 混用的 document `_id` 會讓 Studio 出現新舊正式文件重複，遷移後一定要清理舊文件
+
+- 現象：
+  - 這次多個多筆內容型 document 先前曾從：
+    - `healthEducationArticle.101`
+    - `caseArticle.1`
+    - `featuredTreatmentDetail.facial`
+    - `doctorProfile.1`
+    之類的 dotted `_id`
+  - 遷移到：
+    - `healthEducationArticle-101`
+    - `caseArticle-1`
+    - `featuredTreatmentDetail-facial`
+    - `doctorProfile-1`
+  - 之後如果只 seed 新文件、不刪舊文件，Studio 的 Structure 會同時看到兩批正式文件
+- 這次實際發生的問題：
+  1. `醫師資料` 出現 6 筆，前端其實只吃到新的 3 筆
+  2. `衛教文章` 出現舊 10 篇與新 10 篇重複
+  3. `真實見證文章` 出現舊 5 篇與新 5 篇重複
+  4. `特色療程子頁` 也同時殘留 dotted 舊頁與 hyphen 新頁
+- 這次處理：
+  - 保留前端實際在讀的新 hyphen `_id`
+  - 刪除舊的 dotted `_id` 文件
+  - 再重新整理 Studio，讓 Structure 只剩正式在用的一批
+- 後續自動化建議：
+  - 只要改過多筆 document 的 `_id` 命名規則，就要把「清舊文件」列成必做步驟
+  - 不要只驗前端有沒有讀到新文件，也要驗 Studio Structure 是否只剩一批
+  - 建議自動化流程額外做一個檢查：
+    - 同一種文件是否同時存在 dotted 舊 `_id` 與 hyphen 新 `_id`
+  - 發現重複時，不要直接假設是 draft；先查清楚是不是兩批正式文件並存
+
+## 18. 刪完舊 dotted 文件後，`data-sanity` 指向也要同步改成新 `_id`
+
+- 現象：
+  - 前端畫面顯示的是新文件
+  - 但點圖片或區塊時，Studio 右側卻打開已刪除的舊文件
+- 原因：
+  - 雖然資料已經改成新的 hyphen `_id`
+  - 但前端 `data-sanity` 還在用舊的 dotted `_id` 規則
+- 這次實際遇到的區塊：
+  - `醫師團隊` 的照片與欄位點擊
+- 這次處理：
+  - 把 `dataAttributes.ts` 裡相關 document type 的 ID 規則全部同步更新為新的 hyphen `_id`
+- 後續自動化建議：
+  - `_id` 改名不只是 seed / query 問題，也要一起檢查：
+    - `data-sanity`
+    - Presentation 對應規則
+  - 否則表面上前端已正常，實際上可視化編輯仍會指到錯文件
+
 ## 16. 用 seed / API 寫入 Sanity 的 array object 時，必須主動補 `_key`
 
 - 現象：

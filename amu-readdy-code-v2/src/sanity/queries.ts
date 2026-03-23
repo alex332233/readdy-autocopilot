@@ -3,7 +3,10 @@ import groq from 'groq';
 export const siteSettingsQuery = groq`
   *[_type == "siteSettings"][0]{
     title,
-    headerLogo,
+    "headerLogo": {
+      "url": headerLogo.asset->url,
+      "alt": headerLogo.alt
+    },
     headerNavItems[]{
       label,
       kind,
@@ -19,7 +22,10 @@ export const siteSettingsQuery = groq`
       kind,
       target
     },
-    footerLogo,
+    "footerLogo": {
+      "url": footerLogo.asset->url,
+      "alt": footerLogo.alt
+    },
     footerTagline,
     footerLinkGroups[]{
       title,
@@ -40,9 +46,7 @@ export const siteSettingsQuery = groq`
     },
     copyright,
     builderLink{
-      label,
-      kind,
-      target
+      label
     }
   }
 `;
@@ -66,7 +70,17 @@ export const insurancePageQuery = groq`
     title,
     heroTitle,
     heroSubtitle,
-    overviewCards,
+    "overviewCards": overviewCards[]{
+      title,
+      englishTitle,
+      subtitle,
+      icon,
+      anchorId,
+      "image": {
+        "url": image.asset->url,
+        "alt": image.alt
+      }
+    },
     detailedCategories
   }
 `;
@@ -241,7 +255,18 @@ export const homePageQuery = groq`
         "alt": team.image.alt
       }
     },
-    process,
+    "process": {
+      ...process,
+      "steps": process.steps[]{
+        step,
+        title,
+        description,
+        "image": {
+          "url": image.asset->url,
+          "alt": image.alt
+        }
+      }
+    },
     booking,
     faq,
     "gallery": {
