@@ -1,7 +1,9 @@
 import {getCliClient} from 'sanity/cli'
 import {
   healthEducationArticlesSeed,
+  healthEducationCategoryDocsSeed,
   healthEducationPageSeed,
+  healthEducationSubcategoryDocsSeed,
 } from '../seed/healthEducationSeed.mjs'
 
 const client = getCliClient({apiVersion: '2025-01-01'})
@@ -34,13 +36,25 @@ const uploadImageFromUrl = async (url, alt, articleId) => {
   }
 }
 
+for (const subcategory of healthEducationSubcategoryDocsSeed) {
+  await client.createOrReplace(subcategory)
+}
+
+for (const category of healthEducationCategoryDocsSeed) {
+  await client.createOrReplace(category)
+}
+
 await client.createOrReplace(healthEducationPageSeed)
+await client
+  .patch(healthEducationPageSeed._id)
+  .unset(['categories', 'categoryRefs'])
+  .commit()
 for (const article of healthEducationArticlesSeed) {
-  const coverImage = await uploadImageFromUrl(
-    article.coverImage.url,
-    article.coverImage.alt,
-    article.articleId,
-  )
+  const existing = await client.getDocument(article._id)
+  const coverImage =
+    existing?.coverImage?.asset?._ref
+      ? existing.coverImage
+      : await uploadImageFromUrl(article.coverImage.url, article.coverImage.alt, article.articleId)
   await client.createOrReplace({
     ...article,
     coverImage,
@@ -48,4 +62,6 @@ for (const article of healthEducationArticlesSeed) {
 }
 
 console.log(`Seeded healthEducationPage: ${healthEducationPageSeed._id}`)
+console.log(`Seeded health education categories: ${healthEducationCategoryDocsSeed.length}`)
+console.log(`Seeded health education subcategories: ${healthEducationSubcategoryDocsSeed.length}`)
 console.log(`Seeded health education articles: ${healthEducationArticlesSeed.length}`)

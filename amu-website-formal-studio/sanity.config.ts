@@ -3,6 +3,7 @@ import {defineConfig} from 'sanity'
 import {presentationTool} from 'sanity/presentation'
 import {structureTool} from 'sanity/structure'
 import {schemaTypes} from './schemaTypes'
+import {studioStructure} from './structure'
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'your_project_id'
 const dataset = process.env.SANITY_STUDIO_DATASET || 'production'
@@ -14,7 +15,9 @@ export default defineConfig({
   projectId,
   dataset,
   plugins: [
-    structureTool(),
+    structureTool({
+      structure: studioStructure,
+    }),
     visionTool(),
     presentationTool({
       previewUrl: {

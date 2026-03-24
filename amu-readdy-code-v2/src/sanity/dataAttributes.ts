@@ -81,6 +81,25 @@ const healthEducationPageAttribute = createDataAttribute({
 export const getHealthEducationPageDataAttribute = (path: string) =>
   healthEducationPageAttribute(path).toString();
 
+export const getHealthEducationCategoryDataAttribute = (categoryId: string, path: string) =>
+  createDataAttribute({
+    id: categoryId,
+    type: 'healthEducationCategory',
+    projectId: sanityEnv.projectId,
+    dataset: sanityEnv.dataset,
+  })(path).toString();
+
+export const getHealthEducationSubcategoryDataAttribute = (
+  subcategoryId: string,
+  path: string,
+) =>
+  createDataAttribute({
+    id: subcategoryId,
+    type: 'healthEducationSubcategory',
+    projectId: sanityEnv.projectId,
+    dataset: sanityEnv.dataset,
+  })(path).toString();
+
 export const getHealthEducationArticleDataAttribute = (
   articleId: number | string,
   path: string,

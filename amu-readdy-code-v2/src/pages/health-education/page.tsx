@@ -5,7 +5,11 @@ import Footer from '../home/components/Footer';
 import HeroSection from './components/HeroSection';
 import ArticleCard from './components/ArticleCard';
 import CTASection from '../cases/components/CTASection';
-import { getHealthEducationPageDataAttribute } from '../../sanity/dataAttributes';
+import {
+  getHealthEducationCategoryDataAttribute,
+  getHealthEducationPageDataAttribute,
+  getHealthEducationSubcategoryDataAttribute,
+} from '../../sanity/dataAttributes';
 import type { HealthEducationPageContent } from '../../sanity/types';
 
 export default function HealthEducationPage() {
@@ -21,7 +25,9 @@ export default function HealthEducationPage() {
   }, []);
 
   const currentCategoryObj = content.categories.find((c) => c.name === activeCategory);
-  const subcategories = currentCategoryObj ? ['全部', ...currentCategoryObj.subcategories] : [];
+  const subcategories = currentCategoryObj
+    ? [{id: 'all', name: '全部'}, ...currentCategoryObj.subcategories]
+    : [];
 
   const handleCategoryClick = (cat: string) => {
     setActiveCategory(cat);
@@ -56,9 +62,9 @@ export default function HealthEducationPage() {
             </button>
             {content.categories.map((cat, index) => (
               <button
-                key={cat.name}
+                key={cat.id}
                 onClick={() => handleCategoryClick(cat.name)}
-                data-sanity={getHealthEducationPageDataAttribute(`categories[${index}].name`)}
+                data-sanity={getHealthEducationCategoryDataAttribute(cat.id, 'name')}
                 className={`text-xs tracking-widest px-4 py-1.5 rounded-full border transition-all cursor-pointer whitespace-nowrap ${
                   activeCategory === cat.name
                     ? 'bg-[#cd9651] border-[#cd9651] text-white'
@@ -73,25 +79,22 @@ export default function HealthEducationPage() {
           {activeCategory !== '全部' && subcategories.length > 1 && (
             <div className="flex flex-wrap items-center justify-center gap-2 pb-4 pt-1">
               {subcategories.map((sub) => {
-                const subIndex = currentCategoryObj?.subcategories.findIndex((value) => value === sub) ?? -1;
                 return (
                   <button
-                    key={sub}
-                    onClick={() => setActiveSubcategory(sub)}
+                    key={sub.id}
+                    onClick={() => setActiveSubcategory(sub.name)}
                     data-sanity={
-                      sub !== '全部' && subIndex >= 0 && currentCategoryObj
-                        ? getHealthEducationPageDataAttribute(
-                            `categories[${content.categories.findIndex((item) => item.name === currentCategoryObj.name)}].subcategories[${subIndex}]`,
-                          )
+                      sub.name !== '全部'
+                        ? getHealthEducationSubcategoryDataAttribute(sub.id, 'name')
                         : undefined
                     }
                     className={`text-[11px] tracking-wider px-3.5 py-1 rounded-full border transition-all cursor-pointer whitespace-nowrap ${
-                      activeSubcategory === sub
+                      activeSubcategory === sub.name
                         ? 'bg-[#4a5d4a] border-[#4a5d4a] text-white'
                         : 'bg-white border-gray-200 text-gray-400 hover:border-[#4a5d4a] hover:text-[#4a5d4a]'
                     }`}
                   >
-                    {sub}
+                    {sub.name}
                   </button>
                 );
               })}

@@ -7,8 +7,39 @@ export const healthEducationArticle = defineType({
   fields: [
     defineField({name: 'articleId', title: '文章編號', type: 'number', validation: (Rule) => Rule.required()}),
     defineField({name: 'title', title: '標題', type: 'string', validation: (Rule) => Rule.required()}),
-    defineField({name: 'category', title: '主分類', type: 'string', validation: (Rule) => Rule.required()}),
-    defineField({name: 'subcategory', title: '次分類', type: 'string', validation: (Rule) => Rule.required()}),
+    defineField({
+      name: 'category',
+      title: '主分類',
+      type: 'reference',
+      to: [{type: 'healthEducationCategory'}],
+      options: {
+        disableNew: true,
+      },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'subcategory',
+      title: '次分類',
+      type: 'reference',
+      to: [{type: 'healthEducationSubcategory'}],
+      options: {
+        disableNew: true,
+        filter: ({document}) => {
+          const categoryRef = document?.category?._ref
+          if (!categoryRef) {
+            return {
+              filter: '_type == "healthEducationSubcategory" && false',
+            }
+          }
+
+          return {
+            filter: 'categoryId == $categoryRef',
+            params: {categoryRef},
+          }
+        },
+      },
+      validation: (Rule) => Rule.required(),
+    }),
     defineField({name: 'tags', title: '標籤', type: 'array', of: [{type: 'string'}], validation: (Rule) => Rule.required()}),
     defineField({name: 'author', title: '作者', type: 'string', validation: (Rule) => Rule.required()}),
     defineField({name: 'publishDate', title: '發布日期', type: 'string', validation: (Rule) => Rule.required()}),
@@ -39,6 +70,6 @@ export const healthEducationArticle = defineType({
     {title: '文章編號', name: 'articleIdAsc', by: [{field: 'articleId', direction: 'asc'}]},
   ],
   preview: {
-    select: {title: 'title', subtitle: 'subcategory', media: 'coverImage'},
+    select: {title: 'title', subtitle: 'subcategory.name', media: 'coverImage'},
   },
 })

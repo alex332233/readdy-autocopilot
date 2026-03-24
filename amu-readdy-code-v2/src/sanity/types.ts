@@ -232,8 +232,14 @@ export interface SiteSettingsContent {
 }
 
 export interface HealthEducationCategory {
+  id: string;
   name: string;
-  subcategories: string[];
+  subcategories: HealthEducationSubcategory[];
+}
+
+export interface HealthEducationSubcategory {
+  id: string;
+  name: string;
 }
 
 export interface HealthEducationArticleSection {

@@ -39,8 +39,12 @@ export const defaultHealthEducationPageContent: HealthEducationPageContent = {
   heroTitle: '衛教資訊',
   heroSubtitle: '專業醫師撰寫，讓您更了解中醫調理的知識與日常保健之道',
   categories: healthCategories.map((category) => ({
+    id: category.name,
     name: category.name,
-    subcategories: category.subcategories,
+    subcategories: category.subcategories.map((subcategory) => ({
+      id: `${category.name}-${subcategory}`,
+      name: subcategory,
+    })),
   })),
   ctaTitle: '您也想擁有健康的身體嗎？',
   ctaDescription: '每個人的體質不同，需要的調理方式也不同\n讓我們的專業醫師為您量身打造專屬的治療計畫',

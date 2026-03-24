@@ -150,7 +150,14 @@ export const healthEducationPageQuery = groq`
       title,
       heroTitle,
       heroSubtitle,
-      categories,
+      "categories": visibleCategoryRefs[]->{
+        _id,
+        name,
+        "subcategories": subcategories[]->{
+          _id,
+          name
+        }
+      },
       ctaTitle,
       ctaDescription,
       ctaButtonText
@@ -158,8 +165,8 @@ export const healthEducationPageQuery = groq`
     "articles": *[_type == "healthEducationArticle"] | order(articleId asc){
       articleId,
       title,
-      category,
-      subcategory,
+      "category": category->name,
+      "subcategory": subcategory->name,
       tags,
       author,
       publishDate,
@@ -182,8 +189,8 @@ export const healthEducationArticleQuery = groq`
   *[_type == "healthEducationArticle" && articleId == $articleId][0]{
     articleId,
     title,
-    category,
-    subcategory,
+    "category": category->name,
+    "subcategory": subcategory->name,
     tags,
     author,
     publishDate,

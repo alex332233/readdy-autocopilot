@@ -6,6 +6,7 @@ import type {
   HealthEducationArticleContent,
   HealthEducationCategory,
   HealthEducationPageContent,
+  HealthEducationSubcategory,
   LinkItem,
   SanityImage,
 } from './types';
@@ -26,12 +27,26 @@ const mergeLink = (incoming: unknown, fallback?: LinkItem): LinkItem => {
   };
 };
 
+const mergeSubcategory = (
+  incoming: unknown,
+  fallback?: HealthEducationSubcategory,
+): HealthEducationSubcategory => {
+  const subcategory = incoming as Partial<HealthEducationSubcategory> | null;
+  return {
+    id: subcategory?.id || fallback?.id || '',
+    name: subcategory?.name || fallback?.name || '',
+  };
+};
+
 const mergeCategory = (incoming: unknown, fallback?: HealthEducationCategory): HealthEducationCategory => {
   const category = incoming as Partial<HealthEducationCategory> | null;
   return {
+    id: category?.id || fallback?.id || '',
     name: category?.name || fallback?.name || '',
     subcategories: Array.isArray(category?.subcategories)
-      ? category.subcategories.filter(Boolean)
+      ? category.subcategories.map((subcategory, index) =>
+          mergeSubcategory(subcategory, fallback?.subcategories[index]),
+        )
       : fallback?.subcategories || [],
   };
 };

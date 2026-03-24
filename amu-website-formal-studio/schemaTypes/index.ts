@@ -4,8 +4,10 @@ import {casesPage} from './documents/casesPage'
 import {doctorProfile} from './documents/doctorProfile'
 import {featuredTreatmentDetail} from './documents/featuredTreatmentDetail'
 import {featuredTreatmentsPage} from './documents/featuredTreatmentsPage'
+import {healthEducationCategory} from './documents/healthEducationCategory'
 import {healthEducationArticle} from './documents/healthEducationArticle'
 import {healthEducationPage} from './documents/healthEducationPage'
+import {healthEducationSubcategory} from './documents/healthEducationSubcategory'
 import {homePage} from './documents/homePage'
 import {insurancePage} from './documents/insurancePage'
 import {siteSettings} from './documents/siteSettings'
@@ -34,7 +36,6 @@ import {featuredTreatmentSectionItem} from './objects/featuredTreatmentSectionIt
 import {featuredTreatmentTag} from './objects/featuredTreatmentTag'
 import {galleryImage} from './objects/galleryImage'
 import {healthArticleSection} from './objects/healthArticleSection'
-import {healthCategory} from './objects/healthCategory'
 import {insuranceOverviewCard} from './objects/insuranceOverviewCard'
 import {insuranceTreatmentCategory} from './objects/insuranceTreatmentCategory'
 import {insuranceTreatmentItem} from './objects/insuranceTreatmentItem'
@@ -75,7 +76,6 @@ export const schemaTypes = [
   caseInfoBox,
   faqItem,
   galleryImage,
-  healthCategory,
   healthArticleSection,
   insuranceOverviewCard,
   insuranceTreatmentItem,
@@ -94,6 +94,8 @@ export const schemaTypes = [
   doctorProfile,
   casesPage,
   caseArticle,
+  healthEducationCategory,
+  healthEducationSubcategory,
   healthEducationPage,
   healthEducationArticle,
   featuredTreatmentsPage,
