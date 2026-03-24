@@ -60,8 +60,31 @@ export const defaultSiteSettingsContent: SiteSettingsContent = {
     { platform: 'Instagram', icon: 'ri-instagram-line', url: 'https://www.instagram.com' },
     { platform: 'Facebook', icon: 'ri-facebook-fill', url: 'https://www.facebook.com' },
   ],
+  locationSection: {
+    title: '診所據點',
+    subtitle: '歡迎蒞臨艾苜中醫診所，我們期待為您服務',
+    clinicName: '艾苜中醫診所',
+    clinicDescription: '位於台南市北區，交通便利，環境舒適溫馨',
+    hours: '週一至週六 09:00–21:00\n週日公休',
+    mapLink: 'https://www.google.com/maps/search/?api=1&query=23.012694,120.200711',
+    mapEmbedUrl:
+      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3672.8234567890123!2d120.200711!3d23.012694!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDAwJzQ1LjciTiAxMjDCsDEyJzAyLjYiRQ!5e0!3m2!1szh-TW!2stw!4v1234567890123',
+    image: {
+      url: 'https://readdy.ai/api/search-image?query=Modern%20traditional%20Chinese%20medicine%20clinic%20exterior%20and%20interior%2C%20warm%20welcoming%20entrance%2C%20professional%20medical%20facility%20with%20traditional%20elements%2C%20clean%20and%20bright%20environment%20in%20Taiwan&width=600&height=400&seq=clinic-location-001&orientation=landscape',
+      alt: '艾苜中醫診所外觀',
+    },
+  },
   copyright: '© 2025 艾苜中醫診所. All rights reserved.',
   builderLink: {
     label: 'Website Builder',
+  },
+  floatingLineButton: {
+    enabled: true,
+    ariaLabel: 'Line客服',
+    link: {
+      label: 'LINE',
+      kind: 'external',
+      target: 'https://lin.ee/EeONEJc',
+    },
   },
 };

@@ -25,14 +25,6 @@ export const aboutPage = defineType({
       type: 'array',
       of: [{type: 'aboutCoreValue'}],
     }),
-    defineField({name: 'branchesTitle', title: '分院標題', type: 'string'}),
-    defineField({name: 'branchesSubtitle', title: '分院副標題', type: 'text', rows: 3}),
-    defineField({
-      name: 'branches',
-      title: '分院資訊',
-      type: 'array',
-      of: [{type: 'aboutBranch'}],
-    }),
     defineField({name: 'seo', title: 'SEO', type: 'seo'}),
   ],
   preview: {

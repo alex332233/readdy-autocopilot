@@ -2,6 +2,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import SanityVisualEditing from '../sanity/SanityVisualEditing';
 import { setAppNavigate } from './navigation';
+import FloatingLineButton from '../components/FloatingLineButton';
 
 declare global {
   interface Window {
@@ -45,6 +46,7 @@ export default function RootLayout() {
   return (
     <>
       <Outlet />
+      <FloatingLineButton />
       <SanityVisualEditing />
     </>
   );

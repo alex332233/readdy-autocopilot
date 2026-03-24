@@ -37,7 +37,7 @@ export default function CoreValuesSection({values}: {values: AboutCoreValue[]}) 
                 src={value.image.url}
                 alt={value.image.alt}
                 speed={0.03}
-                dataAttribute={getAboutPageDataAttribute(`coreValues[${index}].image.url`)}
+                dataAttribute={getAboutPageDataAttribute(`coreValues[${index}].image`)}
               />
             </div>
 

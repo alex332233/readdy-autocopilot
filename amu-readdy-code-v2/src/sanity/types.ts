@@ -53,9 +53,6 @@ export interface AboutPageContent {
   philosophyTitle: string;
   philosophyCards: AboutPhilosophyCard[];
   coreValues: AboutCoreValue[];
-  branchesTitle: string;
-  branchesSubtitle: string;
-  branches: AboutBranch[];
 }
 
 export interface InsuranceOverviewCard {
@@ -225,9 +222,24 @@ export interface SiteSettingsContent {
   phone: string;
   email: string;
   socialLinks: SocialLinkContent[];
+  locationSection: {
+    title: string;
+    subtitle: string;
+    clinicName: string;
+    clinicDescription: string;
+    hours: string;
+    mapLink: string;
+    mapEmbedUrl: string;
+    image: SanityImage;
+  };
   copyright: string;
   builderLink: {
     label: string;
+  };
+  floatingLineButton: {
+    enabled: boolean;
+    ariaLabel: string;
+    link: SiteLinkContent;
   };
 }
 

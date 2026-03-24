@@ -2,7 +2,6 @@ import {sanityClient} from './client';
 import {defaultAboutPageContent} from './defaults/aboutPage';
 import {aboutPageQuery} from './queries';
 import type {
-  AboutBranch,
   AboutCoreValue,
   AboutOriginStoryContent,
   AboutPageContent,
@@ -68,20 +67,6 @@ const mergeCoreValue = (incoming: unknown, fallback?: AboutCoreValue): AboutCore
   };
 };
 
-const mergeBranch = (incoming: unknown, fallback?: AboutBranch): AboutBranch => {
-  const branch = incoming as Partial<AboutBranch> | null;
-  return {
-    name: branch?.name || fallback?.name || '',
-    tag: branch?.tag || fallback?.tag || '',
-    address: branch?.address || fallback?.address || '',
-    phone: branch?.phone || fallback?.phone || '',
-    hours: branch?.hours || fallback?.hours || '',
-    mapSrc: branch?.mapSrc || fallback?.mapSrc || '',
-    mapLink: branch?.mapLink || fallback?.mapLink || '',
-    image: mergeImage(branch?.image, fallback?.image),
-  };
-};
-
 export async function fetchAboutPageContent() {
   if (!sanityClient) return defaultAboutPageContent;
 
@@ -101,11 +86,5 @@ export async function fetchAboutPageContent() {
       Array.isArray(data.coreValues) && data.coreValues.length > 0
         ? data.coreValues.map((item, index) => mergeCoreValue(item, defaultAboutPageContent.coreValues[index]))
         : defaultAboutPageContent.coreValues,
-    branchesTitle: data.branchesTitle || defaultAboutPageContent.branchesTitle,
-    branchesSubtitle: data.branchesSubtitle || defaultAboutPageContent.branchesSubtitle,
-    branches:
-      Array.isArray(data.branches) && data.branches.length > 0
-        ? data.branches.map((branch, index) => mergeBranch(branch, defaultAboutPageContent.branches[index]))
-        : defaultAboutPageContent.branches,
   };
 }

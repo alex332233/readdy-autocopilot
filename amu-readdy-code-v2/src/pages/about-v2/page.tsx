@@ -6,7 +6,7 @@ import OriginStorySection from './components/OriginStorySection';
 import PhilosophySection from './components/PhilosophySection';
 import CoreValuesSection from './components/CoreValuesSection';
 import ClosingStorySection from './components/ClosingStorySection';
-import BranchesSection from './components/BranchesSection';
+import LocationSection from '../home/components/LocationSection';
 import type { AboutPageContent } from '../../sanity/types';
 
 export default function AboutV2Page() {
@@ -27,7 +27,7 @@ export default function AboutV2Page() {
         <OriginStorySection content={content.originStory} />
         <PhilosophySection title={content.philosophyTitle} cards={content.philosophyCards} />
         <CoreValuesSection values={content.coreValues} />
-        <BranchesSection title={content.branchesTitle} subtitle={content.branchesSubtitle} branches={content.branches} />
+        <LocationSection />
         <ClosingStorySection />
       </main>
       <Footer />

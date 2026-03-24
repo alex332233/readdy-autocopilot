@@ -41,13 +41,6 @@ export default function HomePage() {
         <LocationSection />
       </main>
       <Footer />
-      <button
-        className="fixed bottom-6 right-6 w-14 h-14 bg-[#cd9651] hover:bg-[#b8843d] rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center z-50 scale-100 cursor-pointer"
-        aria-label="Line客服"
-        onClick={() => window.open('https://lin.ee/EeONEJc', '_blank')}
-      >
-        <i className="ri-line-fill text-white text-2xl"></i>
-      </button>
     </div>
   );
 }

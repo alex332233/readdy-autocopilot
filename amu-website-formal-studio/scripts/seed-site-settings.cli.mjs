@@ -35,5 +35,9 @@ await client.createOrReplace({
   ...siteSettingsSeed,
   headerLogo: await uploadImageFromUrl(siteSettingsSeed.headerLogo, 'site-settings-header-logo'),
   footerLogo: await uploadImageFromUrl(siteSettingsSeed.footerLogo, 'site-settings-footer-logo'),
+  locationSection: {
+    ...siteSettingsSeed.locationSection,
+    image: await uploadImageFromUrl(siteSettingsSeed.locationSection.image, 'site-settings-location'),
+  },
 })
 console.log(`Seeded siteSettings: ${siteSettingsSeed._id}`)

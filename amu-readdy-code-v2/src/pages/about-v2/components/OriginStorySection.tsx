@@ -71,7 +71,7 @@ function TopBlock({block, index}: {block: AboutStoryBlock; index: number}) {
               src={block.primaryImage?.url || ''}
               alt={block.primaryImage?.alt || ''}
               speed={0.03}
-              dataAttribute={getAboutPageDataAttribute(`originStory.blocks[${index}].primaryImage.url`)}
+              dataAttribute={getAboutPageDataAttribute(`originStory.blocks[${index}].primaryImage`)}
             />
           </div>
         </FadeIn>
@@ -192,7 +192,7 @@ function TextImageBlock({block, index}: {block: AboutStoryBlock; index: number})
                 src={block.primaryImage?.url || ''}
                 alt={block.primaryImage?.alt || ''}
                 speed={0.03}
-                dataAttribute={getAboutPageDataAttribute(`originStory.blocks[${index}].primaryImage.url`)}
+                dataAttribute={getAboutPageDataAttribute(`originStory.blocks[${index}].primaryImage`)}
               />
             </div>
           </FadeIn>
@@ -214,7 +214,7 @@ function SplitImagesTextBlock({block, index}: {block: AboutStoryBlock; index: nu
                   src={block.primaryImage?.url || ''}
                   alt={block.primaryImage?.alt || ''}
                   speed={0.025}
-                  dataAttribute={getAboutPageDataAttribute(`originStory.blocks[${index}].primaryImage.url`)}
+                  dataAttribute={getAboutPageDataAttribute(`originStory.blocks[${index}].primaryImage`)}
                 />
               </div>
               <div className="absolute overflow-hidden" style={{width: '48%', height: '55%', bottom: 0, right: 0, background: '#f5f0e8'}}>
@@ -222,7 +222,7 @@ function SplitImagesTextBlock({block, index}: {block: AboutStoryBlock; index: nu
                   src={block.secondaryImage?.url || ''}
                   alt={block.secondaryImage?.alt || ''}
                   speed={0.04}
-                  dataAttribute={getAboutPageDataAttribute(`originStory.blocks[${index}].secondaryImage.url`)}
+                  dataAttribute={getAboutPageDataAttribute(`originStory.blocks[${index}].secondaryImage`)}
                 />
               </div>
             </div>
@@ -277,7 +277,7 @@ function LogoTextBlock({block, index}: {block: AboutStoryBlock; index: number}) 
               src={block.primaryImage?.url || ''}
               alt={block.primaryImage?.alt || ''}
               style={{width: '240px', height: '240px', objectFit: 'contain'}}
-              data-sanity={getAboutPageDataAttribute(`originStory.blocks[${index}].primaryImage.url`)}
+              data-sanity={getAboutPageDataAttribute(`originStory.blocks[${index}].primaryImage`)}
             />
           </div>
         </FadeIn>

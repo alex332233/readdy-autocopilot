@@ -44,9 +44,31 @@ export const siteSettingsQuery = groq`
       icon,
       url
     },
+    "locationSection": {
+      "title": locationSection.title,
+      "subtitle": locationSection.subtitle,
+      "clinicName": locationSection.clinicName,
+      "clinicDescription": locationSection.clinicDescription,
+      "hours": locationSection.hours,
+      "mapLink": locationSection.mapLink,
+      "mapEmbedUrl": locationSection.mapEmbedUrl,
+      "image": {
+        "url": locationSection.image.asset->url,
+        "alt": locationSection.image.alt
+      }
+    },
     copyright,
     builderLink{
       label
+    },
+    floatingLineButton{
+      enabled,
+      ariaLabel,
+      link{
+        label,
+        kind,
+        target
+      }
     }
   }
 `;
@@ -55,13 +77,42 @@ export const aboutPageQuery = groq`
   *[_type == "aboutPage"][0]{
     title,
     summary,
-    originStory,
+    "originStory": {
+      "introQuote": originStory.introQuote,
+      "scrollLabel": originStory.scrollLabel,
+      "blocks": originStory.blocks[]{
+        _key,
+        layout,
+        introText,
+        heading,
+        subheading,
+        paragraphs,
+        "primaryImage": select(
+          defined(primaryImage.asset) => {
+            "url": primaryImage.asset->url,
+            "alt": primaryImage.alt
+          }
+        ),
+        "secondaryImage": select(
+          defined(secondaryImage.asset) => {
+            "url": secondaryImage.asset->url,
+            "alt": secondaryImage.alt
+          }
+        )
+      }
+    },
     philosophyTitle,
     philosophyCards,
-    coreValues,
-    branchesTitle,
-    branchesSubtitle,
-    branches
+    "coreValues": coreValues[]{
+      _key,
+      number,
+      title,
+      description,
+      "image": {
+        "url": image.asset->url,
+        "alt": image.alt
+      }
+    }
   }
 `;
 

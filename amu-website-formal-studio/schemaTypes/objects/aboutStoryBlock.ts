@@ -29,8 +29,20 @@ export const aboutStoryBlock = defineType({
       type: 'array',
       of: [defineArrayMember({type: 'text', rows: 4})],
     }),
-    defineField({name: 'primaryImage', title: 'Primary Image', type: 'externalImage'}),
-    defineField({name: 'secondaryImage', title: 'Secondary Image', type: 'externalImage'}),
+    defineField({
+      name: 'primaryImage',
+      title: 'Primary Image',
+      type: 'image',
+      options: {hotspot: true},
+      fields: [defineField({name: 'alt', title: '替代文字', type: 'string'})],
+    }),
+    defineField({
+      name: 'secondaryImage',
+      title: 'Secondary Image',
+      type: 'image',
+      options: {hotspot: true},
+      fields: [defineField({name: 'alt', title: '替代文字', type: 'string'})],
+    }),
   ],
   preview: {
     select: {title: 'heading', subtitle: 'layout', media: 'primaryImage'},

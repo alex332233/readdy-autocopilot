@@ -61,6 +61,23 @@ const mergeSocialLink = (incoming: unknown, fallback?: SocialLinkContent): Socia
   };
 };
 
+const mergeLocationSection = (
+  incoming: unknown,
+  fallback: SiteSettingsContent['locationSection'],
+): SiteSettingsContent['locationSection'] => {
+  const section = incoming as Partial<SiteSettingsContent['locationSection']> | null;
+  return {
+    title: section?.title || fallback.title,
+    subtitle: section?.subtitle || fallback.subtitle,
+    clinicName: section?.clinicName || fallback.clinicName,
+    clinicDescription: section?.clinicDescription || fallback.clinicDescription,
+    hours: section?.hours || fallback.hours,
+    mapLink: section?.mapLink || fallback.mapLink,
+    mapEmbedUrl: section?.mapEmbedUrl || fallback.mapEmbedUrl,
+    image: mergeImage(section?.image, fallback.image),
+  };
+};
+
 const mergeSiteSettings = (incoming: unknown): SiteSettingsContent => {
   const settings = incoming as Partial<SiteSettingsContent> | null;
   const fallback = defaultSiteSettingsContent;
@@ -86,9 +103,16 @@ const mergeSiteSettings = (incoming: unknown): SiteSettingsContent => {
       Array.isArray(settings?.socialLinks) && settings.socialLinks.length > 0
         ? settings.socialLinks.map((link, index) => mergeSocialLink(link, fallback.socialLinks[index]))
         : fallback.socialLinks,
+    locationSection: mergeLocationSection(settings?.locationSection, fallback.locationSection),
     copyright: settings?.copyright || fallback.copyright,
     builderLink: {
       label: settings?.builderLink?.label || fallback.builderLink.label,
+    },
+    floatingLineButton: {
+      enabled: settings?.floatingLineButton?.enabled ?? fallback.floatingLineButton.enabled,
+      ariaLabel:
+        settings?.floatingLineButton?.ariaLabel || fallback.floatingLineButton.ariaLabel,
+      link: mergeSiteLink(settings?.floatingLineButton?.link, fallback.floatingLineButton.link),
     },
   };
 };
