@@ -1,4 +1,4 @@
-import {defineArrayMember, defineField, defineType} from 'sanity'
+import {defineField, defineType} from 'sanity'
 
 export const healthEducationPage = defineType({
   name: 'healthEducationPage',
@@ -8,19 +8,6 @@ export const healthEducationPage = defineType({
     defineField({name: 'title', title: '頁面名稱', type: 'string', initialValue: '衛教資訊', validation: (Rule) => Rule.required()}),
     defineField({name: 'heroTitle', title: '主標題', type: 'string', validation: (Rule) => Rule.required()}),
     defineField({name: 'heroSubtitle', title: '副標題', type: 'text', rows: 3, validation: (Rule) => Rule.required()}),
-    defineField({
-      name: 'visibleCategoryRefs',
-      title: '頁面主分類顯示設定',
-      type: 'array',
-      of: [
-        defineArrayMember({
-          type: 'reference',
-          to: [{type: 'healthEducationCategory'}],
-          options: {disableNew: true},
-        }),
-      ],
-      validation: (Rule) => Rule.required().min(1),
-    }),
     defineField({name: 'ctaTitle', title: 'CTA 標題', type: 'string', validation: (Rule) => Rule.required()}),
     defineField({name: 'ctaDescription', title: 'CTA 說明', type: 'text', rows: 3, validation: (Rule) => Rule.required()}),
     defineField({name: 'ctaButtonText', title: 'CTA 按鈕文字', type: 'string', validation: (Rule) => Rule.required()}),

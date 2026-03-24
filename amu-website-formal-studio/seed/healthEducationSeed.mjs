@@ -47,11 +47,6 @@ export const healthEducationPageSeed = {
   title: '衛教資訊',
   heroTitle: '衛教資訊',
   heroSubtitle: '專業醫師撰寫，讓您更了解中醫調理的知識與日常保健之道',
-  visibleCategoryRefs: healthCategories.map((category) => ({
-    _type: 'reference',
-    _ref: categoryIdByName.get(category.name),
-    _key: category.name,
-  })),
   ctaTitle: '您也想擁有健康的身體嗎？',
   ctaDescription: '每個人的體質不同，需要的調理方式也不同\n讓我們的專業醫師為您量身打造專屬的治療計畫',
   ctaButtonText: '立即預約諮詢',

@@ -47,7 +47,7 @@ for (const category of healthEducationCategoryDocsSeed) {
 await client.createOrReplace(healthEducationPageSeed)
 await client
   .patch(healthEducationPageSeed._id)
-  .unset(['categories', 'categoryRefs'])
+  .unset(['categories', 'categoryRefs', 'visibleCategoryRefs'])
   .commit()
 for (const article of healthEducationArticlesSeed) {
   const existing = await client.getDocument(article._id)

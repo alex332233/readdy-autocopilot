@@ -150,17 +150,17 @@ export const healthEducationPageQuery = groq`
       title,
       heroTitle,
       heroSubtitle,
-      "categories": visibleCategoryRefs[]->{
-        _id,
-        name,
-        "subcategories": subcategories[]->{
-          _id,
-          name
-        }
-      },
       ctaTitle,
       ctaDescription,
       ctaButtonText
+    },
+    "categories": *[_type == "healthEducationCategory"] | order(_id asc){
+      _id,
+      name,
+      "subcategories": subcategories[]->{
+        _id,
+        name
+      }
     },
     "articles": *[_type == "healthEducationArticle"] | order(articleId asc){
       articleId,

@@ -103,8 +103,10 @@ export async function fetchHealthEducationPageContent() {
     heroTitle: data.page?.heroTitle || defaultHealthEducationPageContent.heroTitle,
     heroSubtitle: data.page?.heroSubtitle || defaultHealthEducationPageContent.heroSubtitle,
     categories:
-      Array.isArray(data.page?.categories) && data.page.categories.length > 0
-        ? data.page.categories.map((category, index) => mergeCategory(category, defaultHealthEducationPageContent.categories[index]))
+      Array.isArray((data as {categories?: unknown[]})?.categories) && (data as {categories?: unknown[]}).categories!.length > 0
+        ? (data as {categories?: unknown[]}).categories!.map((category, index) =>
+            mergeCategory(category, defaultHealthEducationPageContent.categories[index]),
+          )
         : defaultHealthEducationPageContent.categories,
     ctaTitle: data.page?.ctaTitle || defaultHealthEducationPageContent.ctaTitle,
     ctaDescription: data.page?.ctaDescription || defaultHealthEducationPageContent.ctaDescription,
@@ -135,8 +137,8 @@ export async function fetchHealthEducationArticleContent({params}: LoaderFunctio
     heroTitle: pageData?.page?.heroTitle || defaultHealthEducationPageContent.heroTitle,
     heroSubtitle: pageData?.page?.heroSubtitle || defaultHealthEducationPageContent.heroSubtitle,
     categories:
-      Array.isArray(pageData?.page?.categories) && pageData.page.categories.length > 0
-        ? pageData.page.categories.map((category: unknown, index: number) =>
+      Array.isArray(pageData?.categories) && pageData.categories.length > 0
+        ? pageData.categories.map((category: unknown, index: number) =>
             mergeCategory(category, defaultHealthEducationPageContent.categories[index]),
           )
         : defaultHealthEducationPageContent.categories,
