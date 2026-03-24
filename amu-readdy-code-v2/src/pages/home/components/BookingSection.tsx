@@ -6,7 +6,7 @@ export default function BookingSection() {
   const { booking } = useHomePageContent();
 
   return (
-    <section id="booking" className="py-14 bg-[#cd9651]">
+    <section id="booking" className="scroll-mt-24 md:scroll-mt-28 py-14 bg-[#cd9651]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <FadeIn direction="up" delay={0}>
           <div className="text-center mb-10">
