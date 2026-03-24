@@ -164,7 +164,11 @@ export const casesPageQuery = groq`
       conclusion,
       tips,
       medicalInfo,
-      references
+      references,
+      "seo": {
+        "title": seo.title,
+        "description": seo.description
+      }
     }
   }
 `;
@@ -231,7 +235,11 @@ export const healthEducationPageQuery = groq`
       },
       content,
       tips,
-      references
+      references,
+      "seo": {
+        "title": seo.title,
+        "description": seo.description
+      }
     }
   }
 `;
@@ -249,13 +257,17 @@ export const healthEducationArticleQuery = groq`
     readTime,
     views,
     summary,
-    "coverImage": {
+  "coverImage": {
       "url": coverImage.asset->url,
       "alt": coverImage.alt
     },
     content,
     tips,
-    references
+    references,
+    "seo": {
+      "title": seo.title,
+      "description": seo.description
+    }
   }
 `;
 
@@ -278,7 +290,11 @@ export const caseArticleQuery = groq`
     conclusion,
     tips,
     medicalInfo,
-    references
+    references,
+    "seo": {
+      "title": seo.title,
+      "description": seo.description
+    }
   }
 `;
 

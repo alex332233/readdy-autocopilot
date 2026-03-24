@@ -9,6 +9,7 @@ import type {
   HealthEducationSubcategory,
   LinkItem,
   SanityImage,
+  SeoMetadata,
 } from './types';
 
 const mergeImage = (incoming: unknown, fallback?: SanityImage): SanityImage => {
@@ -24,6 +25,15 @@ const mergeLink = (incoming: unknown, fallback?: LinkItem): LinkItem => {
   return {
     text: link?.text || fallback?.text || '',
     href: link?.href || fallback?.href || '',
+  };
+};
+
+const mergeSeo = (incoming: unknown, fallback?: SeoMetadata): SeoMetadata | undefined => {
+  if (!incoming && !fallback) return undefined;
+  const seo = incoming as Partial<SeoMetadata> | null;
+  return {
+    title: seo?.title || fallback?.title || '',
+    description: seo?.description || fallback?.description || '',
   };
 };
 
@@ -87,6 +97,7 @@ const mergeArticle = (
     references: Array.isArray(article?.references)
       ? article.references.map((reference, index) => mergeLink(reference, fallback?.references?.[index]))
       : fallback?.references,
+    seo: mergeSeo(article?.seo, fallback?.seo),
   };
 };
 

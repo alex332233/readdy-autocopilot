@@ -10,6 +10,7 @@ import type {
   CaseInfoBox,
   CasesPageContent,
   SanityImage,
+  SeoMetadata,
 } from './types';
 
 const mergeImage = (incoming: unknown, fallback?: SanityImage): SanityImage => {
@@ -56,6 +57,15 @@ const mergeInfoBox = (incoming: unknown, fallback?: CaseInfoBox): CaseInfoBox | 
   };
 };
 
+const mergeSeo = (incoming: unknown, fallback?: SeoMetadata): SeoMetadata | undefined => {
+  if (!incoming && !fallback) return undefined;
+  const seo = incoming as Partial<SeoMetadata> | null;
+  return {
+    title: seo?.title || fallback?.title || '',
+    description: seo?.description || fallback?.description || '',
+  };
+};
+
 const mergeArticle = (incoming: unknown, fallback?: CaseArticleContent): CaseArticleContent => {
   const article = incoming as Partial<CaseArticleContent> | null;
   return {
@@ -74,6 +84,7 @@ const mergeArticle = (incoming: unknown, fallback?: CaseArticleContent): CaseArt
     tips: mergeInfoBox(article?.tips, fallback?.tips),
     medicalInfo: mergeInfoBox(article?.medicalInfo, fallback?.medicalInfo),
     references: Array.isArray(article?.references) ? article.references.filter(Boolean) : fallback?.references,
+    seo: mergeSeo(article?.seo, fallback?.seo),
   };
 };
 

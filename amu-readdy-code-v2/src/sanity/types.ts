@@ -3,6 +3,11 @@ export interface SanityImage {
   alt: string;
 }
 
+export interface SeoMetadata {
+  title?: string;
+  description?: string;
+}
+
 export interface AboutOriginStoryContent {
   introQuote: string;
   scrollLabel: string;
@@ -124,6 +129,7 @@ export interface CaseArticleContent {
   tips?: CaseInfoBox;
   medicalInfo?: CaseInfoBox;
   references?: string[];
+  seo?: SeoMetadata;
 }
 
 export interface CasesPageContent {
@@ -276,6 +282,7 @@ export interface HealthEducationArticleContent {
   content: HealthEducationArticleSection[];
   tips?: CaseInfoBox;
   references?: LinkItem[];
+  seo?: SeoMetadata;
 }
 
 export interface HealthEducationPageContent {

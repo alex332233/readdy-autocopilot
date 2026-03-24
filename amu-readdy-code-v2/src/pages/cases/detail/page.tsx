@@ -3,6 +3,7 @@ import { useLoaderData, useNavigate, useParams } from 'react-router-dom';
 import Navbar from '../../home/components/Navbar';
 import Footer from '../../home/components/Footer';
 import CTASection from '../components/CTASection';
+import PageMeta from '../../../components/PageMeta';
 import type { CaseArticleContent, CasesPageContent } from '../../../sanity/types';
 import { getCaseArticleDataAttribute } from '../../../sanity/dataAttributes';
 
@@ -37,8 +38,18 @@ export default function CaseDetailPage() {
     );
   }
 
+  const metaTitle = caseData.seo?.title || caseData.title;
+  const metaDescription = caseData.seo?.description || caseData.description;
+
   return (
     <div className="min-h-screen bg-white">
+      <PageMeta
+        title={metaTitle}
+        description={metaDescription}
+        image={caseData.coverImage.url}
+        imageAlt={caseData.coverImage.alt || caseData.title}
+        type="article"
+      />
       <Navbar scrolled={scrolled} />
 
       {/* Hero 封面圖 */}

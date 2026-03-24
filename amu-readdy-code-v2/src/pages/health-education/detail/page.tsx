@@ -3,6 +3,7 @@ import { useLoaderData, useNavigate } from 'react-router-dom';
 import Navbar from '../../home/components/Navbar';
 import Footer from '../../home/components/Footer';
 import CTASection from '../../cases/components/CTASection';
+import PageMeta from '../../../components/PageMeta';
 import {
   getHealthEducationArticleDataAttribute,
   getHealthEducationPageDataAttribute,
@@ -38,9 +39,18 @@ export default function HealthEducationDetailPage() {
   }
 
   const { page, article } = data;
+  const metaTitle = article.seo?.title || article.title;
+  const metaDescription = article.seo?.description || article.summary;
 
   return (
     <div className="min-h-screen bg-white">
+      <PageMeta
+        title={metaTitle}
+        description={metaDescription}
+        image={article.coverImage.url}
+        imageAlt={article.coverImage.alt || article.title}
+        type="article"
+      />
       <Navbar scrolled={scrolled} />
 
       <div className="relative w-full h-[420px] mt-24 overflow-hidden" data-sanity-edit-group data-sanity-edit-target>
