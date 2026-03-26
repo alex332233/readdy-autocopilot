@@ -259,6 +259,264 @@
     - item subtitle / text
     - case label / text
 
+## 16. React Router SPA 部署到 Vercel，要補 rewrite 才不會刷新 404
+
+- 現象：
+  - 網站首頁可正常開啟
+  - 但像 `/cases`、`/team`、`/health-education/101` 這類路由，只要直接刷新就 404
+- 原因：
+  - Vercel 會先把這些網址當成真實檔案路徑找靜態檔
+  - React Router SPA 本身不會自動幫忙 rewrite 回 `index.html`
+- 這次處理：
+  - 在前端專案的 `vercel.json` 補上 SPA rewrite
+  - 讓所有前端路由都回到 `index.html` 再由 React Router 接手
+- 後續自動化建議：
+  - 只要是 SPA 且走 client-side routing，部署到 Vercel 就預設加入 rewrite 設定
+  - 部署驗證不要只測首頁，至少要抽查 1 個列表頁與 1 個 detail 頁的直接刷新
+
+## 17. Vercel Git integration 在 monorepo / 子目錄專案時，要明確設 Root Directory
+
+- 現象：
+  - CLI deploy 可能成功
+  - 但接回 Git integration 後，Git 自動部署不一定會從正確的前端目錄 build
+- 原因：
+  - 這次 repo 根目錄是整個工作區
+  - 真正要部署的前端專案在子目錄：
+    - `amu-readdy-code-v2`
+- 這次處理：
+  - 在 Vercel project 設定中明確指定：
+    - `Root Directory = amu-readdy-code-v2`
+- 特別註記：
+  - 這次**不是典型例子**
+  - 一般專案如果前端專案本身就是 Git repo 根目錄，通常不需要額外處理 Root Directory
+- 後續自動化建議：
+  - 若 repo root 與前端 root 不同，建立 Vercel project 時就同步記錄 Root Directory
+  - 驗證 Git deploy 是否真的從正確子目錄 build，不要只看 CLI deploy 是否成功
+
+## 18. 用 CLI 寫 Vercel env 時，要注意值可能混入多餘字元
+
+- 現象：
+  - production 站 build 成功，但 runtime 直接炸掉
+  - 錯誤像：
+    - `projectId can only contain only a-z, 0-9 and dashes`
+- 原因：
+  - env 值在 CLI 寫入過程中如果混進多餘字元，build 不一定會報錯，但 runtime 會出問題
+- 這次處理：
+  - 重新覆蓋 production env
+  - 再重新 deploy production
+- 後續自動化建議：
+  - CLI 寫入 env 後，至少用 `vercel env ls` 或重新讀回設定確認一次
+  - deployment 驗收要包含 runtime 檢查，不要只看 build 綠燈
+
+## 19. Sanity CORS 要隨正式站網域一起更新
+
+- 現象：
+  - 正式站網址可以打開
+  - 但 runtime 取 Sanity query 時被瀏覽器擋下
+  - console 出現：
+    - `No 'Access-Control-Allow-Origin' header`
+- 原因：
+  - Sanity project 不會自動知道新的 Vercel 正式網域或 alias
+- 這次處理：
+  - 把正式 Vercel 網域與當次 production deployment URL 一起加進 Sanity CORS
+- 後續自動化建議：
+  - 每次有新正式網域、正式 alias、或新的 preview domain，需要同步檢查 CORS
+  - 部署驗收要加一項：
+    - 正式站開啟後，首頁 query 是否成功
+
+## 20. Studio 的 local env 和 deploy env 要分開
+
+- 現象：
+  - local Studio 的 Presentation 會報：
+    - `Blocked preview URL`
+    - `Unable to connect to visual editing`
+- 原因：
+  - `SANITY_STUDIO_PREVIEW_ORIGIN` 如果直接改成正式網址，local Studio 就無法再對 localhost 做 Presentation
+- 這次處理：
+  - 分成：
+    - `.env.local`：給本地開發用
+    - `.env.deploy.example` / deploy env：給正式 deploy 用
+- 後續自動化建議：
+  - local 與 deploy 環境變數預設拆開
+  - 不要共用同一份 preview origin 設定
+
+## 21. Sanity image asset 遷移有固定順序，照順序做最穩
+
+- 這次已實際套用在：
+  - 醫師團隊
+  - 衛教資訊
+  - 真實見證
+  - 首頁主要圖片
+  - 首頁初診流程
+  - header / footer logo
+  - 特色療程
+  - 健保項目
+- 建議固定順序：
+  1. schema 從外部圖片欄位改成 `image`
+  2. seed / migration script 下載舊圖並上傳到 Sanity assets
+  3. 前端 query 改讀 asset URL
+  4. 前端型別與 fallback 對齊
+  5. 重新 seed 內容
+  6. 重新 deploy Studio
+- 後續自動化建議：
+  - 圖片遷移流程應抽成固定腳本模板
+  - 不要一張一張手動重建
+
+## 22. 舊 `_id` 用 `.`、新 `_id` 用 `-`，會造成正式資料重複
+
+- 現象：
+  - Structure 裡同一批內容會看到重複項目
+  - 例如：
+    - `doctorProfile.2`
+    - `doctorProfile-2`
+- 這次實際遇到的類型：
+  - 醫師資料
+  - 衛教文章
+  - 真實見證文章
+  - 特色療程子頁
+- 原因：
+  - 舊 seed 仍在正式 dataset 中
+  - 新 seed 改了命名規則後，舊資料沒有一起刪掉
+- 後續自動化建議：
+  - `_id` 命名規則一旦調整，就要同步做舊文件清理
+  - 遷移完成後，立刻驗 Structure 是否只剩一份正式資料
+
+## 23. `data-sanity` 一定要和真實 `_id` 同步
+
+- 現象：
+  - 前端畫面顯示的是新資料
+  - 但點畫面進 Visual Editing，卻打開舊文件或已刪文件
+- 原因：
+  - 前端 `data-sanity` 還在組舊 `_id`
+  - 例如資料已改成 `doctorProfile-2`，但 `data-sanity` 仍指向 `doctorProfile.2`
+- 這次處理：
+  - 把 `dataAttributes` 統一改成對應新 `_id` 規則
+- 後續自動化建議：
+  - `_id` 規則變更時，前端 `data-sanity` helper 要一起檢查
+  - 不要只改 seed，不改 editor path
+
+## 24. Visual Editing refresh 不能對 draft mutation 太敏感
+
+- 現象：
+  - 在 Studio 打字但還沒 publish，預覽就一直白屏重整
+- 原因：
+  - 如果任何 mutation 都觸發整頁 refresh，draft 編輯體驗會很差
+- 這次處理：
+  - 將 refresh 條件收斂，只在適合的 published 變更時才 refresh
+- 後續自動化建議：
+  - 對 loader-based 前端，不要用「任何 mutation 全 reload」當預設策略
+  - 要區分 draft 編輯與 publish 後同步
+
+## 25. 跨頁 `/#booking` 需要全站 hash scroll 處理，不是只靠 navigate
+
+- 現象：
+  - 從其他頁 CTA 點 `/#booking`
+  - 只回首頁，但沒有落到正確的預約區塊
+  - 甚至停在 `why-choose` 等其他區塊附近
+- 原因：
+  - 單靠 `navigate('/#booking')` 不會自動處理跨頁後的精準滾動
+  - 需要在 root layout 監聽 `location.hash`
+- 這次處理：
+  - 在 `RootLayout` 補上全站 hash scroll 與 offset 邏輯
+- 後續自動化建議：
+  - 有頁內錨點時，應把 hash scroll 視為全站基礎能力，而不是某個頁面內部行為
+
+## 26. 頁首導航切頁後，要另外補 scroll-to-top
+
+- 現象：
+  - 從一頁捲動到中段後，再點頁首導航到另一頁
+  - 新頁面可能停在原本的捲動高度，而不是頂部
+- 原因：
+  - SPA route change 不會自動像傳統多頁網站一樣重設 scroll
+- 這次處理：
+  - 在 `RootLayout` 補上：
+    - 無 hash 的路由切換時，`scrollTo(0, 0)`
+- 後續自動化建議：
+  - 有固定導覽列的 SPA，預設要補 route change scroll reset
+
+## 27. 單例文件適合用 groups，文件集合適合用 Structure 分組
+
+- 這次實際對比：
+  - `siteSettings`
+    - 用 `groups`
+    - 在同一份文件內切成：
+      - 頁首
+      - 頁尾
+      - 診所據點
+      - 浮動按鈕
+  - `衛教資訊`
+    - 用 Structure 收成：
+      - 頁面設定
+      - 主分類
+      - 次分類
+      - 衛教文章
+- 原因：
+  - `siteSettings` 是單一文件
+  - `衛教資訊` 是一組不同 document type
+- 後續自動化建議：
+  - 不要強求所有後台畫面都用同一種技術方式呈現
+  - 以資料模型為主，統一「使用心智」即可
+
+## 28. 衛教分類應保持單一來源，不要讓文章手打類別
+
+- 現象：
+  - 如果文章分類手打，而頁面分類按鈕又有另一份設定，兩邊容易失配
+- 這次處理：
+  - `主分類` / `次分類` 改成獨立文件
+  - `衛教文章` 改成用 reference 選擇
+  - `次分類` 會依 `主分類` 過濾
+- 後續自動化建議：
+  - 分類型欄位優先使用 reference / select，不要讓客戶自由輸入字串
+
+## 29. schema 改欄位型別後，draft 可能殘留 unknown fields
+
+- 現象：
+  - Published 看起來是對的
+  - 但打開 Draft 仍然看到：
+    - `Unknown fields found`
+- 這次實際遇到：
+  - `healthEducationPage`
+  - 舊欄位包括：
+    - `categories`
+    - `categoryRefs`
+    - `visibleCategoryRefs`
+- 原因：
+  - schema 已改，但舊 draft 還保留舊欄位資料
+- 後續自動化建議：
+  - 當欄位結構改動很大時，要檢查 draft 與 published 是否同時乾淨
+  - 不要直接 publish 舊 draft，應先 discard / delete draft
+
+## 30. 文章 OG 不一定要另外開獨立欄位，封面圖可直接當 `og:image`
+
+- 這次決策：
+  - `seo.title` 有值：
+    - `<title>` 與 `og:title` 都用它
+  - `seo.description` 有值：
+    - `meta description` 與 `og:description` 都用它
+  - 沒有時：
+    - fallback 到文章標題與摘要 / 描述
+  - `og:image`：
+    - 直接用封面圖
+- 這次已先套用在：
+  - 衛教文章
+  - 真實見證文章
+- 後續自動化建議：
+  - 若封面圖本身已經是內容維護流程的一部分，通常不需要再多一個「OG 圖片」欄位
+
+## 31. 全站浮動 LINE 按鈕不要分散寫死在各頁
+
+- 現象：
+  - 首頁、健保項目、舊 treatments、特色療程子頁等位置各自寫死浮動 LINE 按鈕
+- 問題：
+  - 連結更新時要改多個檔案
+  - 很難知道哪一頁還留著舊寫法
+- 這次處理：
+  - 抽成全站共用元件
+  - 由 `siteSettings.floatingLineButton` 控制
+  - 掛在 root layout
+- 後續自動化建議：
+  - 所有全站共用浮動 UI 都應優先集中在單一設定來源，不要分散在頁面檔案
+
 ## 16. 圖片欄位從外部 URL 遷移到 Sanity image asset 時，最好採用「先 schema、再 seed 遷移、再前端 query」的固定順序
 
 - 現象：
