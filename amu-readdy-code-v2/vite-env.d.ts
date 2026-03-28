@@ -9,6 +9,7 @@ interface ImportMetaEnv {
   readonly VITE_SANITY_USE_CDN?: string;
   readonly VITE_ENABLE_VISUAL_EDITING?: string;
   readonly VITE_SANITY_STUDIO_URL?: string;
+  readonly VITE_SITE_NOINDEX?: string;
 }
 
 interface ImportMeta {

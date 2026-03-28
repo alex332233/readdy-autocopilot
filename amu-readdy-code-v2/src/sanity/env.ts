@@ -7,6 +7,7 @@ export const sanityEnv = {
   useCdn: getEnv('VITE_SANITY_USE_CDN') !== 'false',
   studioUrl: getEnv('VITE_SANITY_STUDIO_URL') || 'http://localhost:3333',
   visualEditingEnabled: getEnv('VITE_ENABLE_VISUAL_EDITING') === 'true',
+  siteNoIndex: getEnv('VITE_SITE_NOINDEX') === 'true',
 };
 
 export const hasSanityConfig = Boolean(sanityEnv.projectId && sanityEnv.dataset);
