@@ -78,7 +78,7 @@ const mergeLocationSection = (
   };
 };
 
-const mergeSiteSettings = (incoming: unknown): SiteSettingsContent => {
+export const normalizeSiteSettings = (incoming: unknown): SiteSettingsContent => {
   const settings = incoming as Partial<SiteSettingsContent> | null;
   const fallback = defaultSiteSettingsContent;
   return {
@@ -122,7 +122,7 @@ export async function fetchSiteSettingsContent(): Promise<SiteSettingsContent> {
 
   try {
     const data = await sanityClient.fetch(siteSettingsQuery);
-    return mergeSiteSettings(data);
+    return normalizeSiteSettings(data);
   } catch (error) {
     console.error('Failed to fetch site settings content from Sanity', error);
     return defaultSiteSettingsContent;

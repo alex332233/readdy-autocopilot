@@ -1,12 +1,9 @@
-import { useRouteLoaderData } from 'react-router-dom';
 import { getSiteSettingsDataAttribute } from '../../../sanity/dataAttributes';
-import { defaultSiteSettingsContent } from '../../../sanity/defaults/siteSettings';
 import { runSiteLink } from '../../../sanity/siteLinkActions';
-import type { SiteSettingsContent } from '../../../sanity/types';
+import { useSiteSettingsContent } from '../../../sanity/useSiteSettingsContent';
 
 export default function Footer() {
-  const siteSettings =
-    (useRouteLoaderData('root') as SiteSettingsContent | undefined) ?? defaultSiteSettingsContent;
+  const siteSettings = useSiteSettingsContent();
 
   return (
     <footer className="bg-[#cd9651] text-white">

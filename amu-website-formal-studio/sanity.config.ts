@@ -8,6 +8,9 @@ import {studioStructure} from './structure'
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'your_project_id'
 const dataset = process.env.SANITY_STUDIO_DATASET || 'production'
 const previewOrigin = process.env.SANITY_STUDIO_PREVIEW_ORIGIN || 'http://localhost:3000'
+const allowOrigins = Array.from(
+  new Set([previewOrigin, 'http://localhost:3000', 'https://amu-readdy-code-v2.vercel.app']),
+)
 
 export default defineConfig({
   name: 'default',
@@ -20,8 +23,13 @@ export default defineConfig({
     }),
     visionTool(),
     presentationTool({
+      allowOrigins,
       previewUrl: {
-        origin: previewOrigin,
+        initial: previewOrigin,
+        previewMode: {
+          enable: '/api/preview-mode/enable',
+          disable: '/api/preview-mode/disable',
+        },
       },
     }),
   ],

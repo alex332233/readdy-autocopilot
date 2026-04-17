@@ -229,12 +229,8 @@ const mergeTestimonials = (incoming: unknown): HomeTestimonialsContent => {
   };
 };
 
-export async function fetchHomePageContent(): Promise<HomePageContent> {
-  if (!sanityClient) return defaultHomePageContent;
-
-  const data = (await sanityClient.fetch(homePageQuery)) as Partial<HomePageContent> | null;
+export function normalizeHomePageContent(data: Partial<HomePageContent> | null | undefined): HomePageContent {
   if (!data) return defaultHomePageContent;
-
   return {
     hero: mergeHero(data.hero),
     about: mergeAbout(data.about),
@@ -247,4 +243,11 @@ export async function fetchHomePageContent(): Promise<HomePageContent> {
     gallery: mergeGallery(data.gallery),
     testimonials: mergeTestimonials(data.testimonials),
   };
+}
+
+export async function fetchHomePageContent(): Promise<HomePageContent> {
+  if (!sanityClient) return defaultHomePageContent;
+
+  const data = (await sanityClient.fetch(homePageQuery)) as Partial<HomePageContent> | null;
+  return normalizeHomePageContent(data);
 }
