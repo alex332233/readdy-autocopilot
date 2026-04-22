@@ -21,6 +21,7 @@ const mergeImage = (incoming: unknown, fallback?: SanityImage): SanityImage => {
 const mergeSpecialtyGroup = (incoming: unknown, fallback?: DoctorSpecialtyGroup): DoctorSpecialtyGroup => {
   const group = incoming as Partial<DoctorSpecialtyGroup> | null;
   return {
+    _key: group?._key || fallback?._key,
     slug: group?.slug || fallback?.slug || '',
     name: group?.name || fallback?.name || '',
     items: Array.isArray(group?.items) ? group.items.filter(Boolean) : fallback?.items || [],
@@ -56,13 +57,14 @@ const mergeSchedule = (incoming: unknown, fallback?: DoctorSchedule): DoctorSche
 };
 
 const mergeDoctorProfile = (incoming: unknown, fallback?: DoctorProfileContent): DoctorProfileContent => {
-  const doctor = incoming as Partial<DoctorProfileContent> | null;
+  const doctor = incoming as (Partial<DoctorProfileContent> & {_id?: string}) | null;
   return {
+    documentId: doctor?._id || doctor?.documentId || fallback?.documentId || '',
     doctorId: Number(doctor?.doctorId || fallback?.doctorId || 0),
     name: doctor?.name || fallback?.name || '',
     title: doctor?.title || fallback?.title || '',
     bio: doctor?.bio || fallback?.bio || '',
-    image: mergeImage(doctor?.image, fallback?.image),
+    image: doctor?.image ? mergeImage(doctor.image) : {url: '', alt: ''},
     education: Array.isArray(doctor?.education) ? doctor.education.filter(Boolean) : fallback?.education || [],
     experience: Array.isArray(doctor?.experience) ? doctor.experience.filter(Boolean) : fallback?.experience || [],
     specialtyGroups:

@@ -9,7 +9,12 @@ const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'your_project_id'
 const dataset = process.env.SANITY_STUDIO_DATASET || 'production'
 const previewOrigin = process.env.SANITY_STUDIO_PREVIEW_ORIGIN || 'http://localhost:3000'
 const allowOrigins = Array.from(
-  new Set([previewOrigin, 'http://localhost:3000', 'https://amu-readdy-code-v2.vercel.app']),
+  new Set([
+    previewOrigin,
+    'http://localhost:3000',
+    'https://amu-readdy-code-v2.vercel.app',
+    'https://amu-readdy-code-v2-2uhppzfxp-alex332233s-projects.vercel.app',
+  ]),
 )
 
 export default defineConfig({

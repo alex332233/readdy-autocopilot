@@ -59,7 +59,9 @@ export const siteSettingsQuery = groq`
     },
     copyright,
     builderLink{
-      label
+      label,
+      kind,
+      target
     },
     floatingLineButton{
       enabled,
@@ -148,6 +150,7 @@ export const casesPageQuery = groq`
     },
     "articles": *[_type == "caseArticle"] | order(caseId asc){
       caseId,
+      "slug": slug.current,
       title,
       category,
       tags,
@@ -181,6 +184,7 @@ export const teamPageQuery = groq`
       heroSubtitle
     },
     "doctors": *[_type == "doctorProfile"] | order(doctorId asc){
+      "_id": _id,
       doctorId,
       name,
       title,
@@ -219,6 +223,7 @@ export const healthEducationPageQuery = groq`
     },
     "articles": *[_type == "healthEducationArticle"] | order(articleId asc){
       articleId,
+      "slug": slug.current,
       title,
       "category": category->name,
       "subcategory": subcategory->name,
@@ -227,13 +232,16 @@ export const healthEducationPageQuery = groq`
       publishDate,
       updatedDate,
       readTime,
-      views,
       summary,
       "coverImage": {
         "url": coverImage.asset->url,
         "alt": coverImage.alt
       },
       content,
+      "faq": faq[]{
+        question,
+        answer
+      },
       tips,
       references,
       "seo": {
@@ -245,8 +253,9 @@ export const healthEducationPageQuery = groq`
 `;
 
 export const healthEducationArticleQuery = groq`
-  *[_type == "healthEducationArticle" && articleId == $articleId][0]{
+  *[_type == "healthEducationArticle" && (articleId == $articleId || slug.current == $slug)][0]{
     articleId,
+    "slug": slug.current,
     title,
     "category": category->name,
     "subcategory": subcategory->name,
@@ -255,13 +264,23 @@ export const healthEducationArticleQuery = groq`
     publishDate,
     updatedDate,
     readTime,
-    views,
     summary,
-  "coverImage": {
+    "coverImage": {
       "url": coverImage.asset->url,
       "alt": coverImage.alt
     },
+    "body": body[]{
+      ...,
+      _type == "image" => {
+        ...,
+        "url": asset->url
+      }
+    },
     content,
+    "faq": faq[]{
+      question,
+      answer
+    },
     tips,
     references,
     "seo": {
@@ -272,8 +291,9 @@ export const healthEducationArticleQuery = groq`
 `;
 
 export const caseArticleQuery = groq`
-  *[_type == "caseArticle" && caseId == $caseId][0]{
+  *[_type == "caseArticle" && (caseId == $caseId || slug.current == $slug)][0]{
     caseId,
+    "slug": slug.current,
     title,
     category,
     tags,
@@ -283,6 +303,13 @@ export const caseArticleQuery = groq`
     "coverImage": {
       "url": coverImage.asset->url,
       "alt": coverImage.alt
+    },
+    "body": body[]{
+      ...,
+      _type == "image" => {
+        ...,
+        "url": asset->url
+      }
     },
     description,
     before,
@@ -361,10 +388,30 @@ export const featuredTreatmentsPageQuery = groq`
     heroTitle,
     heroDescription,
     cards[]{
+      _key,
       title,
       englishTitle,
       icon,
       color,
+      "image": {
+        "url": image.asset->url,
+        "alt": image.alt
+      },
+      treatmentTitle,
+      description,
+      "tags": tags[].label,
+      detailSlug
+    },
+    relatedExtraCard{
+      _key,
+      title,
+      englishTitle,
+      icon,
+      color,
+      "image": {
+        "url": image.asset->url,
+        "alt": image.alt
+      },
       treatmentTitle,
       description,
       "tags": tags[].label,
@@ -379,6 +426,14 @@ export const featuredTreatmentDetailQuery = groq`
     subtitle,
     themeColor,
     "slug": slug.current,
+    "primaryImage": {
+      "url": primaryImage.asset->url,
+      "alt": primaryImage.alt
+    },
+    "secondaryImage": {
+      "url": secondaryImage.asset->url,
+      "alt": secondaryImage.alt
+    },
     sections[]{
       title,
       icon,
@@ -391,7 +446,26 @@ export const featuredTreatmentDetailQuery = groq`
         "alt": image.alt
       },
       items[]{subtitle, text},
-      cases[]{label, text}
+      cases[]{
+        label,
+        name,
+        "text": coalesce(content, text),
+        link,
+        "image": {
+          "url": image.asset->url,
+          "alt": image.alt
+        }
+      }
+    },
+    "featuredCases": featuredCases[]{
+      label,
+      name,
+      "text": coalesce(content, text),
+      link,
+      "image": {
+        "url": image.asset->url,
+        "alt": image.alt
+      }
     },
     disclaimer,
     "cta": {

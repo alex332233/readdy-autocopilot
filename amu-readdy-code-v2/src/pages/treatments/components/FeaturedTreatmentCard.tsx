@@ -14,11 +14,20 @@ interface FeaturedTreatmentCardProps {
   };
   hasDetail?: boolean;
   detailPath?: string;
+  iconDataAttribute?: string;
 }
 
-export default function FeaturedTreatmentCard({ category, hasDetail, detailPath }: FeaturedTreatmentCardProps) {
+export default function FeaturedTreatmentCard({
+  category,
+  hasDetail,
+  detailPath,
+  iconDataAttribute,
+}: FeaturedTreatmentCardProps) {
   const navigate = useNavigate();
   const treatment = category.treatments[0];
+  const isForestTone = category.title === '光能・修復' || category.title === '深癒・淬鍊';
+  const titleColor = isForestTone ? category.color : '#2f2a25';
+  const cardBackground = isForestTone ? '#fcfaf6' : '#ffffff';
 
   const handleCardClick = () => {
     if (hasDetail && detailPath) {
@@ -28,8 +37,9 @@ export default function FeaturedTreatmentCard({ category, hasDetail, detailPath 
 
   return (
     <div
-      className="group bg-white rounded-xl overflow-hidden transition-all duration-500 cursor-pointer"
+      className="group cursor-pointer overflow-hidden rounded-[28px] transition-all duration-500"
       style={{
+        backgroundColor: cardBackground,
         boxShadow: '0 1px 8px 0 rgba(205,150,81,0.06)',
         border: '1px solid #e8dece',
       }}
@@ -43,22 +53,24 @@ export default function FeaturedTreatmentCard({ category, hasDetail, detailPath 
         (e.currentTarget as HTMLDivElement).style.border = '1px solid #e8dece';
       }}
     >
-      {/* 頂部細線 */}
-      <div className="h-px w-full" style={{ backgroundColor: `${category.color}60` }} />
+      <div className="h-1 w-full" style={{ backgroundColor: `${category.color}85` }} />
 
-      <div className="p-7 flex flex-col h-full">
-        {/* 圖示 + 標題 */}
+      <div className="flex h-full flex-col p-7">
         <div className="flex items-center gap-4 mb-5">
           <div
-            className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
-            style={{ backgroundColor: `${category.color}18`, border: `1.5px solid ${category.color}55` }}
+            className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-110"
+            style={{ backgroundColor: `${category.color}15`, border: `1.5px solid ${category.color}55` }}
           >
-            <i className={`${category.icon} text-xl`} style={{ color: category.color }}></i>
+            <i
+              className={`${category.icon} text-xl`}
+              style={{ color: category.color }}
+              data-sanity={iconDataAttribute}
+            ></i>
           </div>
           <div>
             <h3
-              className="text-xl font-bold text-gray-800 leading-tight"
-              style={{ fontFamily: "'Noto Serif TC', serif" }}
+              className="text-xl font-bold leading-tight"
+              style={{ fontFamily: "'Noto Serif TC', serif", color: titleColor }}
             >
               {category.title}
             </h3>
@@ -68,14 +80,12 @@ export default function FeaturedTreatmentCard({ category, hasDetail, detailPath 
           </div>
         </div>
 
-        {/* 細分隔線 */}
         <div className="w-full h-px mb-5" style={{ background: `linear-gradient(to right, ${category.color}40, transparent)` }} />
 
         <p className="text-sm text-gray-600 leading-relaxed mb-5 flex-1">
           {treatment.description}
         </p>
 
-        {/* 標籤 */}
         <div className="flex flex-wrap gap-2 mb-6">
           {treatment.tags.map((tag, idx) => (
             <span
@@ -92,7 +102,6 @@ export default function FeaturedTreatmentCard({ category, hasDetail, detailPath 
           ))}
         </div>
 
-        {/* 查看詳細介紹 — 質感文字連結，滑入放大 */}
         {hasDetail && detailPath && (
           <div
             className="flex items-center gap-2 text-sm font-medium pt-1 w-fit transition-all duration-300 group-hover:scale-105 origin-left"

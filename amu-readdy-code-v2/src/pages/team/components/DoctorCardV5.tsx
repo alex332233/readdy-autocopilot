@@ -3,9 +3,10 @@ import type {
   DoctorSchedule,
   DoctorSpecialtyGroup,
 } from '../../../sanity/types';
-import { getDoctorProfileDataAttribute } from '../../../sanity/dataAttributes';
+import { getDoctorProfileDocumentDataAttribute } from '../../../sanity/dataAttributes';
 
 interface DoctorCardV5Props {
+  documentId: string;
   doctorId: number;
   name: string;
   title: string;
@@ -38,7 +39,18 @@ const DAYS = [
   { key: 'sun', label: '週日' },
 ] as const;
 
-function ScheduleTable({ doctorId, schedule, note }: { doctorId: number; schedule: DoctorSchedule; note?: string }) {
+const getSpecialtyGroupFieldBase = (specialty: DoctorSpecialtyGroup, index: number) =>
+  specialty._key ? `specialtyGroups[_key=="${specialty._key}"]` : `specialtyGroups[${index}]`;
+
+function ScheduleTable({
+  documentId,
+  schedule,
+  note,
+}: {
+  documentId: string;
+  schedule: DoctorSchedule;
+  note?: string;
+}) {
   const sessions = [
     { key: 'morning', value: schedule.morning },
     { key: 'afternoon', value: schedule.afternoon },
@@ -69,13 +81,13 @@ function ScheduleTable({ doctorId, schedule, note }: { doctorId: number; schedul
                     <div>
                       <div
                         className="font-semibold text-stone-700 text-sm leading-tight"
-                        data-sanity={getDoctorProfileDataAttribute(doctorId, `schedule.${session.key}.label`)}
+                        data-sanity={getDoctorProfileDocumentDataAttribute(documentId, `schedule.${session.key}.label`)}
                       >
                         {session.value.label}
                       </div>
                       <div
                         className="text-xs text-stone-400 leading-tight"
-                        data-sanity={getDoctorProfileDataAttribute(doctorId, `schedule.${session.key}.time`)}
+                        data-sanity={getDoctorProfileDocumentDataAttribute(documentId, `schedule.${session.key}.time`)}
                       >
                         {session.value.time}
                       </div>
@@ -102,7 +114,7 @@ function ScheduleTable({ doctorId, schedule, note }: { doctorId: number; schedul
         </table>
         {note && (
           <div className="px-4 py-3 border-t border-[#e8ddd0] bg-[#f5ede0]/60">
-            <p className="text-xs text-stone-500 leading-relaxed" data-sanity={getDoctorProfileDataAttribute(doctorId, 'scheduleNote')}>
+            <p className="text-xs text-stone-500 leading-relaxed" data-sanity={getDoctorProfileDocumentDataAttribute(documentId, 'scheduleNote')}>
               {note}
             </p>
           </div>
@@ -113,6 +125,7 @@ function ScheduleTable({ doctorId, schedule, note }: { doctorId: number; schedul
 }
 
 export default function DoctorCardV5({
+  documentId,
   doctorId,
   name,
   title,
@@ -130,21 +143,30 @@ export default function DoctorCardV5({
       <div className="flex flex-col lg:flex-row">
         <div className="relative lg:w-64 xl:w-72 flex-shrink-0 bg-[#f5ede0]" data-sanity-edit-group data-sanity-edit-target>
           <div className="w-full h-72 lg:h-full">
-            <img
-              src={image.url}
-              alt={image.alt || `${name}${title}`}
-              className="w-full h-full object-cover object-top"
-              data-sanity={getDoctorProfileDataAttribute(doctorId, 'image')}
-            />
+            {image.url ? (
+              <img
+                src={image.url}
+                alt={image.alt || `${name}${title}`}
+                className="w-full h-full object-cover object-top"
+                data-sanity={getDoctorProfileDocumentDataAttribute(documentId, 'image')}
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-[#f5ede0] text-center px-6" data-sanity={getDoctorProfileDocumentDataAttribute(documentId, 'image')}>
+                <div>
+                  <p className="text-base font-semibold text-stone-600">{name}</p>
+                  <p className="text-sm text-stone-400 mt-1">尚未上傳醫師照片</p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
         <div className="flex-1 p-8 xl:p-10">
           <div className="mb-4">
-            <h3 className="text-2xl font-bold text-stone-800" data-sanity={getDoctorProfileDataAttribute(doctorId, 'name')}>
+            <h3 className="text-2xl font-bold text-stone-800" data-sanity={getDoctorProfileDocumentDataAttribute(documentId, 'name')}>
               {name}
             </h3>
-            <p className="text-sm text-stone-400 mt-0.5" data-sanity={getDoctorProfileDataAttribute(doctorId, 'title')}>
+            <p className="text-sm text-stone-400 mt-0.5" data-sanity={getDoctorProfileDocumentDataAttribute(documentId, 'title')}>
               {title}
             </p>
           </div>
@@ -152,24 +174,30 @@ export default function DoctorCardV5({
           <div className="mb-5">
             <h4 className="text-sm font-bold text-stone-800 mb-3">專長科別</h4>
             <div className="flex flex-wrap gap-2">
-              {specialtyGroups.map((specialty, groupIndex) => (
-                <div
-                  key={`${specialty.slug}-${groupIndex}`}
-                  className="flex items-center gap-1.5 bg-[#faf6f0] border border-[#cd9651]/20 rounded-full px-3 py-1"
-                  data-sanity-edit-group
-                  data-sanity-edit-target
-                >
-                  <div className="w-4 h-4 flex items-center justify-center">
-                    <i className={`${specialtyIcons[specialty.slug] ?? 'ri-medicine-bottle-line'} text-[#cd9651] text-xs`}></i>
-                  </div>
-                  <span
-                    className="text-xs font-medium text-stone-600 whitespace-nowrap"
-                    data-sanity={getDoctorProfileDataAttribute(doctorId, `specialtyGroups[${groupIndex}].name`)}
+              {specialtyGroups.map((specialty, groupIndex) => {
+                const fieldBase = getSpecialtyGroupFieldBase(specialty, groupIndex);
+
+                return (
+                  <div
+                    key={`${specialty._key || specialty.slug}-${groupIndex}`}
+                    className="flex items-center gap-1.5 bg-[#faf6f0] border border-[#cd9651]/20 rounded-full px-3 py-1"
+                    data-sanity={getDoctorProfileDocumentDataAttribute(documentId, `${fieldBase}.name`)}
                   >
-                    {specialty.name}
-                  </span>
-                </div>
-              ))}
+                    <div className="w-4 h-4 flex items-center justify-center">
+                      <i
+                        className={`${specialtyIcons[specialty.slug] ?? 'ri-medicine-bottle-line'} text-[#cd9651] text-xs`}
+                        data-sanity={getDoctorProfileDocumentDataAttribute(documentId, `${fieldBase}.slug`)}
+                      ></i>
+                    </div>
+                    <span
+                      className="text-xs font-medium text-stone-600 whitespace-nowrap"
+                      data-sanity={getDoctorProfileDocumentDataAttribute(documentId, `${fieldBase}.name`)}
+                    >
+                      {specialty.name}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -181,7 +209,7 @@ export default function DoctorCardV5({
                   <span
                     key={treatmentIndex}
                     className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#cd9651] rounded-full text-xs text-white font-medium whitespace-nowrap"
-                    data-sanity={getDoctorProfileDataAttribute(doctorId, `specialTreatments[${treatmentIndex}]`)}
+                    data-sanity={getDoctorProfileDocumentDataAttribute(documentId, `specialTreatments[${treatmentIndex}]`)}
                   >
                     <i className="ri-sparkling-2-line text-xs"></i>
                     {treatment}
@@ -195,7 +223,7 @@ export default function DoctorCardV5({
 
           <div className="mb-5">
             <h4 className="text-sm font-bold text-stone-800 mb-2">關於醫師</h4>
-            <p className="text-sm text-stone-500 leading-relaxed" data-sanity={getDoctorProfileDataAttribute(doctorId, 'bio')}>
+            <p className="text-sm text-stone-500 leading-relaxed" data-sanity={getDoctorProfileDocumentDataAttribute(documentId, 'bio')}>
               {bio ?? specialtyGroups.map((s) => `${s.name}（${s.items.slice(0, 2).join('、')}${s.items.length > 2 ? '等' : ''}）`).join('；')}
             </p>
           </div>
@@ -208,7 +236,7 @@ export default function DoctorCardV5({
                   <span className="text-[#cd9651] font-medium mt-0.5">•</span>
                   <span>
                     <span className="font-medium text-stone-600">學歷：</span>
-                    <span data-sanity={getDoctorProfileDataAttribute(doctorId, 'education')}>
+                    <span data-sanity={getDoctorProfileDocumentDataAttribute(documentId, 'education')}>
                       {education.join('、')}
                     </span>
                   </span>
@@ -219,7 +247,7 @@ export default function DoctorCardV5({
                   <span className="text-[#cd9651] font-medium mt-0.5">•</span>
                   <span>
                     <span className="font-medium text-stone-600">經歷：</span>
-                    <span data-sanity={getDoctorProfileDataAttribute(doctorId, 'experience')}>
+                    <span data-sanity={getDoctorProfileDocumentDataAttribute(documentId, 'experience')}>
                       {experience.join('、')}
                     </span>
                   </span>
@@ -232,7 +260,7 @@ export default function DoctorCardV5({
 
       {schedule && (
         <div className="border-t border-stone-100 px-8 xl:px-10 py-8 xl:py-10">
-          <ScheduleTable doctorId={doctorId} schedule={schedule} note={scheduleNote} />
+          <ScheduleTable documentId={documentId} schedule={schedule} note={scheduleNote} />
         </div>
       )}
     </div>

@@ -67,12 +67,6 @@ export default function ArticleDetailModal({ article, onClose }: ArticleDetailMo
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="w-4 h-4 flex items-center justify-center">
-                  <i className="ri-eye-line text-gray-400" style={{ fontSize: '11px' }}></i>
-                </div>
-                <span className="text-xs text-gray-400">{article.views.toLocaleString()} 次閱讀</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <div className="w-4 h-4 flex items-center justify-center">
                   <i className="ri-time-line text-gray-400" style={{ fontSize: '11px' }}></i>
                 </div>
                 <span className="text-xs text-gray-400">{article.readTime}</span>

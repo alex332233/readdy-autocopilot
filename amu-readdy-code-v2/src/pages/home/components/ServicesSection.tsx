@@ -1,4 +1,5 @@
 import FadeIn from '../../../components/base/FadeIn';
+import { getHomePageDataAttribute } from '../../../sanity/dataAttributes';
 import { useHomePageContent } from '../useHomePageContent';
 
 export default function ServicesSection() {
@@ -33,7 +34,10 @@ export default function ServicesSection() {
                     {service.number}
                   </span>
                   <div className="w-12 h-12 rounded-full bg-[#cd9651] flex items-center justify-center">
-                    <i className={`${service.icon} text-2xl text-white`}></i>
+                    <i
+                      className={`${service.icon} text-2xl text-white`}
+                      data-sanity={getHomePageDataAttribute(`services.items[${index}].icon`)}
+                    ></i>
                   </div>
                 </div>
                 <h3 className="font-serif text-xl font-bold text-gray-800 mb-1">
@@ -66,7 +70,10 @@ export default function ServicesSection() {
                     {service.number}
                   </span>
                   <div className="w-12 h-12 rounded-full bg-[#cd9651] flex items-center justify-center transition-all duration-300 group-hover:scale-110">
-                    <i className={`${service.icon} text-2xl text-white`}></i>
+                    <i
+                      className={`${service.icon} text-2xl text-white`}
+                      data-sanity={getHomePageDataAttribute(`services.items[${index}].icon`)}
+                    ></i>
                   </div>
                 </div>
                 <h3 className="font-serif text-xl font-bold text-gray-800 mb-1 group-hover:text-[#cd9651] transition-colors duration-300">

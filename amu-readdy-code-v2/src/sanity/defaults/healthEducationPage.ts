@@ -11,7 +11,6 @@ const defaultArticles: HealthEducationArticleContent[] = healthEducationData.map
   publishDate: article.date,
   updatedDate: article.updatedDate,
   readTime: article.readTime,
-  views: article.views,
   summary: article.summary,
   coverImage: {
     url: article.coverImage,
@@ -27,6 +26,7 @@ const defaultArticles: HealthEducationArticleContent[] = healthEducationData.map
         }
       : undefined,
   })),
+  faq: [],
   tips: article.tips || undefined,
   references: article.references?.map((reference) => ({
     text: reference.label,

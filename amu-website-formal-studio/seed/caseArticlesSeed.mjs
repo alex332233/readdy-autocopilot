@@ -8,7 +8,7 @@ export const caseArticlesSeed = [
     tags: ['中風', '憂鬱', '失眠', '針灸科'],
     doctor: '李俊廷醫師',
     fbLink: 'https://www.facebook.com/AmuletteCMC/photos/pb.100057559565100.-2207520000/169302091227601/?type=3',
-    publishDate: 'January 4, 2023',
+    publishDate: '2023-01-04',
     coverImage: {
       url: 'https://readdy.ai/api/search-image?query=peaceful%20bedroom%20scene%20with%20soft%20warm%20lighting%20traditional%20Chinese%20medicine%20herbs%20on%20bedside%20table%20calm%20serene%20atmosphere%20minimal%20clean%20background%20neutral%20tones&width=1200&height=500&seq=blog1cover&orientation=landscape',
       alt: '中風後憂鬱失眠，艾苜中醫助妳眠',
@@ -46,7 +46,7 @@ export const caseArticlesSeed = [
     tags: ['糖尿病'],
     doctor: '李俊廷醫師',
     fbLink: 'https://www.facebook.com/AmuletteCMC/photos/pb.100057559565100.-2207520000/178113027013174/?type=3',
-    publishDate: 'January 4, 2023',
+    publishDate: '2023-01-04',
     coverImage: {
       url: 'https://readdy.ai/api/search-image?query=traditional%20Chinese%20medicine%20herbs%20and%20acupuncture%20needles%20arranged%20neatly%20on%20clean%20white%20surface%20warm%20natural%20lighting%20minimal%20aesthetic%20background&width=1200&height=500&seq=blog2cover&orientation=landscape',
       alt: '血糖不穩好煩惱，艾苜讓您免煩惱',
@@ -84,7 +84,7 @@ export const caseArticlesSeed = [
     tags: ['不孕症'],
     doctor: '李俊廷醫師',
     fbLink: 'https://www.facebook.com/AmuletteCMC/photos/pb.100057559565100.-2207520000/211738156983994/?type=3',
-    publishDate: 'January 4, 2023',
+    publishDate: '2023-01-04',
     coverImage: {
       url: 'https://readdy.ai/api/search-image?query=delicate%20pink%20cherry%20blossom%20flowers%20soft%20bokeh%20background%20warm%20pastel%20tones%20hopeful%20and%20gentle%20atmosphere%20minimal%20clean%20style&width=1200&height=500&seq=blog3cover&orientation=landscape',
       alt: '艾苜送子鳥，祝您好孕到',
@@ -123,7 +123,7 @@ export const caseArticlesSeed = [
     tags: ['不孕症', '子宮內膜息肉'],
     doctor: '李俊廷醫師',
     fbLink: 'https://www.facebook.com/AmuletteCMC/photos/pb.100057559565100.-2207520000/348339216657220/?type=3',
-    publishDate: 'January 4, 2023',
+    publishDate: '2023-01-04',
     coverImage: {
       url: 'https://readdy.ai/api/search-image?query=soft%20morning%20light%20through%20window%20with%20green%20plant%20on%20windowsill%20calm%20hopeful%20atmosphere%20warm%20neutral%20tones%20minimal%20clean%20background&width=600&height=400&seq=blog4cover&orientation=landscape',
       alt: '轉「孕」的好幫手 艾苜中醫診所',
@@ -161,7 +161,7 @@ export const caseArticlesSeed = [
     tags: ['陰道炎', '骨盆腔發炎'],
     doctor: '李俊廷醫師',
     fbLink: 'https://www.facebook.com/AmuletteCMC/photos/pb.100057559565100.-2207520000/406080627549745/?type=3',
-    publishDate: 'January 4, 2023',
+    publishDate: '2023-01-04',
     coverImage: {
       url: 'https://readdy.ai/api/search-image?query=fresh%20herbal%20tea%20in%20ceramic%20cup%20with%20dried%20herbs%20scattered%20around%20warm%20natural%20light%20wooden%20table%20minimal%20clean%20background%20wellness%20theme&width=1200&height=500&seq=blog5cover&orientation=landscape',
       alt: '婦科問題好困擾 艾苜細心呵護您',

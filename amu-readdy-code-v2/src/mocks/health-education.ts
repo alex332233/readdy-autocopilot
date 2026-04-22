@@ -9,10 +9,11 @@ export interface HealthArticle {
   date: string;
   updatedDate: string;
   readTime: string;
-  views: number;
+  views?: number;
   summary: string;
   coverImage: string;
   content: { heading: string; text: string; image?: string }[];
+  faq?: { question: string; answer: string }[];
   tips?: { title: string; content: string };
   references?: { label: string; url: string }[];
 }

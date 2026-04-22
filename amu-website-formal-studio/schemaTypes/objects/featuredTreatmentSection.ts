@@ -1,4 +1,5 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
+import {iconFieldOptions} from '../iconOptions'
 
 export const featuredTreatmentSection = defineType({
   name: 'featuredTreatmentSection',
@@ -6,7 +7,7 @@ export const featuredTreatmentSection = defineType({
   type: 'object',
   fields: [
     defineField({name: 'title', title: '標題', type: 'string', validation: (rule) => rule.required()}),
-    defineField({name: 'icon', title: '圖示', type: 'string'}),
+    defineField({name: 'icon', title: '圖示', type: 'string', options: iconFieldOptions}),
     defineField({
       name: 'layout',
       title: '版型',

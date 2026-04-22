@@ -1,4 +1,4 @@
-import { useRouteLoaderData } from 'react-router-dom';
+import { useRouteLoaderData } from 'react-router';
 import { defaultHomePageContent } from '../../sanity/defaults/homePage';
 import { normalizeHomePageContent } from '../../sanity/fetchHomePageContent';
 import type { HomePageContent } from '../../sanity/types';

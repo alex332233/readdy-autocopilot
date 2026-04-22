@@ -1,4 +1,5 @@
 import {defineField, defineType} from 'sanity'
+import {iconFieldOptions} from '../iconOptions'
 
 export const insuranceTreatmentCategory = defineType({
   name: 'insuranceTreatmentCategory',
@@ -8,7 +9,7 @@ export const insuranceTreatmentCategory = defineType({
     defineField({name: 'title', title: 'Title', type: 'string'}),
     defineField({name: 'subtitle', title: 'Subtitle', type: 'string'}),
     defineField({name: 'englishTitle', title: 'English Title', type: 'string'}),
-    defineField({name: 'icon', title: 'Icon', type: 'string'}),
+    defineField({name: 'icon', title: 'Icon', type: 'string', options: iconFieldOptions}),
     defineField({name: 'color', title: 'Color', type: 'string'}),
     defineField({
       name: 'treatments',

@@ -1,4 +1,4 @@
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router';
 import { useEffect } from 'react';
 import SanityVisualEditing from '../sanity/SanityVisualEditing';
 import { setAppNavigate } from './navigation';
@@ -6,7 +6,7 @@ import FloatingLineButton from '../components/FloatingLineButton';
 
 declare global {
   interface Window {
-    REACT_APP_NAVIGATE: import('react-router-dom').NavigateFunction;
+    REACT_APP_NAVIGATE: import('react-router').NavigateFunction;
   }
 }
 

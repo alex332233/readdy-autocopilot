@@ -6,3 +6,6 @@ dist/
 .env.local
 .env
 .vercel
+amu-readdy-code-v2/.react-router/
+amu-readdy-code-v2/build/
+readdy-updates/

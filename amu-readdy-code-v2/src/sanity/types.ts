@@ -115,6 +115,7 @@ export interface CaseInfoBox {
 
 export interface CaseArticleContent {
   caseId: number;
+  slug?: string;
   title: string;
   category: string;
   tags: string[];
@@ -122,6 +123,7 @@ export interface CaseArticleContent {
   fbLink: string;
   publishDate: string;
   coverImage: SanityImage;
+  body?: RichArticleBlock[];
   description: string;
   before: CaseBeforeSection;
   after: CaseAfterSection;
@@ -143,6 +145,7 @@ export interface CasesPageContent {
 }
 
 export interface DoctorSpecialtyGroup {
+  _key?: string;
   slug: string;
   name: string;
   items: string[];
@@ -167,6 +170,7 @@ export interface DoctorSchedule {
 }
 
 export interface DoctorProfileContent {
+  documentId: string;
   doctorId: number;
   name: string;
   title: string;
@@ -239,9 +243,7 @@ export interface SiteSettingsContent {
     image: SanityImage;
   };
   copyright: string;
-  builderLink: {
-    label: string;
-  };
+  builderLink?: SiteLinkContent;
   floatingLineButton: {
     enabled: boolean;
     ariaLabel: string;
@@ -266,8 +268,57 @@ export interface HealthEducationArticleSection {
   image?: SanityImage;
 }
 
+export interface RichArticleLinkMarkDef {
+  _key: string;
+  _type: 'link';
+  href: string;
+  openInNewTab?: boolean;
+}
+
+export interface RichArticleSpan {
+  _key: string;
+  _type: 'span';
+  text: string;
+  marks?: string[];
+}
+
+export interface RichArticleTextBlock {
+  _key: string;
+  _type: 'block';
+  style?: 'normal' | 'h2' | 'h3' | 'blockquote';
+  listItem?: 'bullet' | 'number';
+  level?: number;
+  children: RichArticleSpan[];
+  markDefs?: RichArticleLinkMarkDef[];
+}
+
+export interface RichArticleImageBlock {
+  _key: string;
+  _type: 'image';
+  url: string;
+  alt: string;
+  caption?: string;
+}
+
+export interface RichArticleDividerBlock {
+  _key: string;
+  _type: 'richArticleDivider';
+  style?: 'line';
+}
+
+export type RichArticleBlock =
+  | RichArticleTextBlock
+  | RichArticleImageBlock
+  | RichArticleDividerBlock;
+
+export interface HealthEducationFaqItem {
+  question: string;
+  answer: string;
+}
+
 export interface HealthEducationArticleContent {
   articleId: number;
+  slug?: string;
   title: string;
   category: string;
   subcategory: string;
@@ -276,10 +327,11 @@ export interface HealthEducationArticleContent {
   publishDate: string;
   updatedDate: string;
   readTime: string;
-  views: number;
   summary: string;
   coverImage: SanityImage;
+  body?: RichArticleBlock[];
   content: HealthEducationArticleSection[];
+  faq: HealthEducationFaqItem[];
   tips?: CaseInfoBox;
   references?: LinkItem[];
   seo?: SeoMetadata;
@@ -436,10 +488,12 @@ export interface HomePageContent {
 }
 
 export interface FeaturedTreatmentCardContent {
+  _key?: string;
   title: string;
   englishTitle: string;
   icon: string;
   color: string;
+  image?: SanityImage;
   treatmentTitle: string;
   description: string;
   tags: string[];
@@ -451,6 +505,7 @@ export interface FeaturedTreatmentPageContent {
   heroTitle: string;
   heroDescription: string;
   cards: FeaturedTreatmentCardContent[];
+  relatedExtraCard?: FeaturedTreatmentCardContent;
 }
 
 export type FeaturedTreatmentSectionLayout = 'textOnly' | 'textImage' | 'imageText' | 'cardsCases' | 'processCards';
@@ -462,7 +517,10 @@ export interface FeaturedTreatmentSectionItem {
 
 export interface FeaturedTreatmentCase {
   label: string;
+  name?: string;
   text: string;
+  link?: string;
+  image?: SanityImage;
 }
 
 export interface FeaturedTreatmentSection {
@@ -488,7 +546,10 @@ export interface FeaturedTreatmentDetailContent {
   slug: string;
   subtitle: string;
   themeColor: string;
+  primaryImage?: SanityImage;
+  secondaryImage?: SanityImage;
   sections: FeaturedTreatmentSection[];
+  featuredCases?: FeaturedTreatmentCase[];
   disclaimer: string;
   cta: FeaturedTreatmentCta;
 }

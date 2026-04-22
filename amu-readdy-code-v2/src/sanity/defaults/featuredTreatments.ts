@@ -4,6 +4,12 @@ import type {
   FeaturedTreatmentPageContent,
   FeaturedTreatmentSection,
 } from '../types';
+import {
+  bodyCases,
+  decoctionCases,
+  eyeCases,
+  laserCases,
+} from '../../pages/featured-treatments/components/specializedDetailContent';
 
 const sharedCta = {
   title: '艾苜中醫，您的健康護身符',
@@ -20,63 +26,96 @@ export const defaultFeaturedTreatmentsPageContent: FeaturedTreatmentPageContent 
       title: '御顏・緊緻',
       englishTitle: 'Facial Rejuvenation',
       icon: 'ri-sparkling-line',
-      color: '#cd9651',
-      treatmentTitle: '專業臉部美容療程',
-      description: '結合傳統中醫與現代美容技術，針對臉部肌膚進行深層調理，改善膚質、緊緻輪廓，讓您重現青春光采。',
-      tags: ['美顏針灸', '緊緻拉提', '膚質改善'],
+      color: '#c8884a',
+      image: {
+        url: 'https://readdy.ai/api/search-image?query=Elegant%20close%20up%20of%20a%20beautiful%20Asian%20woman%20glowing%20radiant%20skin%20soft%20warm%20golden%20light%20cream%20ivory%20background%20subtle%20botanical%20herbs%20nearby%20serene%20beauty%20ritual%20spa%20atmosphere%20minimal%20luxurious%20tranquil%20wellness%20aesthetic%20smooth%20porcelain%20complexion&width=600&height=780&seq=feat_facial_hero_01&orientation=portrait',
+        alt: '御顏・緊緻',
+      },
+      treatmentTitle: '美顏針',
+      description: '以針代刀的溫柔塑顏術。這不是侵入性的手術，而是喚醒肌膚底層膠原蛋白的藝術。美顏針透過極細微的針具刺激臉部筋膜層 (SMAS)，針對細紋、法令紋、臉部下垂與大小臉進行精密微雕。',
+      tags: ['日韓美顏針', '中藥調理'],
       detailSlug: 'facial',
     },
     {
       title: '登峰・轉骨',
       englishTitle: 'Growth Enhancement',
       icon: 'ri-line-chart-line',
-      color: '#8b7355',
-      treatmentTitle: '青少年成長發育調理',
-      description: '把握黃金成長期，透過中醫調理促進骨骼發育、增強體質，為孩子的健康成長奠定良好基礎。',
-      tags: ['轉骨調理', '體質強化', '成長促進'],
+      color: '#cd9651',
+      image: {
+        url: 'https://readdy.ai/api/search-image?query=Tiny%20green%20bamboo%20shoots%20sprouting%20upward%20strong%20sunlight%20filtering%20through%20soft%20misty%20morning%20air%20sage%20mint%20and%20warm%20earth%20tones%20clean%20minimal%20background%20growth%20vitality%20youth%20energy%20nature%20healing%20botanical%20wellness%20serene%20peaceful&width=600&height=780&seq=feat_growth_hero_01&orientation=portrait',
+        alt: '登峰・轉骨',
+      },
+      treatmentTitle: '兒少成長',
+      description: '把握一生一次的黃金生長窗，許孩子一個自信的高度。我們的轉骨計畫結合了無痛雷射針灸與客製化轉骨方，針對生長板尚未閉合的孩童進行衝刺調理。',
+      tags: ['過敏體質', '性早熟', '轉骨增高'],
       detailSlug: 'growth',
     },
     {
-      title: '調經・助孕',
-      englishTitle: 'Fertility Support',
-      icon: 'ri-heart-pulse-line',
-      color: '#d4a574',
-      treatmentTitle: '婦科調理與助孕療程',
-      description: '針對月經不調、備孕需求提供專業調理，平衡內分泌，提升受孕機率。',
-      tags: ['月經調理', '助孕調理', '內分泌平衡'],
-      detailSlug: 'fertility',
-    },
-    {
-      title: '減重・塑身',
-      englishTitle: 'Weight Management',
+      title: '輕盈・體雕',
+      englishTitle: 'Body Sculpting',
       icon: 'ri-scales-3-line',
-      color: '#b8956a',
-      treatmentTitle: '健康減重與體態雕塑',
-      description: '透過中醫調理配合現代技術，健康減重、雕塑體態，打造理想身形。',
-      tags: ['健康減重', '體態雕塑', '代謝調理'],
-      detailSlug: 'weight',
+      color: '#b87d3a',
+      image: {
+        url: 'https://readdy.ai/api/search-image?query=Serene%20Asian%20woman%20in%20soft%20athleisure%20silhouette%20standing%20near%20window%20warm%20morning%20backlight%20cream%20and%20ivory%20linen%20tones%20gentle%20shadow%20play%20on%20smooth%20skin%20healthy%20body%20wellness%20balance%20minimal%20calm%20lifestyle%20photography%20flowing%20fabric&width=600&height=780&seq=feat_body_hero_01&orientation=portrait',
+        alt: '輕盈・體雕',
+      },
+      treatmentTitle: '體態管理',
+      description: '重塑身體的代謝記憶，找回輕盈的自己。我們避開極端的節食，採用埋線減重技術，如同在體內安放了24小時運作的代謝教練。',
+      tags: ['中藥調理', '體雕針灸'],
+      detailSlug: 'body',
     },
     {
-      title: '過敏・免疫',
-      englishTitle: 'Allergy & Immunity',
-      icon: 'ri-shield-cross-line',
-      color: '#9d8b6f',
-      treatmentTitle: '過敏體質調理',
-      description: '改善過敏症狀，增強免疫系統，從根本調理體質，減少過敏發作。',
-      tags: ['過敏調理', '免疫提升', '體質改善'],
-      detailSlug: 'allergy',
+      title: '明眸・亮視',
+      englishTitle: 'Eye Care',
+      icon: 'ri-eye-line',
+      color: '#d4a25a',
+      image: {
+        url: 'https://readdy.ai/api/search-image?query=Extreme%20close%20up%20of%20a%20beautiful%20Asian%20eye%20with%20crystal%20clear%20iris%20and%20glowing%20dewy%20skin%20soft%20natural%20light%20soft%20sage%20green%20and%20ivory%20tones%20clear%20vision%20eye%20health%20wellness%20serene%20healing%20beauty%20ritual%20calm%20peaceful%20atmosphere&width=600&height=780&seq=feat_eye_hero_01&orientation=portrait',
+        alt: '明眸・亮視',
+      },
+      treatmentTitle: '精彩視界',
+      description: '為靈魂之窗點入一滴甘露，重現清澈神采。這是專為數位時代設計的護眼儀式。針對3C重度使用者常見的眼睛乾澀、眼壓過高、視力模糊與眼睛疲勞，我們採用特殊的「眼針」療法。',
+      tags: ['中藥調理', '眼針'],
+      detailSlug: 'eye',
     },
     {
-      title: '疼痛・復健',
-      englishTitle: 'Pain Management',
-      icon: 'ri-hand-heart-line',
-      color: '#a89176',
-      treatmentTitle: '疼痛管理與復健治療',
-      description: '針對各類疼痛問題提供專業治療，加速復健進程，恢復身體機能。',
-      tags: ['疼痛緩解', '復健治療', '功能恢復'],
-      detailSlug: 'pain',
+      title: '光能・修復',
+      englishTitle: 'Laser Acupuncture',
+      icon: 'ri-flashlight-line',
+      color: '#5a8a6a',
+      image: {
+        url: 'https://readdy.ai/api/search-image?query=Soft%20warm%20laser%20light%20beams%20over%20smooth%20skin%20surface%20golden%20amber%20light%20rays%20healing%20energy%20flow%20minimal%20clean%20background%20warm%20honey%20tones%20futuristic%20yet%20natural%20medical%20wellness%20atmosphere%20serene%20glow%20technology%20meets%20nature&width=600&height=780&seq=feat_laser_hero_01&orientation=portrait',
+        alt: '光能・修復',
+      },
+      treatmentTitle: '無痛雷射針灸',
+      description: '純淨光能的無痛注入，喚醒細胞深層的自癒力。害怕針刺感嗎？雷射針灸是您的最佳選擇。我們利用低能量雷射光束照射穴位，達到無痛、無創的治療效果。',
+      tags: ['無痛針感', '穴位精準刺激'],
+      detailSlug: 'laser',
+    },
+    {
+      title: '深癒・淬鍊',
+      englishTitle: 'Herbal Decoction',
+      icon: 'ri-flask-line',
+      color: '#4a7a5c',
+      image: {
+        url: 'https://readdy.ai/api/search-image?query=Traditional%20Chinese%20medicine%20herbal%20decoction%20simmering%20in%20clay%20pot%20gentle%20steam%20rising%20warm%20amber%20golden%20broth%20dried%20herbs%20scattered%20around%20warm%20earthy%20tones%20moody%20healing%20atmosphere%20ancient%20wisdom%20wellness%20ritual%20minimal%20elegant%20background&width=600&height=780&seq=feat_decoction_hero_01&orientation=portrait',
+        alt: '深癒・淬鍊',
+      },
+      treatmentTitle: '全客製水煎藥',
+      description: '這是一場為您量身熬製的健康淬鍊。水煎藥能打破固定藥粉比例的限制，讓醫師能更敏銳地捕捉您每一階段的細微變化，靈活調配專屬處方。',
+      tags: ['高階調理', '精準醫療', '專屬處方'],
+      detailSlug: 'decoction',
     },
   ],
+  relatedExtraCard: {
+    title: '客製調理',
+    englishTitle: 'Tailored Wellness',
+    icon: 'ri-medicine-bottle-line',
+    color: '#c7a06b',
+    treatmentTitle: '一人一方的專屬調理',
+    description: '依照體質、階段與生活節奏客製辨證方向，讓艾苜醫師陪您找到更適合自己的調理節奏與療程搭配。',
+    tags: ['辨證施治', '客製方向', '整體調理'],
+  },
 };
 
 const facialSections: FeaturedTreatmentSection[] = [
@@ -196,11 +235,12 @@ const createPlaceholderDetail = (
   title: string,
   slug: string,
   themeColor: string,
+  subtitle: string,
   description = '若您想先了解是否適合此療程，歡迎先預約諮詢。',
 ): FeaturedTreatmentDetailContent => ({
   title,
   slug,
-  subtitle: '內容待設計定稿後補充',
+  subtitle,
   themeColor,
   sections: [{title: '內容規劃中', layout: 'textOnly', content: '此療程詳細內容將於設計與文案定稿後補上。'}],
   disclaimer: '',
@@ -230,8 +270,65 @@ export const defaultFeaturedTreatmentDetails: Record<string, FeaturedTreatmentDe
     disclaimer: '【艾苜中醫溫馨提醒】本網站所提及之生長發育調理、體質改善等療程效能與進度，將因每位孩童的個人體質、年齡、骨齡發展及日常作息而有所差異。任何醫療處置均需視個人情況調整，實際的治療計畫（含雷射針灸與客製方劑之頻率與劑量），必須由本診所專業中醫師親自看診、評估相關數據後方可制定並執行。',
     cta: sharedCta,
   },
-  fertility: createPlaceholderDetail('調經・助孕', 'fertility', '#d4a574'),
-  weight: createPlaceholderDetail('減重・塑身', 'weight', '#b8956a'),
-  allergy: createPlaceholderDetail('過敏・免疫', 'allergy', '#9d8b6f'),
-  pain: createPlaceholderDetail('疼痛・復健', 'pain', '#a89176'),
+  body: createPlaceholderDetail('輕盈・體雕', 'body', '#b8956a', '外埋線體雕・內中藥調理，重塑代謝記憶', '若您想先了解體態管理與埋線體雕是否適合自己，歡迎先預約諮詢。'),
+  eye: createPlaceholderDetail('明眸・亮視', 'eye', '#5c8f8c', '眼針調理・中藥滋養，重現晶亮神采', '若您想先了解眼針與護眼調理是否適合自己，歡迎先預約諮詢。'),
+  laser: createPlaceholderDetail('光能・修復', 'laser', '#c9965a', '無痛雷射針灸・溫柔喚醒，讓每個年齡層都能安心調理', '若您想先了解無痛雷射針灸是否適合自己，歡迎先預約諮詢。'),
+  decoction: createPlaceholderDetail('深癒・淬鍊', 'decoction', '#5a7a6e', '全客製水煎藥・深層淬鍊，為每一個生命關鍵期精準守護', '若您想先了解全客製水煎藥是否適合自己，歡迎先預約諮詢。'),
 };
+
+defaultFeaturedTreatmentDetails.body.primaryImage = {
+  url: 'https://readdy.ai/api/search-image?query=A%20thoughtful%20Asian%20woman%20in%20her%20thirties%20looking%20at%20herself%20in%20a%20mirror%20with%20a%20gentle%20concerned%20expression%2C%20wearing%20casual%20comfortable%20clothing%20in%20soft%20morning%20light%2C%20a%20clean%20minimal%20bedroom%20setting%20with%20warm%20ivory%20and%20soft%20beige%20tones%2C%20subtle%20natural%20light%20casting%20soft%20shadows%2C%20the%20scene%20evokes%20quiet%20determination%20and%20self-reflection%20rather%20than%20distress%2C%20peaceful%20mood%2C%20professional%20lifestyle%20photography%20with%20shallow%20depth%20of%20field%2C%20warm%20neutral%20background%20tones&width=600&height=500&seq=body-concern-img-01&orientation=landscape',
+  alt: '體態困擾',
+};
+defaultFeaturedTreatmentDetails.body.secondaryImage = {
+  url: 'https://readdy.ai/api/search-image?query=A%20serene%20and%20modern%20traditional%20Chinese%20medicine%20clinic%20interior%2C%20a%20doctor%20in%20white%20coat%20performing%20acupuncture%20treatment%20on%20a%20patient%20lying%20on%20a%20clean%20treatment%20bed%2C%20warm%20soft%20lighting%20with%20earthy%20beige%20and%20warm%20wood%20tones%2C%20neatly%20arranged%20herbal%20medicine%20jars%20in%20the%20background%2C%20potted%20green%20plants%20adding%20calm%20vitality%2C%20the%20atmosphere%20is%20professional%20yet%20gentle%20and%20healing%2C%20medical%20lifestyle%20photography%20with%20natural%20window%20light%20streaming%20in&width=600&height=500&seq=body-solution-img-02&orientation=landscape',
+  alt: '艾苜體雕解方',
+};
+defaultFeaturedTreatmentDetails.body.featuredCases = bodyCases.map((item) => ({
+  label: item.label,
+  name: item.name,
+  text: item.content,
+  link: item.link,
+  image: { url: item.image, alt: item.name },
+}));
+defaultFeaturedTreatmentDetails.eye.primaryImage = {
+  url: 'https://readdy.ai/api/search-image?query=A%20tired%20Asian%20office%20worker%20in%20his%20late%20twenties%20sitting%20at%20a%20desk%20in%20a%20modern%20bright%20office%2C%20rubbing%20his%20eyes%20with%20both%20hands%2C%20multiple%20computer%20monitors%20glowing%20in%20the%20background%20showing%20code%20and%20spreadsheets%2C%20a%20clean%20minimal%20workspace%20with%20soft%20warm%20white%20and%20light%20gray%20tones%2C%20the%20scene%20conveys%20digital%20eye%20strain%20and%20fatigue%20from%20prolonged%20screen%20use%2C%20professional%20lifestyle%20photography%20with%20shallow%20depth%20of%20field%2C%20natural%20morning%20light%20from%20the%20side%20windows&width=600&height=500&seq=eye-concern-img-01&orientation=landscape',
+  alt: '眼部困擾',
+};
+defaultFeaturedTreatmentDetails.eye.secondaryImage = {
+  url: 'https://readdy.ai/api/search-image?query=A%20serene%20traditional%20Chinese%20medicine%20treatment%20room%2C%20a%20skilled%20doctor%20in%20a%20white%20coat%20gently%20performing%20eye%20acupuncture%20on%20a%20relaxed%20patient%20lying%20on%20a%20clean%20treatment%20bed%2C%20extremely%20fine%20delicate%20silver%20needles%20carefully%20placed%20around%20the%20eye%20area%20on%20acupoints%2C%20soft%20warm%20natural%20window%20light%2C%20the%20background%20shows%20green%20potted%20plants%20and%20wooden%20shelving%20with%20herbal%20jars%20in%20the%20background%2C%20clean%20clinical%20yet%20warm%20atmosphere%2C%20peaceful%20healing%20medical%20photography%20with%20soft%20teal%20and%20ivory%20color%20palette&width=600&height=500&seq=eye-solution-img-02&orientation=landscape',
+  alt: '艾苜眼針解方',
+};
+defaultFeaturedTreatmentDetails.eye.featuredCases = eyeCases.map((item) => ({
+  label: item.label,
+  name: item.name,
+  text: item.content,
+  link: item.link,
+  image: { url: item.image, alt: item.name },
+}));
+defaultFeaturedTreatmentDetails.laser.primaryImage = {
+  url: 'https://readdy.ai/api/search-image?query=A%20worried%20parent%20sitting%20beside%20a%20young%20child%20in%20a%20warm%20Chinese%20medicine%20clinic%20waiting%20room%2C%20the%20child%20looking%20nervous%20and%20hesitant%20about%20the%20upcoming%20treatment%2C%20soft%20amber%20warm%20lighting%20illuminating%20the%20cozy%20interior%20space%2C%20potted%20green%20plants%20and%20wooden%20shelves%20with%20herbal%20jars%20in%20background%2C%20gentle%20calming%20environment%20with%20beige%20ivory%20and%20warm%20gold%20tones%2C%20lifestyle%20medical%20photography%20with%20a%20sense%20of%20empathy%20and%20care%2C%20shallow%20depth%20of%20field&width=600&height=500&seq=laser-concern-v2-01&orientation=landscape',
+  alt: '光能修復困擾',
+};
+defaultFeaturedTreatmentDetails.laser.secondaryImage = {
+  url: 'https://readdy.ai/api/search-image?query=A%20skilled%20Chinese%20medicine%20practitioner%20gently%20holding%20a%20small%20low-level%20laser%20therapy%20device%20near%20acupuncture%20points%20on%20a%20relaxed%20child%20patient%20lying%20on%20a%20clean%20treatment%20bed%2C%20soft%20warm%20amber%20golden%20light%20effect%20emanating%20from%20the%20laser%2C%20no%20needles%20visible%2C%20peaceful%20modern%20clinical%20setting%20with%20wooden%20elements%20and%20green%20plants%2C%20the%20child%20looks%20calm%20and%20comfortable%2C%20warm%20beige%20and%20ivory%20interior%20palette%2C%20professional%20medical%20photography&width=600&height=500&seq=laser-solution-v2-02&orientation=landscape',
+  alt: '光能解方',
+};
+defaultFeaturedTreatmentDetails.laser.featuredCases = laserCases.map((item) => ({
+  label: item.label,
+  name: item.name,
+  text: item.content,
+  link: item.link,
+  image: { url: item.image, alt: item.name },
+}));
+defaultFeaturedTreatmentDetails.decoction.secondaryImage = {
+  url: 'https://readdy.ai/api/search-image?query=A%20professional%20Chinese%20medicine%20doctor%20in%20a%20clean%20white%20coat%20carefully%20measuring%20and%20blending%20dried%20herbal%20ingredients%20at%20a%20wooden%20apothecary%20counter%2C%20vacuum-sealed%20herbal%20decoction%20pouches%20arranged%20neatly%20beside%20the%20workspace%2C%20warm%20natural%20daylight%20streaming%20through%20large%20windows%2C%20organized%20wooden%20shelving%20with%20labeled%20herbal%20jars%20in%20the%20background%2C%20the%20scene%20conveys%20precision%20craftsmanship%20and%20personalized%20care%2C%20forest%20green%20and%20warm%20earth%20tones%2C%20calm%20clinical%20aesthetic&width=600&height=500&seq=decoction-solution-v2-01&orientation=landscape',
+  alt: '艾苜水煎藥解方',
+};
+defaultFeaturedTreatmentDetails.decoction.featuredCases = decoctionCases.map((item) => ({
+  label: item.label,
+  name: item.name,
+  text: item.content,
+  link: item.link,
+  image: { url: item.image, alt: item.name },
+}));

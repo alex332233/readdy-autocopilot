@@ -1,3 +1,4 @@
+import type { SanityClient } from '@sanity/client';
 import type { LoaderFunctionArgs } from 'react-router-dom';
 import { sanityClient } from './client';
 import { defaultCasesPageContent } from './defaults/casesPage';
@@ -9,9 +10,12 @@ import type {
   CaseBeforeSection,
   CaseInfoBox,
   CasesPageContent,
+  RichArticleBlock,
   SanityImage,
   SeoMetadata,
 } from './types';
+
+type SanityFetchClient = Pick<SanityClient, 'fetch'>;
 
 const mergeImage = (incoming: unknown, fallback?: SanityImage): SanityImage => {
   const image = incoming as Partial<SanityImage> | null;
@@ -66,10 +70,85 @@ const mergeSeo = (incoming: unknown, fallback?: SeoMetadata): SeoMetadata | unde
   };
 };
 
+const mergeRichArticleBody = (incoming: unknown): RichArticleBlock[] | undefined => {
+  if (!Array.isArray(incoming) || incoming.length === 0) return undefined;
+
+  const blocks = incoming
+    .map((item) => {
+      const block = item as Partial<RichArticleBlock> | null;
+      if (!block?._type || !block?._key) return null;
+
+      if (block._type === 'image') {
+        const imageBlock = block as Partial<Extract<RichArticleBlock, {_type: 'image'}>>;
+        if (!imageBlock.url) return null;
+        return {
+          _key: imageBlock._key,
+          _type: 'image' as const,
+          url: imageBlock.url,
+          alt: imageBlock.alt || '',
+          caption: imageBlock.caption || '',
+        };
+      }
+
+      if (block._type === 'richArticleDivider') {
+        return {
+          _key: block._key,
+          _type: 'richArticleDivider' as const,
+          style: 'line' as const,
+        };
+      }
+
+      if (block._type === 'block') {
+        const textBlock = block as Partial<Extract<RichArticleBlock, {_type: 'block'}>>;
+        return {
+          _key: textBlock._key,
+          _type: 'block' as const,
+          style: textBlock.style || 'normal',
+          listItem: textBlock.listItem,
+          level: textBlock.level,
+          children: Array.isArray(textBlock.children)
+            ? textBlock.children
+                .map((child) => {
+                  const span = child as { _key?: string; _type?: string; text?: string; marks?: string[] };
+                  if (span?._type !== 'span' || !span?._key) return null;
+                  return {
+                    _key: span._key,
+                    _type: 'span' as const,
+                    text: span.text || '',
+                    marks: Array.isArray(span.marks) ? span.marks : [],
+                  };
+                })
+                .filter(Boolean)
+            : [],
+          markDefs: Array.isArray(textBlock.markDefs)
+            ? textBlock.markDefs
+                .map((mark) => {
+                  const item = mark as { _key?: string; _type?: string; href?: string; openInNewTab?: boolean };
+                  if (item?._type !== 'link' || !item?._key || !item?.href) return null;
+                  return {
+                    _key: item._key,
+                    _type: 'link' as const,
+                    href: item.href,
+                    openInNewTab: item.openInNewTab,
+                  };
+                })
+                .filter(Boolean)
+            : [],
+        };
+      }
+
+      return null;
+    })
+    .filter(Boolean) as RichArticleBlock[];
+
+  return blocks.length > 0 ? blocks : undefined;
+};
+
 const mergeArticle = (incoming: unknown, fallback?: CaseArticleContent): CaseArticleContent => {
   const article = incoming as Partial<CaseArticleContent> | null;
   return {
     caseId: Number(article?.caseId || fallback?.caseId || 0),
+    slug: article?.slug || fallback?.slug,
     title: article?.title || fallback?.title || '',
     category: article?.category || fallback?.category || '',
     tags: Array.isArray(article?.tags) ? article.tags.filter(Boolean) : fallback?.tags || [],
@@ -77,6 +156,7 @@ const mergeArticle = (incoming: unknown, fallback?: CaseArticleContent): CaseArt
     fbLink: article?.fbLink || fallback?.fbLink || '',
     publishDate: article?.publishDate || fallback?.publishDate || '',
     coverImage: mergeImage(article?.coverImage, fallback?.coverImage),
+    body: mergeRichArticleBody(article?.body),
     description: article?.description || fallback?.description || '',
     before: mergeBefore(article?.before, fallback?.before),
     after: mergeAfter(article?.after, fallback?.after),
@@ -108,18 +188,27 @@ export async function fetchCasesPageContent() {
   };
 }
 
-export async function fetchCaseArticleContent({ params }: LoaderFunctionArgs) {
-  const caseId = Number(params.id);
-  if (!Number.isFinite(caseId)) return null;
+export async function fetchCaseArticleContent(
+  { params }: Pick<LoaderFunctionArgs, 'params'>,
+  clientOverride?: SanityFetchClient | null,
+) {
+  const slugOrId = params.id || '';
+  const parsedCaseId = Number(slugOrId);
+  const caseId = Number.isFinite(parsedCaseId) ? parsedCaseId : null;
+  if (!slugOrId) return null;
+  const client = clientOverride || sanityClient;
 
-  if (!sanityClient) {
-    const article = defaultCasesPageContent.articles.find((item) => item.caseId === caseId) || null;
+  if (!client) {
+    const article =
+      defaultCasesPageContent.articles.find(
+        (item) => item.slug === slugOrId || (caseId !== null && item.caseId === caseId),
+      ) || null;
     return article ? { page: defaultCasesPageContent, article } : null;
   }
 
   const [pageData, articleData] = await Promise.all([
-    sanityClient.fetch(casesPageQuery),
-    sanityClient.fetch(caseArticleQuery, { caseId }),
+    client.fetch(casesPageQuery),
+    client.fetch(caseArticleQuery, { caseId, slug: slugOrId }),
   ]);
 
   const page = {
@@ -133,11 +222,16 @@ export async function fetchCaseArticleContent({ params }: LoaderFunctionArgs) {
   };
 
   if (!articleData) {
-    const fallbackArticle = defaultCasesPageContent.articles.find((article) => article.caseId === caseId) || null;
+    const fallbackArticle =
+      defaultCasesPageContent.articles.find(
+        (article) => article.slug === slugOrId || (caseId !== null && article.caseId === caseId),
+      ) || null;
     return fallbackArticle ? { page, article: fallbackArticle } : null;
   }
 
-  const fallback = defaultCasesPageContent.articles.find((article) => article.caseId === caseId);
+  const fallback = defaultCasesPageContent.articles.find(
+    (article) => article.slug === slugOrId || (caseId !== null && article.caseId === caseId),
+  );
   return {
     page,
     article: mergeArticle(articleData, fallback),

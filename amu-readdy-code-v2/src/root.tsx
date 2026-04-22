@@ -50,11 +50,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>艾苜中醫診所 - 以艾醫身,以苜養心:妳與家人的專屬健康御守</title>
-        <meta
-          name="description"
-          content="艾苜中醫診所提供全方位中醫診療服務,包含婦科調理、兒童生長發育、美顏針灸、體質調理等專業療程。位於台南市北區,電話06-252-0699。"
-        />
         <meta
           name="keywords"
           content="台南中醫,中醫診所,婦科調理,美顏針,兒童轉骨,體質調理,針灸"
@@ -62,9 +57,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="geo.region" content="TW-TNN" />
         <meta name="geo.placename" content="台南市北區" />
         <meta name="geo.position" content="23.012694;120.200711" />
-        <meta property="og:title" content="艾苜中醫診所 - 以艾醫身,以苜養心" />
-        <meta property="og:description" content="您與家人的專屬健康御守,提供專業中醫診療服務" />
-        <meta property="og:type" content="website" />
         <link rel="icon" type="image/svg+xml" href="/vite.svg" />
         <link
           rel="stylesheet"

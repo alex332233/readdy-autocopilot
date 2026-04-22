@@ -7,6 +7,7 @@ export const defaultTeamPageContent: TeamPageContent = {
     '三位專業中醫師，各擅其長，以豐富的臨床經驗與現代醫學知識，為您提供全方位的健康照護。',
   doctors: [
     {
+      documentId: 'doctorProfile-1',
       doctorId: 1,
       name: '李俊廷',
       title: '醫師',
@@ -33,6 +34,7 @@ export const defaultTeamPageContent: TeamPageContent = {
       scheduleNote: '※ 週三、週日及國定假日休診，時間如有異動請依診所公告為主。',
     },
     {
+      documentId: 'doctorProfile-2',
       doctorId: 2,
       name: '歐陽汝亭',
       title: '醫師',
@@ -59,6 +61,7 @@ export const defaultTeamPageContent: TeamPageContent = {
       scheduleNote: '※ 週三、週日及國定假日休診，時間如有異動請依診所公告為主。',
     },
     {
+      documentId: 'doctorProfile-3',
       doctorId: 3,
       name: '吳雅筠',
       title: '醫師',

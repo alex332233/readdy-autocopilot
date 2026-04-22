@@ -3,6 +3,8 @@ import { index, route, type RouteConfig } from "@react-router/dev/routes";
 export default [
   route("api/preview-mode/enable", "routes/api.preview-mode.enable.ts"),
   route("api/preview-mode/disable", "routes/api.preview-mode.disable.ts"),
+  route("sitemap.xml", "routes/sitemap.xml.ts"),
+  route("robots.txt", "routes/robots.txt.ts"),
   index("routes/home.tsx", { id: "home" }),
   route("treatments", "routes/treatments.tsx"),
   route("insurance", "routes/insurance.tsx", { id: "insurance" }),

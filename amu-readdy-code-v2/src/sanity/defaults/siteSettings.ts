@@ -16,6 +16,10 @@ export const defaultSiteSettingsContent: SiteSettingsContent = {
       children: [
         { label: '御顏・緊緻', kind: 'route', target: '/featured-treatments/facial' },
         { label: '登峰・轉骨', kind: 'route', target: '/featured-treatments/growth' },
+        { label: '輕盈・體雕', kind: 'route', target: '/featured-treatments/body' },
+        { label: '明眸・亮視', kind: 'route', target: '/featured-treatments/eye' },
+        { label: '光能・修復', kind: 'route', target: '/featured-treatments/laser' },
+        { label: '深癒・淬鍊', kind: 'route', target: '/featured-treatments/decoction' },
       ],
     },
     { label: '醫師團隊', kind: 'route', target: '/team' },
@@ -77,6 +81,8 @@ export const defaultSiteSettingsContent: SiteSettingsContent = {
   copyright: '© 2025 艾苜中醫診所. All rights reserved.',
   builderLink: {
     label: 'Website Builder',
+    kind: 'external',
+    target: '',
   },
   floatingLineButton: {
     enabled: true,

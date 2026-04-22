@@ -1,5 +1,5 @@
 import { loadQuery, setServerClient } from "@sanity/react-loader";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData } from "react-router";
 import HomePage from "../pages/home/page";
 import { HomePageContentProvider } from "../pages/home/HomePageContentContext";
 import { normalizeHomePageContent } from "../sanity/fetchHomePageContent";
@@ -7,6 +7,9 @@ import { getPreviewState } from "../sanity/previewState.server";
 import { homePageQuery } from "../sanity/queries";
 import { useQuery } from "../sanity/reactLoader";
 import { createSanityServerClient } from "../sanity/serverClient";
+import { createSeoMeta, pageSeo } from "../seo/meta";
+
+export const meta = () => createSeoMeta(pageSeo.home);
 
 export async function loader({ request }: { request: Request }) {
   const preview = await getPreviewState(request);

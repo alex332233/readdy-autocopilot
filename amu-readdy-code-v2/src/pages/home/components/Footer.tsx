@@ -42,7 +42,9 @@ export default function Footer() {
                     <button
                       onClick={() => runSiteLink(link)}
                       className="text-white/90 hover:text-white transition-colors text-sm whitespace-nowrap cursor-pointer"
-                      data-sanity={getSiteSettingsDataAttribute(`footerLinkGroups[${groupIndex}].links[${linkIndex}].label`)}
+                      data-sanity-edit-group
+                      data-sanity-edit-target
+                      data-sanity={getSiteSettingsDataAttribute(`footerLinkGroups[${groupIndex}].links[${linkIndex}]`)}
                     >
                       {link.label}
                     </button>
@@ -109,12 +111,18 @@ export default function Footer() {
                 </a>
               ))}
             </div>
-            <span
-              className="text-white/70 text-sm whitespace-nowrap"
-              data-sanity={getSiteSettingsDataAttribute('builderLink.label')}
-            >
-              {siteSettings.builderLink.label}
-            </span>
+            {siteSettings.builderLink?.label ? (
+              <button
+                type="button"
+                onClick={() => runSiteLink(siteSettings.builderLink!)}
+                className="text-white/70 text-sm whitespace-nowrap hover:text-white transition-colors cursor-pointer"
+                data-sanity-edit-group
+                data-sanity-edit-target
+                data-sanity={getSiteSettingsDataAttribute('builderLink')}
+              >
+                {siteSettings.builderLink.label}
+              </button>
+            ) : null}
           </div>
         </div>
       </div>

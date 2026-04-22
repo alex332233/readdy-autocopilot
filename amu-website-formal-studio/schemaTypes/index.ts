@@ -41,6 +41,8 @@ import {insuranceTreatmentCategory} from './objects/insuranceTreatmentCategory'
 import {insuranceTreatmentItem} from './objects/insuranceTreatmentItem'
 import {link} from './objects/link'
 import {processStep} from './objects/processStep'
+import {richArticleContent} from './objects/richArticleContent'
+import {richArticleDivider} from './objects/richArticleDivider'
 import {seo} from './objects/seo'
 import {serviceItem} from './objects/serviceItem'
 import {siteLink} from './objects/siteLink'
@@ -69,6 +71,8 @@ export const schemaTypes = [
   doctorScheduleSession,
   doctorSchedule,
   processStep,
+  richArticleDivider,
+  richArticleContent,
   bookingCard,
   caseBeforeSection,
   caseAfterPhase,

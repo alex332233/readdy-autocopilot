@@ -1,4 +1,5 @@
 import {defineField, defineType} from 'sanity'
+import {iconFieldOptions} from '../iconOptions'
 
 export const aboutPhilosophyCard = defineType({
   name: 'aboutPhilosophyCard',
@@ -6,7 +7,7 @@ export const aboutPhilosophyCard = defineType({
   type: 'object',
   fields: [
     defineField({name: 'number', title: 'Number', type: 'string'}),
-    defineField({name: 'icon', title: 'Icon', type: 'string'}),
+    defineField({name: 'icon', title: 'Icon', type: 'string', options: iconFieldOptions}),
     defineField({name: 'title', title: 'Title', type: 'string'}),
     defineField({name: 'description', title: 'Description', type: 'text', rows: 4}),
   ],

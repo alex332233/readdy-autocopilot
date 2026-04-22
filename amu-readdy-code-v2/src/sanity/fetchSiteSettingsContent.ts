@@ -29,9 +29,13 @@ const mergeSiteLink = (incoming: unknown, fallback?: SiteLinkContent): SiteLinkC
 
 const mergeNavItem = (incoming: unknown, fallback?: SiteNavItemContent): SiteNavItemContent => {
   const item = incoming as Partial<SiteNavItemContent> | null;
-  const children = Array.isArray(item?.children) && item.children.length > 0
-    ? item.children.map((child, index) => mergeSiteLink(child, fallback?.children?.[index]))
-    : fallback?.children;
+  const incomingChildren = Array.isArray(item?.children) ? item.children : [];
+  const fallbackChildren = fallback?.children || [];
+  const children = incomingChildren.length > 0 || fallbackChildren.length > 0
+    ? Array.from({length: Math.max(incomingChildren.length, fallbackChildren.length)}, (_, index) =>
+        mergeSiteLink(incomingChildren[index], fallbackChildren[index]),
+      )
+    : undefined;
 
   return {
     label: item?.label || fallback?.label || '',
@@ -105,9 +109,14 @@ export const normalizeSiteSettings = (incoming: unknown): SiteSettingsContent =>
         : fallback.socialLinks,
     locationSection: mergeLocationSection(settings?.locationSection, fallback.locationSection),
     copyright: settings?.copyright || fallback.copyright,
-    builderLink: {
-      label: settings?.builderLink?.label || fallback.builderLink.label,
-    },
+    builderLink:
+      settings?.builderLink && (settings.builderLink.label || settings.builderLink.target)
+        ? {
+            label: settings.builderLink.label || '',
+            kind: settings.builderLink.kind || 'external',
+            target: settings.builderLink.target || '',
+          }
+        : undefined,
     floatingLineButton: {
       enabled: settings?.floatingLineButton?.enabled ?? fallback.floatingLineButton.enabled,
       ariaLabel:

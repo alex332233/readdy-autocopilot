@@ -70,7 +70,6 @@ export const healthEducationArticlesSeed = healthEducationData.map((article) => 
   publishDate: article.date,
   updatedDate: article.updatedDate,
   readTime: article.readTime,
-  views: article.views,
   summary: article.summary,
   coverImage: {
     url: article.coverImage,

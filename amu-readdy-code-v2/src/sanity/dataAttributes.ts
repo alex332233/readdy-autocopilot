@@ -1,6 +1,8 @@
 import { createDataAttribute } from '@sanity/visual-editing';
 import { sanityEnv } from './env';
 
+const normalizeDocumentId = (id: string) => id.replace(/^drafts\./, '');
+
 const homePageAttribute = createDataAttribute({
   id: 'homePage',
   type: 'homePage',
@@ -66,6 +68,14 @@ export const getTeamPageDataAttribute = (path: string) => teamPageAttribute(path
 export const getDoctorProfileDataAttribute = (doctorId: number | string, path: string) =>
   createDataAttribute({
     id: `doctorProfile-${doctorId}`,
+    type: 'doctorProfile',
+    projectId: sanityEnv.projectId,
+    dataset: sanityEnv.dataset,
+  })(path).toString();
+
+export const getDoctorProfileDocumentDataAttribute = (documentId: string, path: string) =>
+  createDataAttribute({
+    id: normalizeDocumentId(documentId),
     type: 'doctorProfile',
     projectId: sanityEnv.projectId,
     dataset: sanityEnv.dataset,

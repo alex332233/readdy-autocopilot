@@ -167,7 +167,7 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: 'builderLink',
-      title: '右下角文字',
+      title: '右下角連結',
       type: 'object',
       group: 'footer',
       fields: [
@@ -175,12 +175,28 @@ export const siteSettings = defineType({
           name: 'label',
           title: '文字',
           type: 'string',
-          validation: (Rule) => Rule.required(),
         }),
-        defineField({name: 'kind', title: '連結類型', type: 'string', hidden: true, initialValue: 'external'}),
-        defineField({name: 'target', title: '目標值', type: 'string', hidden: true}),
+        defineField({
+          name: 'kind',
+          title: '連結類型',
+          type: 'string',
+          initialValue: 'external',
+          options: {
+            list: [
+              {title: '頁面路由', value: 'route'},
+              {title: '頁內區塊', value: 'scroll'},
+              {title: '外部連結', value: 'external'},
+            ],
+            layout: 'radio',
+          },
+        }),
+        defineField({
+          name: 'target',
+          title: '目標值',
+          type: 'string',
+          description: 'route 填 /about，scroll 填 booking，external 填完整網址',
+        }),
       ],
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'floatingLineButton',

@@ -8,11 +8,12 @@ interface BlogCardProps {
 
 export default function BlogCard({ caseData }: BlogCardProps) {
   const navigate = useNavigate();
+  const casePath = caseData.slug || String(caseData.caseId);
 
   return (
     <article
       className="bg-white group cursor-pointer"
-      onClick={() => navigate(`/cases/${caseData.caseId}`)}
+      onClick={() => navigate(`/cases/${casePath}`)}
     >
       {/* 封面圖 */}
       <div className="relative w-full h-52 overflow-hidden" data-sanity-edit-group data-sanity-edit-target>

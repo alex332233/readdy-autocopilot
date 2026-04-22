@@ -1,5 +1,5 @@
 import { VisualEditing } from '@sanity/visual-editing/react-router';
-import { useRouteLoaderData } from 'react-router-dom';
+import { useRevalidator, useRouteLoaderData } from 'react-router';
 import { sanityClient } from './client';
 import { sanityEnv } from './env';
 import { useLiveMode } from './reactLoader';
@@ -13,6 +13,8 @@ type RootRouteData =
   | undefined;
 
 function SanityVisualEditingEnabled({ isDraftPreview }: { isDraftPreview: boolean }) {
+  const revalidator = useRevalidator();
+
   useLiveMode({
     client: sanityClient,
     studioUrl: sanityEnv.studioUrl,
@@ -25,7 +27,7 @@ function SanityVisualEditingEnabled({ isDraftPreview }: { isDraftPreview: boolea
           if (!isDraftPreview && payload.document._id.startsWith('drafts.')) {
             return false;
           }
-          window.location.reload();
+          revalidator.revalidate();
           return Promise.resolve();
         }
         return refreshDefault();

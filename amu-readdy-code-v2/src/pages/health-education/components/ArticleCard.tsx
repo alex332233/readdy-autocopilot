@@ -10,10 +10,11 @@ interface ArticleCardProps {
 
 export default function ArticleCard({ article, index = 0 }: ArticleCardProps) {
   const navigate = useNavigate();
+  const articlePath = article.slug || String(article.articleId);
 
   return (
     <FadeIn delay={index * 80} direction="up" duration={1400}>
-      <article className="bg-white group cursor-pointer" onClick={() => navigate(`/health-education/${article.articleId}`)}>
+      <article className="bg-white group cursor-pointer" onClick={() => navigate(`/health-education/${articlePath}`)}>
         <div className="relative w-full h-52 overflow-hidden rounded-lg" data-sanity-edit-group data-sanity-edit-target>
           <img
             src={article.coverImage.url}
@@ -34,15 +35,6 @@ export default function ArticleCard({ article, index = 0 }: ArticleCardProps) {
             <p className="text-[11px] text-gray-400 tracking-wide" data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'updatedDate')}>
               {article.updatedDate} 更新
             </p>
-            <span className="text-gray-300">·</span>
-            <div className="flex items-center gap-1">
-              <div className="w-4 h-4 flex items-center justify-center">
-                <i className="ri-eye-line text-gray-400" style={{ fontSize: '11px' }}></i>
-              </div>
-              <span className="text-[11px] text-gray-400" data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'views')}>
-                {article.views.toLocaleString()}
-              </span>
-            </div>
             <span className="text-gray-300">·</span>
             <div className="flex items-center gap-1">
               <div className="w-4 h-4 flex items-center justify-center">

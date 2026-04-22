@@ -19,10 +19,8 @@ export const doctorProfile = defineType({
           name: 'alt',
           title: '替代文字',
           type: 'string',
-          validation: (Rule) => Rule.required(),
         }),
       ],
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'education',

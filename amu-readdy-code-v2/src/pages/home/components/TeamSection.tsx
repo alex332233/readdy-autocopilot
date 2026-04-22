@@ -1,8 +1,10 @@
+import { useNavigate } from 'react-router';
 import FadeIn from '../../../components/base/FadeIn';
 import { useHomePageContent } from '../useHomePageContent';
 import { getHomePageDataAttribute } from '../../../sanity/dataAttributes';
 
 export default function TeamSection() {
+  const navigate = useNavigate();
   const { team } = useHomePageContent();
 
   return (
@@ -19,19 +21,15 @@ export default function TeamSection() {
               <p className="text-base text-gray-500 leading-relaxed mb-8">
                 {team.description}
               </p>
-              <div className="flex flex-col gap-3">
-                {team.doctors.map((doc, i) => (
-                  <FadeIn key={i} direction="up" delay={200 + i * 100}>
-                    <div className="flex items-center gap-3 py-3 border-b border-gray-200 last:border-0">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#cd9651] flex-shrink-0"></div>
-                      <div>
-                        <span className="text-sm font-semibold text-gray-800">{doc.name}</span>
-                        <span className="text-xs text-gray-400 ml-2">{doc.title}</span>
-                      </div>
-                    </div>
-                  </FadeIn>
-                ))}
-              </div>
+              <FadeIn direction="up" delay={200}>
+                <button
+                  onClick={() => navigate('/team')}
+                  className="group inline-flex items-center gap-2 px-6 py-3 bg-[#cd9651] text-white rounded-full text-sm font-medium hover:bg-[#b8823d] transition-colors duration-300 cursor-pointer whitespace-nowrap"
+                >
+                  更多醫師介紹
+                  <i className="ri-arrow-right-line transition-transform duration-300 group-hover:translate-x-1.5"></i>
+                </button>
+              </FadeIn>
             </FadeIn>
           </div>
 

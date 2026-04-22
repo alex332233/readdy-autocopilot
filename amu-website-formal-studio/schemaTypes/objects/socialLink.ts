@@ -1,4 +1,5 @@
 import {defineField, defineType} from 'sanity'
+import {iconFieldOptions} from '../iconOptions'
 
 export const socialLink = defineType({
   name: 'socialLink',
@@ -15,6 +16,7 @@ export const socialLink = defineType({
       name: 'icon',
       title: 'Icon class',
       type: 'string',
+      options: iconFieldOptions,
       validation: (Rule) => Rule.required(),
     }),
     defineField({

@@ -16,7 +16,13 @@
     "seed:cases": "sanity exec ./scripts/seed-cases.cli.mjs --with-user-token",
     "seed:team": "sanity exec ./scripts/seed-team.cli.mjs --with-user-token",
     "seed:health-education": "sanity exec ./scripts/seed-health-education.cli.mjs --with-user-token",
-    "seed:site-settings": "sanity exec ./scripts/seed-site-settings.cli.mjs --with-user-token"
+    "seed:site-settings": "sanity exec ./scripts/seed-site-settings.cli.mjs --with-user-token",
+    "seed:featured-card-images": "sanity exec ./scripts/seed-featured-card-images.cli.mjs --with-user-token",
+    "seed:doctor-specialty-types": "sanity exec ./scripts/seed-doctor-specialty-types.cli.mjs --with-user-token",
+    "seed:article-slugs": "sanity exec ./scripts/seed-article-slugs.cli.mjs --with-user-token",
+    "normalize:article-dates": "sanity exec ./scripts/normalize-article-dates.cli.mjs --with-user-token",
+    "audit:article-seo": "sanity exec ./scripts/audit-article-seo.cli.mjs --with-user-token",
+    "clear:health-education-views": "sanity exec ./scripts/clear-health-education-views.cli.mjs --with-user-token"
   },
   "dependencies": {
     "@sanity/vision": "^5.14.1",

@@ -3,7 +3,7 @@ import { useLoaderData, useNavigate, useParams } from 'react-router-dom';
 import Navbar from '../../home/components/Navbar';
 import Footer from '../../home/components/Footer';
 import CTASection from '../components/CTASection';
-import PageMeta from '../../../components/PageMeta';
+import RichArticleRenderer from '../../../components/RichArticleRenderer';
 import type { CaseArticleContent, CasesPageContent } from '../../../sanity/types';
 import { getCaseArticleDataAttribute } from '../../../sanity/dataAttributes';
 
@@ -38,18 +38,8 @@ export default function CaseDetailPage() {
     );
   }
 
-  const metaTitle = caseData.seo?.title || caseData.title;
-  const metaDescription = caseData.seo?.description || caseData.description;
-
   return (
     <div className="min-h-screen bg-white">
-      <PageMeta
-        title={metaTitle}
-        description={metaDescription}
-        image={caseData.coverImage.url}
-        imageAlt={caseData.coverImage.alt || caseData.title}
-        type="article"
-      />
       <Navbar scrolled={scrolled} />
 
       {/* Hero 封面圖 */}
@@ -104,82 +94,86 @@ export default function CaseDetailPage() {
           </div>
         </div>
 
-        {/* 描述 */}
-        <p
-          className="text-sm text-gray-500 leading-relaxed mb-10 border-l-2 border-[#cd9651]/30 pl-4"
-          data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'description')}
-        >
-          {caseData.description}
-        </p>
+        {caseData.body && caseData.body.length > 0 ? (
+          <RichArticleRenderer
+            getDataAttribute={(path) => getCaseArticleDataAttribute(caseData.caseId, path)}
+            blocks={caseData.body}
+          />
+        ) : (
+          <>
+            <p
+              className="text-sm text-gray-500 leading-relaxed mb-10 border-l-2 border-[#cd9651]/30 pl-4"
+              data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'description')}
+            >
+              {caseData.description}
+            </p>
 
-        {/* 治療前後 */}
-        <div className="grid md:grid-cols-2 gap-5 mb-10">
-          {/* 治療前 */}
-          <div className="bg-[#fdf8f8] rounded-xl p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="w-2 h-2 rounded-full bg-red-300 flex-shrink-0"></span>
-              <span className="text-sm font-bold text-gray-700 tracking-widest" data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'before.title')}>
-                {caseData.before.title}
-              </span>
-            </div>
-            <ul className="space-y-2.5">
-              {caseData.before.items.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-2">
-                  <div className="w-4 h-4 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <i className="ri-subtract-line text-red-300 text-sm"></i>
-                  </div>
-                  <span className="text-xs text-gray-600 leading-relaxed" data-sanity={getCaseArticleDataAttribute(caseData.caseId, `before.items[${idx}]`)}>
-                    {item}
+            <div className="grid md:grid-cols-2 gap-5 mb-10">
+              <div className="bg-[#fdf8f8] rounded-xl p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="w-2 h-2 rounded-full bg-red-300 flex-shrink-0"></span>
+                  <span className="text-sm font-bold text-gray-700 tracking-widest" data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'before.title')}>
+                    {caseData.before.title}
                   </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* 治療後 */}
-          <div className="bg-[#f7fdf9] rounded-xl p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"></span>
-              <span className="text-sm font-bold text-gray-700 tracking-widest" data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'after.title')}>
-                {caseData.after.title}
-              </span>
-            </div>
-            <div className="space-y-4">
-              {caseData.after.phases.map((phase, idx) => (
-                <div key={idx}>
-                  <span className="text-xs text-emerald-600 font-semibold mb-2 block" data-sanity={getCaseArticleDataAttribute(caseData.caseId, `after.phases[${idx}].period`)}>
-                    {phase.period}
-                  </span>
-                  <ul className="space-y-1.5">
-                    {phase.improvements.map((item, impIdx) => (
-                      <li key={impIdx} className="flex items-start gap-2">
-                        <div className="w-4 h-4 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <i className="ri-check-line text-emerald-400 text-sm"></i>
-                        </div>
-                        <span
-                          className="text-xs text-gray-600 leading-relaxed"
-                          data-sanity={getCaseArticleDataAttribute(caseData.caseId, `after.phases[${idx}].improvements[${impIdx}]`)}
-                        >
-                          {item}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
+                <ul className="space-y-2.5">
+                  {caseData.before.items.map((item, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <div className="w-4 h-4 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <i className="ri-subtract-line text-red-300 text-sm"></i>
+                      </div>
+                      <span className="text-xs text-gray-600 leading-relaxed" data-sanity={getCaseArticleDataAttribute(caseData.caseId, `before.items[${idx}]`)}>
+                        {item}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-        {/* 醫師總結 */}
-        <div className="flex items-start gap-3 mb-10 bg-[#faf6f0] rounded-xl p-6">
-          <div className="w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">
-            <i className="ri-double-quotes-l text-[#cd9651] text-xl"></i>
-          </div>
-          <p className="text-sm text-gray-600 leading-relaxed italic" data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'conclusion')}>
-            {caseData.conclusion}
-          </p>
-        </div>
+              <div className="bg-[#f7fdf9] rounded-xl p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"></span>
+                  <span className="text-sm font-bold text-gray-700 tracking-widest" data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'after.title')}>
+                    {caseData.after.title}
+                  </span>
+                </div>
+                <div className="space-y-4">
+                  {caseData.after.phases.map((phase, idx) => (
+                    <div key={idx}>
+                      <span className="text-xs text-emerald-600 font-semibold mb-2 block" data-sanity={getCaseArticleDataAttribute(caseData.caseId, `after.phases[${idx}].period`)}>
+                        {phase.period}
+                      </span>
+                      <ul className="space-y-1.5">
+                        {phase.improvements.map((item, impIdx) => (
+                          <li key={impIdx} className="flex items-start gap-2">
+                            <div className="w-4 h-4 flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <i className="ri-check-line text-emerald-400 text-sm"></i>
+                            </div>
+                            <span
+                              className="text-xs text-gray-600 leading-relaxed"
+                              data-sanity={getCaseArticleDataAttribute(caseData.caseId, `after.phases[${idx}].improvements[${impIdx}]`)}
+                            >
+                              {item}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 mb-10 bg-[#faf6f0] rounded-xl p-6">
+              <div className="w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <i className="ri-double-quotes-l text-[#cd9651] text-xl"></i>
+              </div>
+              <p className="text-sm text-gray-600 leading-relaxed italic" data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'conclusion')}>
+                {caseData.conclusion}
+              </p>
+            </div>
+          </>
+        )}
 
         {/* 貼心小提醒 / 醫學小知識 */}
         {(caseData.tips || caseData.medicalInfo) && (

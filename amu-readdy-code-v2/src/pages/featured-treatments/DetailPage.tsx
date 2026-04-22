@@ -1,18 +1,38 @@
 import { useEffect, useState } from 'react';
-import { useLoaderData, useRouteLoaderData } from 'react-router-dom';
+import { useLoaderData } from 'react-router-dom';
 import Navbar from '../home/components/Navbar';
 import Footer from '../home/components/Footer';
 import RelatedTreatmentsSection from './components/RelatedTreatmentsSection';
+import BodyDetailSection from './components/BodyDetailSection';
+import EyeDetailSection from './components/EyeDetailSection';
+import LaserDetailSection from './components/LaserDetailSection';
+import DecoctionDetailSection from './components/DecoctionDetailSection';
 import type { FeaturedTreatmentDetailContent, FeaturedTreatmentPageContent } from '../../sanity/types';
 import { getFeaturedTreatmentDetailDataAttribute } from '../../sanity/dataAttributes';
 
 const divider = (color: string) => ({ background: `linear-gradient(to right, transparent, ${color}4d, transparent)` });
 
+const detailHeroBackgrounds: Record<string, string> = {
+  body: '#faf6f0',
+  eye: '#f2f7f7',
+  laser: '#fdf8f2',
+  decoction: '#f2f7f5',
+};
+
+const specializedDetailSections: Record<string, (detail: FeaturedTreatmentDetailContent) => React.ReactNode> = {
+  body: (detail) => <BodyDetailSection detail={detail} />,
+  eye: (detail) => <EyeDetailSection detail={detail} />,
+  laser: (detail) => <LaserDetailSection detail={detail} />,
+  decoction: (detail) => <DecoctionDetailSection detail={detail} />,
+};
+
 export default function FeaturedTreatmentDetailPage() {
   const [scrolled, setScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const detail = useLoaderData() as FeaturedTreatmentDetailContent;
-  const pageData = useRouteLoaderData('featuredTreatments') as FeaturedTreatmentPageContent | undefined;
+  const { detail, page } = useLoaderData() as {
+    detail: FeaturedTreatmentDetailContent;
+    page: FeaturedTreatmentPageContent;
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -35,7 +55,10 @@ export default function FeaturedTreatmentDetailPage() {
     <div className="relative">
       <Navbar scrolled={scrolled} />
       <main>
-        <section className="relative pt-24 overflow-hidden bg-[#faf6f0]">
+        <section
+          className="relative pt-24 overflow-hidden"
+          style={{ backgroundColor: detailHeroBackgrounds[detail.slug] ?? '#faf6f0' }}
+        >
           <div className="max-w-7xl mx-auto px-6 py-20 flex flex-col items-center text-center">
             <h1 className="text-4xl lg:text-5xl font-bold mb-4 leading-tight" style={{ fontFamily: "'Noto Serif TC', serif", color: detail.themeColor, ...fadeUp(100) }}>
               <span data-sanity={getFeaturedTreatmentDetailDataAttribute(detail.slug, 'title')}>{detail.title}</span>
@@ -46,6 +69,7 @@ export default function FeaturedTreatmentDetailPage() {
           </div>
         </section>
 
+        {specializedDetailSections[detail.slug]?.(detail) ?? (
         <section className="py-20 bg-gradient-to-b from-white to-[#f8f6f1]">
           <div className="max-w-6xl mx-auto px-6 lg:px-8">
             {detail.sections.map((section, sectionIndex) => {
@@ -227,8 +251,9 @@ export default function FeaturedTreatmentDetailPage() {
             </div>
           </div>
         </section>
+        )}
 
-        {pageData && <RelatedTreatmentsSection cards={pageData.cards} currentSlug={detail.slug} />}
+        {page && <RelatedTreatmentsSection cards={page.cards} currentSlug={detail.slug} extraCard={page.relatedExtraCard} />}
       </main>
       <Footer />
     </div>
