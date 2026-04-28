@@ -15,12 +15,6 @@ export const featuredTreatmentsPage = defineType({
       of: [defineArrayMember({type: 'featuredTreatmentCard'})],
       validation: (rule) => rule.required().min(1),
     }),
-    defineField({
-      name: 'relatedExtraCard',
-      title: '個別頁底部額外卡片',
-      description: '顯示在特色療程個別頁底部六張卡片中的補充卡片，例如客製調理。',
-      type: 'featuredTreatmentCard',
-    }),
     defineField({name: 'seo', title: 'SEO', type: 'seo'}),
   ],
   preview: {

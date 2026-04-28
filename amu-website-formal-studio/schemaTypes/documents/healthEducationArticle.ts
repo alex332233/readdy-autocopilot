@@ -1,6 +1,7 @@
 import {defineField, defineType} from 'sanity'
 
 const today = () => new Date().toISOString().slice(0, 10)
+type ReferenceLike = {_ref?: string}
 
 export const healthEducationArticle = defineType({
   name: 'healthEducationArticle',
@@ -44,7 +45,7 @@ export const healthEducationArticle = defineType({
       options: {
         disableNew: true,
         filter: ({document}) => {
-          const categoryRef = document?.category?._ref
+          const categoryRef = (document?.category as ReferenceLike | undefined)?._ref
           if (!categoryRef) {
             return {
               filter: '_type == "healthEducationSubcategory" && false',

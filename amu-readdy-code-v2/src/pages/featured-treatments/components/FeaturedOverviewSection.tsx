@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FeaturedTreatmentCardContent } from '../../../sanity/types';
 import { getFeaturedTreatmentsPageDataAttribute } from '../../../sanity/dataAttributes';
+import { getFeaturedTreatmentDetailPath } from '../treatmentLinks';
 
 interface FeaturedOverviewSectionProps {
   cards: FeaturedTreatmentCardContent[];
@@ -51,7 +52,7 @@ export default function FeaturedOverviewSection({ cards }: FeaturedOverviewSecti
 
         return {
           ...card,
-          path: card.detailSlug ? `/featured-treatments/${card.detailSlug}` : undefined,
+          path: getFeaturedTreatmentDetailPath(card),
           subtitle: meta.subtitle,
           image: card.image?.url || '',
         };

@@ -23,6 +23,7 @@ export const defaultFeaturedTreatmentsPageContent: FeaturedTreatmentPageContent 
   heroDescription: '結合中醫專業與個人化調理，為不同需求提供溫和且具方向性的療程方案。',
   cards: [
     {
+      treatmentKey: 'facial',
       title: '御顏・緊緻',
       englishTitle: 'Facial Rejuvenation',
       icon: 'ri-sparkling-line',
@@ -37,6 +38,7 @@ export const defaultFeaturedTreatmentsPageContent: FeaturedTreatmentPageContent 
       detailSlug: 'facial',
     },
     {
+      treatmentKey: 'growth',
       title: '登峰・轉骨',
       englishTitle: 'Growth Enhancement',
       icon: 'ri-line-chart-line',
@@ -51,6 +53,7 @@ export const defaultFeaturedTreatmentsPageContent: FeaturedTreatmentPageContent 
       detailSlug: 'growth',
     },
     {
+      treatmentKey: 'body',
       title: '輕盈・體雕',
       englishTitle: 'Body Sculpting',
       icon: 'ri-scales-3-line',
@@ -65,6 +68,7 @@ export const defaultFeaturedTreatmentsPageContent: FeaturedTreatmentPageContent 
       detailSlug: 'body',
     },
     {
+      treatmentKey: 'eye',
       title: '明眸・亮視',
       englishTitle: 'Eye Care',
       icon: 'ri-eye-line',
@@ -79,6 +83,7 @@ export const defaultFeaturedTreatmentsPageContent: FeaturedTreatmentPageContent 
       detailSlug: 'eye',
     },
     {
+      treatmentKey: 'laser',
       title: '光能・修復',
       englishTitle: 'Laser Acupuncture',
       icon: 'ri-flashlight-line',
@@ -93,6 +98,7 @@ export const defaultFeaturedTreatmentsPageContent: FeaturedTreatmentPageContent 
       detailSlug: 'laser',
     },
     {
+      treatmentKey: 'decoction',
       title: '深癒・淬鍊',
       englishTitle: 'Herbal Decoction',
       icon: 'ri-flask-line',
@@ -107,15 +113,6 @@ export const defaultFeaturedTreatmentsPageContent: FeaturedTreatmentPageContent 
       detailSlug: 'decoction',
     },
   ],
-  relatedExtraCard: {
-    title: '客製調理',
-    englishTitle: 'Tailored Wellness',
-    icon: 'ri-medicine-bottle-line',
-    color: '#c7a06b',
-    treatmentTitle: '一人一方的專屬調理',
-    description: '依照體質、階段與生活節奏客製辨證方向，讓艾苜醫師陪您找到更適合自己的調理節奏與療程搭配。',
-    tags: ['辨證施治', '客製方向', '整體調理'],
-  },
 };
 
 const facialSections: FeaturedTreatmentSection[] = [
@@ -253,6 +250,7 @@ const createPlaceholderDetail = (
 
 export const defaultFeaturedTreatmentDetails: Record<string, FeaturedTreatmentDetailContent> = {
   facial: {
+    treatmentKey: 'facial',
     title: '御顏・緊緻',
     slug: 'facial',
     subtitle: '由內而外的無創微雕',
@@ -262,6 +260,7 @@ export const defaultFeaturedTreatmentDetails: Record<string, FeaturedTreatmentDe
     cta: sharedCta,
   },
   growth: {
+    treatmentKey: 'growth',
     title: '登峰・轉骨',
     slug: 'growth',
     subtitle: '科學中醫的循證轉骨',
@@ -270,10 +269,10 @@ export const defaultFeaturedTreatmentDetails: Record<string, FeaturedTreatmentDe
     disclaimer: '【艾苜中醫溫馨提醒】本網站所提及之生長發育調理、體質改善等療程效能與進度，將因每位孩童的個人體質、年齡、骨齡發展及日常作息而有所差異。任何醫療處置均需視個人情況調整，實際的治療計畫（含雷射針灸與客製方劑之頻率與劑量），必須由本診所專業中醫師親自看診、評估相關數據後方可制定並執行。',
     cta: sharedCta,
   },
-  body: createPlaceholderDetail('輕盈・體雕', 'body', '#b8956a', '外埋線體雕・內中藥調理，重塑代謝記憶', '若您想先了解體態管理與埋線體雕是否適合自己，歡迎先預約諮詢。'),
-  eye: createPlaceholderDetail('明眸・亮視', 'eye', '#5c8f8c', '眼針調理・中藥滋養，重現晶亮神采', '若您想先了解眼針與護眼調理是否適合自己，歡迎先預約諮詢。'),
-  laser: createPlaceholderDetail('光能・修復', 'laser', '#c9965a', '無痛雷射針灸・溫柔喚醒，讓每個年齡層都能安心調理', '若您想先了解無痛雷射針灸是否適合自己，歡迎先預約諮詢。'),
-  decoction: createPlaceholderDetail('深癒・淬鍊', 'decoction', '#5a7a6e', '全客製水煎藥・深層淬鍊，為每一個生命關鍵期精準守護', '若您想先了解全客製水煎藥是否適合自己，歡迎先預約諮詢。'),
+  body: {...createPlaceholderDetail('輕盈・體雕', 'body', '#b8956a', '外埋線體雕・內中藥調理，重塑代謝記憶', '若您想先了解體態管理與埋線體雕是否適合自己，歡迎先預約諮詢。'), treatmentKey: 'body'},
+  eye: {...createPlaceholderDetail('明眸・亮視', 'eye', '#b8956a', '眼針調理・中藥滋養，重現晶亮神采', '若您想先了解眼針與護眼調理是否適合自己，歡迎先預約諮詢。'), treatmentKey: 'eye'},
+  laser: {...createPlaceholderDetail('光能・修復', 'laser', '#5a7a6e', '無痛雷射針灸・溫柔喚醒，讓每個年齡層都能安心調理', '若您想先了解無痛雷射針灸是否適合自己，歡迎先預約諮詢。'), treatmentKey: 'laser'},
+  decoction: {...createPlaceholderDetail('深癒・淬鍊', 'decoction', '#5a7a6e', '全客製水煎藥・深層淬鍊，為每一個生命關鍵期精準守護', '若您想先了解全客製水煎藥是否適合自己，歡迎先預約諮詢。'), treatmentKey: 'decoction'},
 };
 
 defaultFeaturedTreatmentDetails.body.primaryImage = {

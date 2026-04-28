@@ -61,9 +61,12 @@ export interface AboutPageContent {
 }
 
 export interface InsuranceOverviewCard {
+  _key?: string;
   title: string;
   englishTitle: string;
   subtitle: string;
+  treatmentKey?: string;
+  treatmentIcon?: string;
   icon: string;
   anchorId: string;
   image: SanityImage;
@@ -77,9 +80,12 @@ export interface InsuranceTreatmentItem {
 }
 
 export interface InsuranceTreatmentCategory {
+  _key?: string;
   title: string;
   subtitle: string;
   englishTitle: string;
+  treatmentKey?: string;
+  treatmentIcon?: string;
   icon: string;
   color: string;
   treatments: InsuranceTreatmentItem[];
@@ -148,7 +154,17 @@ export interface DoctorSpecialtyGroup {
   _key?: string;
   slug: string;
   name: string;
+  icon?: string;
+  sourceField?: 'insuranceSpecialtyRefs' | 'specialtyGroups';
   items: string[];
+}
+
+export interface DoctorTreatmentTag {
+  _key?: string;
+  key?: string;
+  name: string;
+  icon?: string;
+  sourceField?: 'featuredTreatmentRefs' | 'specialTreatments';
 }
 
 export interface DoctorScheduleSession {
@@ -180,6 +196,7 @@ export interface DoctorProfileContent {
   experience: string[];
   specialtyGroups: DoctorSpecialtyGroup[];
   specialTreatments: string[];
+  specialTreatmentItems?: DoctorTreatmentTag[];
   schedule?: DoctorSchedule;
   scheduleNote?: string;
 }
@@ -374,7 +391,15 @@ export interface HomeAboutContent {
 }
 
 export interface HomeServiceItem {
+  _key?: string;
   number: string;
+  treatmentKey?: string;
+  treatmentCategory?: 'insurance' | 'featured' | 'reserved';
+  treatmentIcon?: string;
+  treatmentName?: string;
+  treatmentHomeSubtitle?: string;
+  treatmentHomeDescription?: string;
+  href?: string;
   icon: string;
   title: string;
   subtitle: string;
@@ -489,6 +514,9 @@ export interface HomePageContent {
 
 export interface FeaturedTreatmentCardContent {
   _key?: string;
+  treatmentKey?: string;
+  treatmentIcon?: string;
+  treatmentFeaturedName?: string;
   title: string;
   englishTitle: string;
   icon: string;
@@ -505,7 +533,6 @@ export interface FeaturedTreatmentPageContent {
   heroTitle: string;
   heroDescription: string;
   cards: FeaturedTreatmentCardContent[];
-  relatedExtraCard?: FeaturedTreatmentCardContent;
 }
 
 export type FeaturedTreatmentSectionLayout = 'textOnly' | 'textImage' | 'imageText' | 'cardsCases' | 'processCards';
@@ -542,6 +569,8 @@ export interface FeaturedTreatmentCta {
 }
 
 export interface FeaturedTreatmentDetailContent {
+  _id?: string;
+  treatmentKey?: string;
   title: string;
   slug: string;
   subtitle: string;

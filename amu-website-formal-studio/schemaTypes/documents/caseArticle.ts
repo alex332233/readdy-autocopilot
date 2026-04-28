@@ -23,7 +23,23 @@ export const caseArticle = defineType({
       validation: (rule) => rule.required().warning('建議填寫，將用於前台文章網址與 SEO。'),
       description: '用於前台網址，例如 cases/acupuncture-sleep-case。若暫時未填，前台會保留文章編號網址。',
     }),
-    defineField({name: 'category', title: '分類', type: 'string'}),
+    defineField({
+      name: 'categoryRef',
+      title: '分類',
+      type: 'reference',
+      to: [{type: 'caseCategory'}],
+      weak: true,
+      options: {
+        disableNew: true,
+      },
+    }),
+    defineField({
+      name: 'category',
+      title: '分類（舊欄位）',
+      type: 'string',
+      readOnly: true,
+      hidden: true,
+    }),
     defineField({
       name: 'tags',
       title: '標籤',
@@ -93,6 +109,12 @@ export const caseArticle = defineType({
     defineField({name: 'seo', title: 'SEO', type: 'seo'}),
   ],
   preview: {
-    select: {title: 'title', subtitle: 'category'},
+    select: {title: 'title', categoryName: 'categoryRef.name', legacyCategory: 'category'},
+    prepare(selection) {
+      return {
+        title: selection.title,
+        subtitle: selection.categoryName || selection.legacyCategory,
+      }
+    },
   },
 })

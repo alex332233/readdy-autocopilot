@@ -6,6 +6,7 @@ import type {
   DoctorSchedule,
   DoctorScheduleSession,
   DoctorSpecialtyGroup,
+  DoctorTreatmentTag,
   SanityImage,
   TeamPageContent,
 } from './types';
@@ -24,7 +25,20 @@ const mergeSpecialtyGroup = (incoming: unknown, fallback?: DoctorSpecialtyGroup)
     _key: group?._key || fallback?._key,
     slug: group?.slug || fallback?.slug || '',
     name: group?.name || fallback?.name || '',
+    icon: group?.icon || fallback?.icon,
+    sourceField: group?.sourceField || fallback?.sourceField || 'specialtyGroups',
     items: Array.isArray(group?.items) ? group.items.filter(Boolean) : fallback?.items || [],
+  };
+};
+
+const mergeTreatmentTag = (incoming: unknown, fallback?: DoctorTreatmentTag): DoctorTreatmentTag => {
+  const tag = incoming as Partial<DoctorTreatmentTag> | null;
+  return {
+    _key: tag?._key || fallback?._key,
+    key: tag?.key || fallback?.key,
+    name: tag?.name || fallback?.name || '',
+    icon: tag?.icon || fallback?.icon,
+    sourceField: tag?.sourceField || fallback?.sourceField || 'specialTreatments',
   };
 };
 
@@ -57,7 +71,31 @@ const mergeSchedule = (incoming: unknown, fallback?: DoctorSchedule): DoctorSche
 };
 
 const mergeDoctorProfile = (incoming: unknown, fallback?: DoctorProfileContent): DoctorProfileContent => {
-  const doctor = incoming as (Partial<DoctorProfileContent> & {_id?: string}) | null;
+  const doctor = incoming as
+    | (Partial<DoctorProfileContent> & {
+        _id?: string;
+        insuranceSpecialtyGroups?: unknown[];
+        featuredTreatmentItems?: unknown[];
+      })
+    | null;
+  const specialtyGroups =
+    Array.isArray(doctor?.insuranceSpecialtyGroups) && doctor.insuranceSpecialtyGroups.length > 0
+      ? doctor.insuranceSpecialtyGroups.map((group, index) => mergeSpecialtyGroup(group, fallback?.specialtyGroups[index]))
+      : Array.isArray(doctor?.specialtyGroups) && doctor.specialtyGroups.length > 0
+        ? doctor.specialtyGroups.map((group, index) => mergeSpecialtyGroup(group, fallback?.specialtyGroups[index]))
+        : fallback?.specialtyGroups || [];
+  const specialTreatmentItems =
+    Array.isArray(doctor?.featuredTreatmentItems) && doctor.featuredTreatmentItems.length > 0
+      ? doctor.featuredTreatmentItems.map((tag, index) =>
+          mergeTreatmentTag(tag, fallback?.specialTreatmentItems?.[index]),
+        )
+      : undefined;
+  const specialTreatments = specialTreatmentItems
+    ? specialTreatmentItems.map((tag) => tag.name).filter(Boolean)
+    : Array.isArray(doctor?.specialTreatments)
+      ? doctor.specialTreatments.filter(Boolean)
+      : fallback?.specialTreatments || [];
+
   return {
     documentId: doctor?._id || doctor?.documentId || fallback?.documentId || '',
     doctorId: Number(doctor?.doctorId || fallback?.doctorId || 0),
@@ -67,13 +105,9 @@ const mergeDoctorProfile = (incoming: unknown, fallback?: DoctorProfileContent):
     image: doctor?.image ? mergeImage(doctor.image) : {url: '', alt: ''},
     education: Array.isArray(doctor?.education) ? doctor.education.filter(Boolean) : fallback?.education || [],
     experience: Array.isArray(doctor?.experience) ? doctor.experience.filter(Boolean) : fallback?.experience || [],
-    specialtyGroups:
-      Array.isArray(doctor?.specialtyGroups) && doctor.specialtyGroups.length > 0
-        ? doctor.specialtyGroups.map((group, index) => mergeSpecialtyGroup(group, fallback?.specialtyGroups[index]))
-        : fallback?.specialtyGroups || [],
-    specialTreatments: Array.isArray(doctor?.specialTreatments)
-      ? doctor.specialTreatments.filter(Boolean)
-      : fallback?.specialTreatments || [],
+    specialtyGroups,
+    specialTreatments,
+    specialTreatmentItems,
     schedule: mergeSchedule(doctor?.schedule, fallback?.schedule),
     scheduleNote: doctor?.scheduleNote || fallback?.scheduleNote,
   };

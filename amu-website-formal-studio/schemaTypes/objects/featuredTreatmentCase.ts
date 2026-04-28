@@ -11,6 +11,14 @@ export const featuredTreatmentCase = defineType({
     defineField({name: 'content', title: 'Content', type: 'text', rows: 4}),
     defineField({name: 'link', title: 'Link', type: 'string'}),
     defineField({
+      name: 'imageUrl',
+      title: 'Image URL（舊欄位）',
+      description: '僅作前台 fallback。正式圖片請使用 Image 欄位上傳。',
+      type: 'url',
+      readOnly: true,
+      hidden: true,
+    }),
+    defineField({
       name: 'image',
       title: 'Image',
       type: 'image',

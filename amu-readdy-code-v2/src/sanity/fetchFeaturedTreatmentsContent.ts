@@ -28,9 +28,12 @@ const mergeCard = (incoming: unknown, fallback?: FeaturedTreatmentCardContent): 
   const card = incoming as Partial<FeaturedTreatmentCardContent> | null;
   return {
     _key: card?._key || fallback?._key,
+    treatmentKey: card?.treatmentKey || fallback?.treatmentKey,
+    treatmentIcon: card?.treatmentIcon || fallback?.treatmentIcon,
+    treatmentFeaturedName: card?.treatmentFeaturedName || fallback?.treatmentFeaturedName,
     title: fallback?.title || card?.title || '',
     englishTitle: fallback?.englishTitle || card?.englishTitle || '',
-    icon: fallback?.icon || card?.icon || '',
+    icon: card?.treatmentIcon || fallback?.treatmentIcon || fallback?.icon || card?.icon || '',
     color: fallback?.color || card?.color || '#cd9651',
     image: mergeImage(card?.image, fallback?.image),
     treatmentTitle: fallback?.treatmentTitle || card?.treatmentTitle || '',
@@ -45,6 +48,7 @@ const findMatchingCard = (
   fallback: FeaturedTreatmentCardContent,
 ) =>
   cards.find((card) =>
+    (card.treatmentKey && fallback.treatmentKey && card.treatmentKey === fallback.treatmentKey) ||
     (card.detailSlug && fallback.detailSlug && card.detailSlug === fallback.detailSlug) ||
     (card.title && card.title === fallback.title) ||
     (card.englishTitle && card.englishTitle === fallback.englishTitle),
@@ -96,6 +100,7 @@ export async function fetchFeaturedTreatmentsPageContent() {
       ? incomingCards.map((card) => {
           const fallback = findMatchingCard(defaultFeaturedTreatmentsPageContent.cards, {
             _key: card._key,
+            treatmentKey: card.treatmentKey,
             title: card.title || '',
             englishTitle: card.englishTitle || '',
             icon: card.icon || '',
@@ -116,10 +121,6 @@ export async function fetchFeaturedTreatmentsPageContent() {
     heroTitle: data.heroTitle || defaultFeaturedTreatmentsPageContent.heroTitle,
     heroDescription: data.heroDescription || defaultFeaturedTreatmentsPageContent.heroDescription,
     cards: mergedCards,
-    relatedExtraCard: mergeCard(
-      (data as { relatedExtraCard?: unknown } | null)?.relatedExtraCard,
-      defaultFeaturedTreatmentsPageContent.relatedExtraCard,
-    ),
   };
 }
 
@@ -132,6 +133,8 @@ export async function fetchFeaturedTreatmentDetailContent({ params }: { params: 
   if (!data) return fallback;
 
   return {
+    _id: data._id || fallback._id,
+    treatmentKey: data.treatmentKey || fallback.treatmentKey,
     title: fallback.title || data.title || '',
     slug: data.slug || fallback.slug,
     subtitle: fallback.subtitle || data.subtitle || '',

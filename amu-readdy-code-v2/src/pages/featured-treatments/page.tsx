@@ -6,6 +6,7 @@ import FeaturedOverviewSection from './components/FeaturedOverviewSection';
 import FeaturedTreatmentCard from '../treatments/components/FeaturedTreatmentCard';
 import type { FeaturedTreatmentPageContent } from '../../sanity/types';
 import { getFeaturedTreatmentsPageDataAttribute } from '../../sanity/dataAttributes';
+import { getFeaturedTreatmentDetailPath } from './treatmentLinks';
 
 export default function FeaturedTreatmentsPage() {
   const featuredPage = useLoaderData() as FeaturedTreatmentPageContent;
@@ -23,6 +24,7 @@ export default function FeaturedTreatmentsPage() {
               <FeaturedTreatmentCard
                 key={index}
                 category={{
+                  treatmentKey: category.treatmentKey,
                   title: category.title,
                   englishTitle: category.englishTitle,
                   icon: category.icon,
@@ -35,8 +37,8 @@ export default function FeaturedTreatmentsPage() {
                     },
                   ],
                 }}
-                hasDetail={Boolean(category.detailSlug)}
-                detailPath={category.detailSlug ? `/featured-treatments/${category.detailSlug}` : undefined}
+                hasDetail={Boolean(getFeaturedTreatmentDetailPath(category))}
+                detailPath={getFeaturedTreatmentDetailPath(category)}
                 iconDataAttribute={getFeaturedTreatmentsPageDataAttribute(
                   category._key ? `cards[_key=="${category._key}"].icon` : `cards[${index}].icon`,
                 )}

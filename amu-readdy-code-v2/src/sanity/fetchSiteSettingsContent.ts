@@ -45,6 +45,15 @@ const mergeNavItem = (incoming: unknown, fallback?: SiteNavItemContent): SiteNav
   };
 };
 
+const getSocialIcon = (platform: string, fallbackIcon = '') => {
+  const key = platform.trim().toLowerCase();
+  if (key.includes('instagram') || key === 'ig') return 'ri-instagram-line';
+  if (key.includes('facebook') || key === 'fb') return 'ri-facebook-fill';
+  if (key.includes('line')) return 'ri-line-line';
+  if (key.includes('youtube')) return 'ri-youtube-line';
+  return fallbackIcon || 'ri-links-line';
+};
+
 const mergeFooterGroup = (incoming: unknown, fallback?: FooterLinkGroupContent): FooterLinkGroupContent => {
   const group = incoming as Partial<FooterLinkGroupContent> | null;
   return {
@@ -58,9 +67,10 @@ const mergeFooterGroup = (incoming: unknown, fallback?: FooterLinkGroupContent):
 
 const mergeSocialLink = (incoming: unknown, fallback?: SocialLinkContent): SocialLinkContent => {
   const link = incoming as Partial<SocialLinkContent> | null;
+  const platform = link?.platform || fallback?.platform || '';
   return {
-    platform: link?.platform || fallback?.platform || '',
-    icon: link?.icon || fallback?.icon || '',
+    platform,
+    icon: getSocialIcon(platform, link?.icon || fallback?.icon),
     url: link?.url || fallback?.url || '',
   };
 };

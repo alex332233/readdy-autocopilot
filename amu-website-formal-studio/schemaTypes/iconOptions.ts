@@ -1,4 +1,6 @@
-export const iconOptions = [
+import type {TitledListValue} from 'sanity'
+
+export const iconOptions: TitledListValue<string>[] = [
   {title: '葉子 leaf', value: 'ri-leaf-line'},
   {title: '愛心脈搏 heart pulse', value: 'ri-heart-pulse-line'},
   {title: '月亮 moon', value: 'ri-moon-line'},
@@ -27,8 +29,14 @@ export const iconOptions = [
   {title: '使用者愛心 user heart', value: 'ri-user-heart-line'},
   {title: '盾牌十字 shield cross', value: 'ri-shield-cross-line'},
   {title: '脈搏 pulse', value: 'ri-pulse-line'},
-] as const
+  {title: 'Instagram', value: 'ri-instagram-line'},
+  {title: 'Facebook line', value: 'ri-facebook-line'},
+  {title: 'Facebook', value: 'ri-facebook-fill'},
+  {title: 'Facebook circle', value: 'ri-facebook-circle-line'},
+  {title: 'LINE', value: 'ri-line-line'},
+  {title: 'YouTube', value: 'ri-youtube-line'},
+]
 
 export const iconFieldOptions = {
   list: iconOptions,
-} as const
+}

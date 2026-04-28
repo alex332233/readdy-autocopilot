@@ -5,6 +5,17 @@ export const featuredTreatmentDetail = defineType({
   title: '特色療程子頁',
   type: 'document',
   fields: [
+    defineField({
+      name: 'treatmentRef',
+      title: '療程項目',
+      type: 'reference',
+      to: [{type: 'treatmentTaxonomyItem'}],
+      weak: true,
+      options: {
+        filter: 'category == "featured"',
+        disableNew: true,
+      },
+    }),
     defineField({name: 'title', title: '標題', type: 'string', validation: (rule) => rule.required()}),
     defineField({
       name: 'slug',
@@ -14,19 +25,28 @@ export const featuredTreatmentDetail = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({name: 'subtitle', title: '副標題', type: 'text', rows: 3}),
-    defineField({name: 'themeColor', title: '主題色', type: 'string'}),
+    defineField({
+      name: 'themeColor',
+      title: '主題色',
+      description: '由設計系統與療程 taxonomy 控管，僅保留作舊資料 fallback。',
+      type: 'string',
+      readOnly: true,
+      hidden: true,
+    }),
     defineField({
       name: 'primaryImage',
-      title: '主要圖片',
-      description: '新設計稿個別頁主內容第一張圖。',
+      title: '內容第一張圖片',
+      description: '不是頁首 hero；用於下方主內容區塊的第一張情境圖。',
       type: 'image',
+      hidden: ({document}) =>
+        (document?.slug as {_type?: 'slug'; current?: string} | undefined)?.current === 'decoction',
       options: {hotspot: true},
       fields: [defineField({name: 'alt', title: '替代文字', type: 'string'})],
     }),
     defineField({
       name: 'secondaryImage',
-      title: '次要圖片',
-      description: '新設計稿個別頁主內容第二張圖。',
+      title: '內容第二張圖片',
+      description: '用於下方主內容區塊的第二張情境圖。',
       type: 'image',
       options: {hotspot: true},
       fields: [defineField({name: 'alt', title: '替代文字', type: 'string'})],

@@ -138,3 +138,11 @@ export const getFeaturedTreatmentDetailDataAttribute = (slug: string, path: stri
     projectId: sanityEnv.projectId,
     dataset: sanityEnv.dataset,
   })(path).toString();
+
+export const getFeaturedTreatmentDetailDocumentDataAttribute = (documentId: string, path: string) =>
+  createDataAttribute({
+    id: normalizeDocumentId(documentId),
+    type: 'featuredTreatmentDetail',
+    projectId: sanityEnv.projectId,
+    dataset: sanityEnv.dataset,
+  })(path).toString();

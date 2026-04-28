@@ -37,6 +37,7 @@ export default function TeamPage() {
                 experience={doctor.experience}
                 specialtyGroups={doctor.specialtyGroups}
                 specialTreatments={doctor.specialTreatments}
+                specialTreatmentItems={doctor.specialTreatmentItems}
                 schedule={doctor.schedule}
                 scheduleNote={doctor.scheduleNote}
               />

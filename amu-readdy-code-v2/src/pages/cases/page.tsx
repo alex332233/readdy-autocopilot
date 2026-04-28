@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
+import { stegaClean } from '@sanity/client/stega';
 import Navbar from '../home/components/Navbar';
 import Footer from '../home/components/Footer';
 import HeroSection from './components/HeroSection';
@@ -19,8 +20,14 @@ export default function CasesPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const allCategories = ['全部', ...Array.from(new Set(content.articles.map((c) => c.category)))];
-  const filtered = activeCategory === '全部' ? content.articles : content.articles.filter((c) => c.category === activeCategory);
+  const allCategories = [
+    '全部',
+    ...Array.from(new Set(content.articles.map((caseItem) => stegaClean(caseItem.category)).filter(Boolean))),
+  ];
+  const filtered =
+    activeCategory === '全部'
+      ? content.articles
+      : content.articles.filter((caseItem) => stegaClean(caseItem.category) === activeCategory);
 
   return (
     <div className="min-h-screen bg-white">

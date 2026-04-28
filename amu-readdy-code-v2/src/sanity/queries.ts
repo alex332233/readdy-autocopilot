@@ -111,7 +111,7 @@ export const aboutPageQuery = groq`
       title,
       description,
       "image": {
-        "url": image.asset->url,
+        "url": coalesce(image.asset->url, imageUrl),
         "alt": image.alt
       }
     }
@@ -119,22 +119,35 @@ export const aboutPageQuery = groq`
 `;
 
 export const insurancePageQuery = groq`
-  *[_type == "insurancePage"][0]{
+  coalesce(*[_id == "drafts.insurancePage"][0], *[_id == "insurancePage"][0]){
     title,
     heroTitle,
     heroSubtitle,
     "overviewCards": overviewCards[]{
+      _key,
       title,
       englishTitle,
       subtitle,
-      icon,
+      "treatmentKey": treatmentRef->key,
+      "treatmentIcon": treatmentRef->icon,
+      "icon": coalesce(treatmentRef->icon, icon),
       anchorId,
       "image": {
-        "url": image.asset->url,
+        "url": coalesce(image.asset->url, imageUrl),
         "alt": image.alt
       }
     },
-    detailedCategories
+    "detailedCategories": detailedCategories[]{
+      _key,
+      title,
+      subtitle,
+      englishTitle,
+      "treatmentKey": treatmentRef->key,
+      "treatmentIcon": treatmentRef->icon,
+      "icon": coalesce(treatmentRef->icon, icon),
+      color,
+      treatments
+    }
   }
 `;
 
@@ -152,7 +165,7 @@ export const casesPageQuery = groq`
       caseId,
       "slug": slug.current,
       title,
-      category,
+      "category": coalesce(categoryRef->name, category),
       tags,
       doctor,
       fbLink,
@@ -178,7 +191,7 @@ export const casesPageQuery = groq`
 
 export const teamPageQuery = groq`
   {
-    "page": *[_type == "teamPage"][0]{
+    "page": coalesce(*[_id == "drafts.teamPage"][0], *[_id == "teamPage"][0]){
       title,
       heroTitle,
       heroSubtitle
@@ -195,7 +208,22 @@ export const teamPageQuery = groq`
       },
       education,
       experience,
+      "insuranceSpecialtyGroups": insuranceSpecialtyRefs[]{
+        _key,
+        "slug": @->key,
+        "name": @->doctorTagName,
+        "icon": @->icon,
+        "items": [],
+        "sourceField": "insuranceSpecialtyRefs"
+      },
       specialtyGroups,
+      "featuredTreatmentItems": featuredTreatmentRefs[]{
+        _key,
+        "key": @->key,
+        "name": @->doctorTagName,
+        "icon": @->icon,
+        "sourceField": "featuredTreatmentRefs"
+      },
       specialTreatments,
       schedule,
       scheduleNote
@@ -326,7 +354,7 @@ export const caseArticleQuery = groq`
 `;
 
 export const homePageQuery = groq`
-  *[_type == "homePage"][0]{
+  coalesce(*[_id == "drafts.homePage"][0], *[_id == "homePage"][0]){
     "hero": {
       ...hero,
       "image": {
@@ -341,7 +369,36 @@ export const homePageQuery = groq`
         "alt": about.image.alt
       }
     },
-    services,
+    "services": {
+      "title": services.title,
+      "description": services.description,
+      "items": select(
+        count(services.serviceTreatmentRefs[]) > 0 => services.serviceTreatmentRefs[0...8]{
+          _key,
+          "treatmentKey": @->key,
+          "treatmentCategory": @->category,
+          "treatmentIcon": @->icon,
+          "treatmentName": coalesce(@->insuranceName, @->featuredName, @->doctorTagName),
+          "treatmentHomeSubtitle": @->homeCardSubtitle,
+          "treatmentHomeDescription": @->homeCardDescription,
+          "icon": @->icon
+        },
+        services.items[0...8]{
+          _key,
+          number,
+          "treatmentKey": treatmentRef->key,
+          "treatmentCategory": treatmentRef->category,
+          "treatmentIcon": treatmentRef->icon,
+          "treatmentName": coalesce(treatmentRef->insuranceName, treatmentRef->featuredName, treatmentRef->doctorTagName),
+          "treatmentHomeSubtitle": treatmentRef->homeCardSubtitle,
+          "treatmentHomeDescription": treatmentRef->homeCardDescription,
+          "icon": coalesce(treatmentRef->icon, icon),
+          title,
+          subtitle,
+          description
+        }
+      )
+    },
     "whyChoose": {
       ...whyChoose,
       "image": {
@@ -383,27 +440,15 @@ export const homePageQuery = groq`
 `;
 
 export const featuredTreatmentsPageQuery = groq`
-  *[_type == "featuredTreatmentsPage"][0]{
+  coalesce(*[_id == "drafts.featuredTreatmentsPage"][0], *[_id == "featuredTreatmentsPage"][0]){
     title,
     heroTitle,
     heroDescription,
     cards[]{
       _key,
-      title,
-      englishTitle,
-      icon,
-      color,
-      "image": {
-        "url": image.asset->url,
-        "alt": image.alt
-      },
-      treatmentTitle,
-      description,
-      "tags": tags[].label,
-      detailSlug
-    },
-    relatedExtraCard{
-      _key,
+      "treatmentKey": treatmentRef->key,
+      "treatmentIcon": treatmentRef->icon,
+      "treatmentFeaturedName": treatmentRef->featuredName,
       title,
       englishTitle,
       icon,
@@ -422,6 +467,8 @@ export const featuredTreatmentsPageQuery = groq`
 
 export const featuredTreatmentDetailQuery = groq`
   *[_type == "featuredTreatmentDetail" && slug.current == $slug][0]{
+    _id,
+    "treatmentKey": treatmentRef->key,
     title,
     subtitle,
     themeColor,

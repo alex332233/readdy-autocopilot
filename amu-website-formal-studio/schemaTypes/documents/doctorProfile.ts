@@ -37,17 +37,55 @@ export const doctorProfile = defineType({
       validation: (Rule) => Rule.required().min(1),
     }),
     defineField({
+      name: 'insuranceSpecialtyRefs',
+      title: '專長科別（健保項目）',
+      type: 'array',
+      of: [
+        {
+          type: 'reference',
+          to: [{type: 'treatmentTaxonomyItem'}],
+          weak: true,
+          options: {
+            filter: 'category == "insurance"',
+            disableNew: true,
+          },
+        },
+      ],
+      description: '從全站療程項目選擇醫師擅長的健保項目；前台會顯示對應的醫師 Tag 名稱與固定 icon。',
+    }),
+    defineField({
       name: 'specialtyGroups',
-      title: '專長科別',
+      title: '專長科別（舊欄位）',
       type: 'array',
       of: [{type: 'doctorSpecialtyGroup'}],
+      readOnly: true,
+      hidden: true,
       validation: (Rule) => Rule.required().min(1),
     }),
     defineField({
-      name: 'specialTreatments',
+      name: 'featuredTreatmentRefs',
       title: '特色治療',
       type: 'array',
+      of: [
+        {
+          type: 'reference',
+          to: [{type: 'treatmentTaxonomyItem'}],
+          weak: true,
+          options: {
+            filter: 'category == "featured"',
+            disableNew: true,
+          },
+        },
+      ],
+      description: '從全站療程項目選擇醫師擅長的特色治療；前台會顯示對應的醫師 Tag 名稱與固定 icon。',
+    }),
+    defineField({
+      name: 'specialTreatments',
+      title: '特色治療（舊欄位）',
+      type: 'array',
       of: [{type: 'string'}],
+      readOnly: true,
+      hidden: true,
     }),
     defineField({name: 'schedule', title: '門診時刻表', type: 'doctorSchedule'}),
     defineField({name: 'scheduleNote', title: '門診備註', type: 'text', rows: 2}),

@@ -36,6 +36,23 @@ const mergeArray = <T>(incoming: unknown, fallback: T[], mapper: (item: unknown,
   return incoming.map((item, index) => mapper(item, fallback[index]));
 };
 
+const featuredTreatmentSlugs = new Set(['facial', 'growth', 'body', 'eye', 'laser', 'decoction']);
+
+const getServiceHref = (item?: Partial<HomeServiceItem> | null, fallback?: HomeServiceItem) => {
+  const treatmentKey = item?.treatmentKey || fallback?.treatmentKey;
+  const treatmentCategory = item?.treatmentCategory || fallback?.treatmentCategory;
+
+  if (treatmentCategory === 'featured' && treatmentKey && featuredTreatmentSlugs.has(treatmentKey)) {
+    return `/featured-treatments/${treatmentKey}`;
+  }
+
+  if (treatmentCategory === 'featured') return '/featured-treatments';
+  if (treatmentCategory === 'insurance' && treatmentKey) return `/insurance#${treatmentKey}`;
+  if (treatmentCategory === 'insurance') return '/insurance';
+
+  return fallback?.href || '/insurance';
+};
+
 const mergeHero = (incoming: unknown): HomeHeroContent => {
   const hero = incoming as Partial<HomeHeroContent> | null;
   const fallback = defaultHomePageContent.hero;
@@ -74,12 +91,22 @@ const mergeAbout = (incoming: unknown): HomeAboutContent => {
 
 const mergeServiceItem = (incoming: unknown, fallback?: HomeServiceItem): HomeServiceItem => {
   const item = incoming as Partial<HomeServiceItem> | null;
+  const fallbackNumber = fallback?.number || '';
   return {
-    number: item?.number || fallback?.number || '',
-    icon: item?.icon || fallback?.icon || '',
-    title: item?.title || fallback?.title || '',
-    subtitle: item?.subtitle || fallback?.subtitle || '',
-    description: item?.description || fallback?.description || '',
+    _key: item?._key || fallback?._key,
+    number: item?.number || fallbackNumber,
+    treatmentKey: item?.treatmentKey || fallback?.treatmentKey,
+    treatmentCategory: item?.treatmentCategory || fallback?.treatmentCategory,
+    treatmentIcon: item?.treatmentIcon || fallback?.treatmentIcon,
+    treatmentName: item?.treatmentName || fallback?.treatmentName,
+    treatmentHomeSubtitle: item?.treatmentHomeSubtitle || fallback?.treatmentHomeSubtitle,
+    treatmentHomeDescription: item?.treatmentHomeDescription || fallback?.treatmentHomeDescription,
+    href: getServiceHref(item, fallback),
+    icon: item?.treatmentIcon || item?.icon || fallback?.treatmentIcon || fallback?.icon || '',
+    title: item?.treatmentName || item?.title || fallback?.treatmentName || fallback?.title || '',
+    subtitle: item?.treatmentHomeSubtitle || item?.subtitle || fallback?.treatmentHomeSubtitle || fallback?.subtitle || '',
+    description:
+      item?.treatmentHomeDescription || item?.description || fallback?.treatmentHomeDescription || fallback?.description || '',
   };
 };
 
@@ -89,7 +116,7 @@ const mergeServices = (incoming: unknown): HomeServicesContent => {
   return {
     title: services?.title || fallback.title,
     description: services?.description || fallback.description,
-    items: mergeArray(services?.items, fallback.items, mergeServiceItem),
+    items: mergeArray(services?.items, fallback.items, mergeServiceItem).slice(0, 8),
   };
 };
 

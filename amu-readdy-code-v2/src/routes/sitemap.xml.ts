@@ -14,6 +14,15 @@ interface SlugDoc {
   lastmod?: string;
 }
 
+const canonicalFeaturedTreatmentSlugs = [
+  'facial',
+  'growth',
+  'body',
+  'eye',
+  'laser',
+  'decoction',
+];
+
 const staticEntries: SitemapEntry[] = [
   {path: '/', changefreq: 'weekly', priority: '1.0'},
   {path: '/about', changefreq: 'monthly', priority: '0.8'},
@@ -83,11 +92,14 @@ async function fetchDynamicEntries(): Promise<SitemapEntry[]> {
         "slug": slug.current,
         "lastmod": publishDate
       },
-      "featuredTreatments": *[_type == "featuredTreatmentDetail" && defined(slug.current)] | order(slug.current asc){
+      "featuredTreatments": *[
+        _type == "featuredTreatmentDetail" &&
+        slug.current in $canonicalFeaturedTreatmentSlugs
+      ] | order(slug.current asc){
         "slug": slug.current
       }
     }
-  `);
+  `, {canonicalFeaturedTreatmentSlugs});
 
   return [
     ...(data.healthEducationArticles || []).map((doc) => ({

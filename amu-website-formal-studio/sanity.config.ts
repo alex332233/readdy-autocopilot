@@ -40,5 +40,11 @@ export default defineConfig({
   ],
   schema: {
     types: schemaTypes,
+    templates: (prev) =>
+      prev.filter(
+        (template) =>
+          template.id !== 'featuredTreatmentDetail' &&
+          template.id !== 'treatmentTaxonomyItem',
+      ),
   },
 })

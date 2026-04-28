@@ -1,5 +1,6 @@
 import {aboutPage} from './documents/aboutPage'
 import {caseArticle} from './documents/caseArticle'
+import {caseCategory} from './documents/caseCategory'
 import {casesPage} from './documents/casesPage'
 import {doctorProfile} from './documents/doctorProfile'
 import {featuredTreatmentDetail} from './documents/featuredTreatmentDetail'
@@ -12,6 +13,7 @@ import {homePage} from './documents/homePage'
 import {insurancePage} from './documents/insurancePage'
 import {siteSettings} from './documents/siteSettings'
 import {teamPage} from './documents/teamPage'
+import {treatmentTaxonomyItem} from './documents/treatmentTaxonomyItem'
 import {aboutFeature} from './objects/aboutFeature'
 import {aboutBranch} from './objects/aboutBranch'
 import {aboutCoreValue} from './objects/aboutCoreValue'
@@ -97,11 +99,13 @@ export const schemaTypes = [
   teamPage,
   doctorProfile,
   casesPage,
+  caseCategory,
   caseArticle,
   healthEducationCategory,
   healthEducationSubcategory,
   healthEducationPage,
   healthEducationArticle,
+  treatmentTaxonomyItem,
   featuredTreatmentsPage,
   featuredTreatmentDetail,
 ]

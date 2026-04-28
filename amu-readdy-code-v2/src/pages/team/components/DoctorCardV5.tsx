@@ -2,6 +2,7 @@ import type {
   DoctorProfileContent,
   DoctorSchedule,
   DoctorSpecialtyGroup,
+  DoctorTreatmentTag,
 } from '../../../sanity/types';
 import { getDoctorProfileDocumentDataAttribute } from '../../../sanity/dataAttributes';
 
@@ -16,17 +17,20 @@ interface DoctorCardV5Props {
   experience: string[];
   specialtyGroups: DoctorSpecialtyGroup[];
   specialTreatments: string[];
+  specialTreatmentItems?: DoctorTreatmentTag[];
   schedule?: DoctorSchedule;
   scheduleNote?: string;
 }
 
 const specialtyIcons: Record<string, string> = {
-  internal: 'ri-heart-pulse-line',
+  internal: 'ri-hearts-line',
+  'herbal-internal': 'ri-hearts-line',
   gynecology: 'ri-women-line',
-  pediatrics: 'ri-user-heart-line',
-  dermatology: 'ri-leaf-line',
-  acupuncture: 'ri-focus-3-line',
-  beauty: 'ri-sparkling-line',
+  'women-health': 'ri-women-line',
+  pediatrics: 'ri-seedling-line',
+  'pediatric-growth': 'ri-seedling-line',
+  dermatology: 'ri-bard-line',
+  acupuncture: 'ri-crosshair-2-line',
 };
 
 const DAYS = [
@@ -40,7 +44,20 @@ const DAYS = [
 ] as const;
 
 const getSpecialtyGroupFieldBase = (specialty: DoctorSpecialtyGroup, index: number) =>
-  specialty._key ? `specialtyGroups[_key=="${specialty._key}"]` : `specialtyGroups[${index}]`;
+  specialty.sourceField === 'insuranceSpecialtyRefs'
+    ? specialty._key
+      ? `insuranceSpecialtyRefs[_key=="${specialty._key}"]`
+      : `insuranceSpecialtyRefs[${index}]`
+    : specialty._key
+      ? `specialtyGroups[_key=="${specialty._key}"]`
+      : `specialtyGroups[${index}]`;
+
+const getTreatmentTagFieldBase = (treatment: DoctorTreatmentTag, index: number) =>
+  treatment.sourceField === 'featuredTreatmentRefs'
+    ? treatment._key
+      ? `featuredTreatmentRefs[_key=="${treatment._key}"]`
+      : `featuredTreatmentRefs[${index}]`
+    : `specialTreatments[${index}]`;
 
 function ScheduleTable({
   documentId,
@@ -135,9 +152,15 @@ export default function DoctorCardV5({
   experience,
   specialtyGroups,
   specialTreatments,
+  specialTreatmentItems,
   schedule,
   scheduleNote,
 }: DoctorCardV5Props) {
+  const treatmentTags =
+    specialTreatmentItems && specialTreatmentItems.length > 0
+      ? specialTreatmentItems
+      : specialTreatments.map((name) => ({ name, icon: 'ri-sparkling-2-line', sourceField: 'specialTreatments' as const }));
+
   return (
     <div className="bg-white rounded-2xl overflow-hidden border border-stone-100 shadow-sm hover:shadow-md transition-shadow duration-300">
       <div className="flex flex-col lg:flex-row">
@@ -176,22 +199,26 @@ export default function DoctorCardV5({
             <div className="flex flex-wrap gap-2">
               {specialtyGroups.map((specialty, groupIndex) => {
                 const fieldBase = getSpecialtyGroupFieldBase(specialty, groupIndex);
+                const specialtyAttributePath =
+                  specialty.sourceField === 'insuranceSpecialtyRefs' ? fieldBase : `${fieldBase}.name`;
+                const specialtyIconAttributePath =
+                  specialty.sourceField === 'insuranceSpecialtyRefs' ? fieldBase : `${fieldBase}.slug`;
 
                 return (
                   <div
                     key={`${specialty._key || specialty.slug}-${groupIndex}`}
                     className="flex items-center gap-1.5 bg-[#faf6f0] border border-[#cd9651]/20 rounded-full px-3 py-1"
-                    data-sanity={getDoctorProfileDocumentDataAttribute(documentId, `${fieldBase}.name`)}
+                    data-sanity={getDoctorProfileDocumentDataAttribute(documentId, specialtyAttributePath)}
                   >
                     <div className="w-4 h-4 flex items-center justify-center">
                       <i
-                        className={`${specialtyIcons[specialty.slug] ?? 'ri-medicine-bottle-line'} text-[#cd9651] text-xs`}
-                        data-sanity={getDoctorProfileDocumentDataAttribute(documentId, `${fieldBase}.slug`)}
+                        className={`${specialty.icon ?? specialtyIcons[specialty.slug] ?? 'ri-medicine-bottle-line'} text-[#cd9651] text-xs`}
+                        data-sanity={getDoctorProfileDocumentDataAttribute(documentId, specialtyIconAttributePath)}
                       ></i>
                     </div>
                     <span
                       className="text-xs font-medium text-stone-600 whitespace-nowrap"
-                      data-sanity={getDoctorProfileDocumentDataAttribute(documentId, `${fieldBase}.name`)}
+                      data-sanity={getDoctorProfileDocumentDataAttribute(documentId, specialtyAttributePath)}
                     >
                       {specialty.name}
                     </span>
@@ -201,18 +228,18 @@ export default function DoctorCardV5({
             </div>
           </div>
 
-          {specialTreatments.length > 0 && (
+          {treatmentTags.length > 0 && (
             <div className="mb-5">
               <h4 className="text-sm font-bold text-stone-800 mb-3">特色治療</h4>
               <div className="flex flex-wrap gap-2">
-                {specialTreatments.map((treatment, treatmentIndex) => (
+                {treatmentTags.map((treatment, treatmentIndex) => (
                   <span
-                    key={treatmentIndex}
+                    key={`${treatment.key || treatment.name}-${treatmentIndex}`}
                     className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#cd9651] rounded-full text-xs text-white font-medium whitespace-nowrap"
-                    data-sanity={getDoctorProfileDocumentDataAttribute(documentId, `specialTreatments[${treatmentIndex}]`)}
+                    data-sanity={getDoctorProfileDocumentDataAttribute(documentId, getTreatmentTagFieldBase(treatment, treatmentIndex))}
                   >
-                    <i className="ri-sparkling-2-line text-xs"></i>
-                    {treatment}
+                    <i className={`${treatment.icon || 'ri-sparkling-2-line'} text-xs`}></i>
+                    {treatment.name}
                   </span>
                 ))}
               </div>

@@ -468,6 +468,29 @@ Presentation 的 preview location input 仍會報：
 - **優先使用 route revalidate 或 Sanity 內建 refresh**
 - 若要有回饋感，也應是局部、低干擾，不應是整頁白屏
 
+### 5.18 特色療程 detail 頁也要用真實 `_id` 做 Visual Editing identity
+
+這次 PM 回饋指出四個新特色療程頁在 Presentation 中不能同步編輯。
+
+排查後確認兩個重點：
+
+- 前端如果只用 slug 推測 `featuredTreatmentDetail-${slug}`，在舊資料、draft、手動新增文件或設計稿 slug 遷移後容易指錯 document。
+- production dataset 可能存在舊設計稿 detail documents，例如 `pain`、`fertility`、`weight`、`allergy`，但新前端路由是 `body`、`eye`、`laser`、`decoction`。
+
+修正規則：
+
+- GROQ detail query 要回傳真實 `_id`。
+- 前端 `data-sanity` 要優先用真實 `_id` 建立 target，只在沒有 document 時 fallback slug。
+- specialized detail component 不能只 render hardcoded content；若 CMS document 有完整 `sections[]`，應優先吃 CMS sections 並掛正確 field path。
+- 若頁面仍在吃 fallback content，Presentation 只能部分編輯，需先補 canonical published documents 或 migration，再做完整驗收。
+
+未來自動化可檢查：
+
+- detail query 是否投影 `_id`
+- `data-sanity` 是否用真實 `_id`
+- route slug 是否和 dataset document slug 對齊
+- specialized component 是否仍有大量未掛 field path 的硬寫內容
+
 ## 6. 哪些可以在 Readdy 匯出 code 的第一天就先做，避免這次的坑
 
 這次不是完全無法提前避開，其實有幾件很值得在一開始就做。
@@ -633,6 +656,31 @@ component props 也應保留：
 - 可編輯 document query 是否有回傳真實 `_id`
 - `data-sanity` 是否誤用 `doctorId` / `articleId` / slug 等業務欄位推測文件 id
 - mutation refresh 是否仍使用 `window.location.reload()`
+- 前端是否直接拿 Sanity 字串做 dedupe、filter、相等比較或 route/key mapping；若字串可能帶 stega metadata，應先用 `stegaClean()` 清理，避免畫面同字串被程式視為不同值
+- singleton query 是否在 draft preview 明確優先 draft document，例如 `coalesce(*[_id == "drafts.insurancePage"][0], *[_id == "insurancePage"][0])`；不要只用 `*[_type == "..."][0]`，因為 `drafts` perspective 可能同時看見 draft 與 published，導致 preview 還是拿到 published 資料
+- draft-only reference seed 是否把 `_ref` 存成 canonical id，而不是 `drafts.*` id；Sanity 會在 `drafts` perspective 將 draft overlay 成 canonical document，若 reference 指向 `drafts.*`，`treatmentRef->icon` 這類 dereference 可能解析不到
+- specialized page component 是否只吃 fallback / hardcoded display，而沒有把 CMS 欄位掛上 `data-sanity`；這會造成畫面看得到內容，但 Presentation 點不到或點到錯誤欄位
+- 圖片 Presentation 可點不代表 CMS 欄位已有 asset；若畫面使用前端 fallback URL，點進 Studio 仍會看到空白 image 欄位。驗收期可用 draft-only image seed 將 fallback 圖上傳成 Sanity asset，正式上線前再換成正式圖片
+
+### 7.7 Taxonomy Reference 與 Presentation 的關係
+
+療程 taxonomy 採 `treatmentTaxonomyItem` reference document，而不是 string key 或自由 icon class。
+
+原因：
+
+- Sanity 的資料關聯應由 `_id` / `_ref` 負責，前端或 migration 不需要用中文名稱猜身份。
+- `key` 只作為 readOnly 的 seed、migration、debug、fallback 輔助，不給 PM 修改。
+- 中文名稱、醫師 tag 名稱是可維護內容，不是資料 identity；名稱日後可調整，但 reference 不會因此斷掉。
+- reference selector 可依 `category` 限制可選項，例如健保欄位只選 `category == "insurance"`、特色療程欄位只選 `category == "featured"`，`reserved` 預設不進一般選單。
+- Presentation / Visual Editing 仍要保留真實 `_id` 與正確 field path；前端 projection 不能把 reference 展開後就丟失原 document 的可編輯路徑。
+
+未來可抽成 Readdy / Sanity scaffold：
+
+1. 產生 taxonomy document schema，固定 `key`、`category`、`icon` 為 readOnly。
+2. 產生 reference selector helper，內建 `filter`、`disableNew` 與 category 限制。
+3. 產生 audit-only migration script，先列出舊欄位到 taxonomy 的 mapping，再由 `--apply` 或環境變數明確 patch。
+4. 產生 draft-only seed script，讓 PM 可先在 Presentation 驗收，不立即改 published production。
+5. 產生前端 projection pattern：優先讀 `treatmentRef->...`，保留舊欄位 fallback，並保留真實 `_id` / `_key` 供 `data-sanity` 使用。
 
 ## 8. 這次遷移的建議結論
 
