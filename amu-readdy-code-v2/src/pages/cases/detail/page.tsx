@@ -5,7 +5,10 @@ import Footer from '../../home/components/Footer';
 import CTASection from '../components/CTASection';
 import RichArticleRenderer from '../../../components/RichArticleRenderer';
 import type { CaseArticleContent, CasesPageContent } from '../../../sanity/types';
-import { getCaseArticleDataAttribute } from '../../../sanity/dataAttributes';
+import {
+  getCaseArticleDataAttribute,
+  getCaseArticleDocumentDataAttribute,
+} from '../../../sanity/dataAttributes';
 
 export default function CaseDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -14,6 +17,10 @@ export default function CaseDetailPage() {
 
   const content = useLoaderData() as { page: CasesPageContent; article: CaseArticleContent } | null;
   const caseData = content?.article || null;
+  const getDataAttribute = (path: string) =>
+    caseData?.documentId
+      ? getCaseArticleDocumentDataAttribute(caseData.documentId, path)
+      : getCaseArticleDataAttribute(caseData?.caseId || 0, path);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -48,17 +55,17 @@ export default function CaseDetailPage() {
           src={caseData.coverImage.url}
           alt={caseData.title}
           className="w-full h-full object-cover object-top"
-          data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'coverImage')}
+          data-sanity={getDataAttribute('coverImage')}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 px-6 pb-10 max-w-3xl mx-auto">
           <span
             className="inline-block text-[10px] font-semibold tracking-widest uppercase bg-[#cd9651] text-white px-3 py-1 rounded-sm mb-3"
-            data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'category')}
+            data-sanity={getDataAttribute('category')}
           >
             {caseData.category}
           </span>
-          <h1 className="text-2xl md:text-3xl font-bold text-white leading-snug" data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'title')}>
+          <h1 className="text-2xl md:text-3xl font-bold text-white leading-snug" data-sanity={getDataAttribute('title')}>
             {caseData.title}
           </h1>
         </div>
@@ -79,7 +86,7 @@ export default function CaseDetailPage() {
             返回案例列表
           </button>
           <div className="flex items-center gap-3">
-            <span className="text-[11px] text-gray-400 tracking-wide" data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'publishDate')}>
+            <span className="text-[11px] text-gray-400 tracking-wide" data-sanity={getDataAttribute('publishDate')}>
               {caseData.publishDate}
             </span>
             <span className="text-gray-200">·</span>
@@ -87,7 +94,7 @@ export default function CaseDetailPage() {
               <div className="w-4 h-4 flex items-center justify-center">
                 <i className="ri-user-line text-[#cd9651]" style={{ fontSize: '12px' }}></i>
               </div>
-              <span className="text-[11px] text-[#cd9651] font-medium tracking-wide" data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'doctor')}>
+              <span className="text-[11px] text-[#cd9651] font-medium tracking-wide" data-sanity={getDataAttribute('doctor')}>
                 {caseData.doctor}
               </span>
             </div>
@@ -96,14 +103,14 @@ export default function CaseDetailPage() {
 
         {caseData.body && caseData.body.length > 0 ? (
           <RichArticleRenderer
-            getDataAttribute={(path) => getCaseArticleDataAttribute(caseData.caseId, path)}
+            getDataAttribute={getDataAttribute}
             blocks={caseData.body}
           />
         ) : (
           <>
             <p
               className="text-sm text-gray-500 leading-relaxed mb-10 border-l-2 border-[#cd9651]/30 pl-4"
-              data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'description')}
+              data-sanity={getDataAttribute('description')}
             >
               {caseData.description}
             </p>
@@ -112,7 +119,7 @@ export default function CaseDetailPage() {
               <div className="bg-[#fdf8f8] rounded-xl p-6">
                 <div className="flex items-center gap-2 mb-4">
                   <span className="w-2 h-2 rounded-full bg-red-300 flex-shrink-0"></span>
-                  <span className="text-sm font-bold text-gray-700 tracking-widest" data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'before.title')}>
+                  <span className="text-sm font-bold text-gray-700 tracking-widest" data-sanity={getDataAttribute('before.title')}>
                     {caseData.before.title}
                   </span>
                 </div>
@@ -122,7 +129,7 @@ export default function CaseDetailPage() {
                       <div className="w-4 h-4 flex items-center justify-center flex-shrink-0 mt-0.5">
                         <i className="ri-subtract-line text-red-300 text-sm"></i>
                       </div>
-                      <span className="text-xs text-gray-600 leading-relaxed" data-sanity={getCaseArticleDataAttribute(caseData.caseId, `before.items[${idx}]`)}>
+                      <span className="text-xs text-gray-600 leading-relaxed" data-sanity={getDataAttribute(`before.items[${idx}]`)}>
                         {item}
                       </span>
                     </li>
@@ -133,14 +140,14 @@ export default function CaseDetailPage() {
               <div className="bg-[#f7fdf9] rounded-xl p-6">
                 <div className="flex items-center gap-2 mb-4">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"></span>
-                  <span className="text-sm font-bold text-gray-700 tracking-widest" data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'after.title')}>
+                  <span className="text-sm font-bold text-gray-700 tracking-widest" data-sanity={getDataAttribute('after.title')}>
                     {caseData.after.title}
                   </span>
                 </div>
                 <div className="space-y-4">
                   {caseData.after.phases.map((phase, idx) => (
                     <div key={idx}>
-                      <span className="text-xs text-emerald-600 font-semibold mb-2 block" data-sanity={getCaseArticleDataAttribute(caseData.caseId, `after.phases[${idx}].period`)}>
+                      <span className="text-xs text-emerald-600 font-semibold mb-2 block" data-sanity={getDataAttribute(`after.phases[${idx}].period`)}>
                         {phase.period}
                       </span>
                       <ul className="space-y-1.5">
@@ -151,7 +158,7 @@ export default function CaseDetailPage() {
                             </div>
                             <span
                               className="text-xs text-gray-600 leading-relaxed"
-                              data-sanity={getCaseArticleDataAttribute(caseData.caseId, `after.phases[${idx}].improvements[${impIdx}]`)}
+                              data-sanity={getDataAttribute(`after.phases[${idx}].improvements[${impIdx}]`)}
                             >
                               {item}
                             </span>
@@ -168,7 +175,7 @@ export default function CaseDetailPage() {
               <div className="w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">
                 <i className="ri-double-quotes-l text-[#cd9651] text-xl"></i>
               </div>
-              <p className="text-sm text-gray-600 leading-relaxed italic" data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'conclusion')}>
+              <p className="text-sm text-gray-600 leading-relaxed italic" data-sanity={getDataAttribute('conclusion')}>
                 {caseData.conclusion}
               </p>
             </div>
@@ -179,13 +186,13 @@ export default function CaseDetailPage() {
         {(caseData.tips || caseData.medicalInfo) && (
           <div className="border border-stone-100 rounded-xl p-6 mb-10">
             <p className="text-xs font-semibold text-[#cd9651] tracking-widest mb-3 uppercase">
-              <span data-sanity={getCaseArticleDataAttribute(caseData.caseId, caseData.tips ? 'tips.title' : 'medicalInfo.title')}>
+              <span data-sanity={getDataAttribute(caseData.tips ? 'tips.title' : 'medicalInfo.title')}>
                 {caseData.tips?.title || caseData.medicalInfo?.title}
               </span>
             </p>
             <p
               className="text-xs text-gray-500 leading-relaxed"
-              data-sanity={getCaseArticleDataAttribute(caseData.caseId, caseData.tips ? 'tips.content' : 'medicalInfo.content')}
+              data-sanity={getDataAttribute(caseData.tips ? 'tips.content' : 'medicalInfo.content')}
             >
               {caseData.tips?.content || caseData.medicalInfo?.content}
             </p>
@@ -208,7 +215,7 @@ export default function CaseDetailPage() {
                   <div className="w-4 h-4 flex items-center justify-center flex-shrink-0">
                     <i className="ri-link text-xs"></i>
                   </div>
-                  <span className="underline underline-offset-2 break-all" data-sanity={getCaseArticleDataAttribute(caseData.caseId, `references[${idx}]`)}>
+                  <span className="underline underline-offset-2 break-all" data-sanity={getDataAttribute(`references[${idx}]`)}>
                     {ref}
                   </span>
                 </a>
@@ -224,7 +231,7 @@ export default function CaseDetailPage() {
               key={idx}
               className="text-[11px] text-gray-400 tracking-wide bg-gray-50 px-2.5 py-1 rounded-full"
             >
-              <span data-sanity={getCaseArticleDataAttribute(caseData.caseId, `tags[${idx}]`)}>#{tag}</span>
+              <span data-sanity={getDataAttribute(`tags[${idx}]`)}>#{tag}</span>
             </span>
           ))}
         </div>
@@ -245,7 +252,7 @@ export default function CaseDetailPage() {
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-xs text-gray-400 hover:text-[#1877F2] transition-colors cursor-pointer"
-            data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'fbLink')}
+            data-sanity={getDataAttribute('fbLink')}
           >
             <div className="w-4 h-4 flex items-center justify-center">
               <i className="ri-facebook-fill text-base"></i>

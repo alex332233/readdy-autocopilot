@@ -60,7 +60,12 @@ export default function CasesPage() {
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
             {filtered.map((caseItem, index) => (
-              <FadeIn key={caseItem.caseId} delay={index * 120} direction="up" duration={1600}>
+              <FadeIn
+                key={caseItem.documentId || caseItem.slug || caseItem.caseId || `case-${index}`}
+                delay={index * 120}
+                direction="up"
+                duration={1600}
+              >
                 <BlogCard caseData={caseItem} />
               </FadeIn>
             ))}

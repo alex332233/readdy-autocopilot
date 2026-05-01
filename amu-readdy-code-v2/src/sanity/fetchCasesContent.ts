@@ -147,6 +147,7 @@ const mergeRichArticleBody = (incoming: unknown): RichArticleBlock[] | undefined
 const mergeArticle = (incoming: unknown, fallback?: CaseArticleContent): CaseArticleContent => {
   const article = incoming as Partial<CaseArticleContent> | null;
   return {
+    documentId: article?.documentId || fallback?.documentId,
     caseId: Number(article?.caseId || fallback?.caseId || 0),
     slug: article?.slug || fallback?.slug,
     title: article?.title || fallback?.title || '',
@@ -195,20 +196,26 @@ export async function fetchCaseArticleContent(
   const slugOrId = params.id || '';
   const parsedCaseId = Number(slugOrId);
   const caseId = Number.isFinite(parsedCaseId) ? parsedCaseId : null;
+  const documentId = decodeURIComponent(slugOrId);
+  const draftDocumentId = documentId.startsWith('drafts.') ? documentId : `drafts.${documentId}`;
   if (!slugOrId) return null;
   const client = clientOverride || sanityClient;
 
   if (!client) {
     const article =
       defaultCasesPageContent.articles.find(
-        (item) => item.slug === slugOrId || (caseId !== null && item.caseId === caseId),
+        (item) =>
+          item.slug === slugOrId ||
+          (caseId !== null && item.caseId === caseId) ||
+          item.documentId === documentId ||
+          item.documentId === draftDocumentId,
       ) || null;
     return article ? { page: defaultCasesPageContent, article } : null;
   }
 
   const [pageData, articleData] = await Promise.all([
     client.fetch(casesPageQuery),
-    client.fetch(caseArticleQuery, { caseId, slug: slugOrId }),
+    client.fetch(caseArticleQuery, { caseId, slug: slugOrId, documentId, draftDocumentId }),
   ]);
 
   const page = {
@@ -224,13 +231,21 @@ export async function fetchCaseArticleContent(
   if (!articleData) {
     const fallbackArticle =
       defaultCasesPageContent.articles.find(
-        (article) => article.slug === slugOrId || (caseId !== null && article.caseId === caseId),
+        (article) =>
+          article.slug === slugOrId ||
+          (caseId !== null && article.caseId === caseId) ||
+          article.documentId === documentId ||
+          article.documentId === draftDocumentId,
       ) || null;
     return fallbackArticle ? { page, article: fallbackArticle } : null;
   }
 
   const fallback = defaultCasesPageContent.articles.find(
-    (article) => article.slug === slugOrId || (caseId !== null && article.caseId === caseId),
+    (article) =>
+      article.slug === slugOrId ||
+      (caseId !== null && article.caseId === caseId) ||
+      article.documentId === documentId ||
+      article.documentId === draftDocumentId,
   );
   return {
     page,

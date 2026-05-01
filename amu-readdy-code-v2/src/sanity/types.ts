@@ -120,6 +120,7 @@ export interface CaseInfoBox {
 }
 
 export interface CaseArticleContent {
+  documentId?: string;
   caseId: number;
   slug?: string;
   title: string;

@@ -56,6 +56,14 @@ export const getCaseArticleDataAttribute = (caseId: number | string, path: strin
     dataset: sanityEnv.dataset,
   })(path).toString();
 
+export const getCaseArticleDocumentDataAttribute = (documentId: string, path: string) =>
+  createDataAttribute({
+    id: normalizeDocumentId(documentId),
+    type: 'caseArticle',
+    projectId: sanityEnv.projectId,
+    dataset: sanityEnv.dataset,
+  })(path).toString();
+
 const teamPageAttribute = createDataAttribute({
   id: 'teamPage',
   type: 'teamPage',

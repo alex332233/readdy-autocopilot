@@ -162,6 +162,7 @@ export const casesPageQuery = groq`
       ctaButtonText
     },
     "articles": *[_type == "caseArticle"] | order(caseId asc){
+      "documentId": _id,
       caseId,
       "slug": slug.current,
       title,
@@ -319,11 +320,20 @@ export const healthEducationArticleQuery = groq`
 `;
 
 export const caseArticleQuery = groq`
-  *[_type == "caseArticle" && (caseId == $caseId || slug.current == $slug)][0]{
+  *[
+    _type == "caseArticle" &&
+    (
+      caseId == $caseId ||
+      slug.current == $slug ||
+      _id == $documentId ||
+      _id == $draftDocumentId
+    )
+  ][0]{
+    "documentId": _id,
     caseId,
     "slug": slug.current,
     title,
-    category,
+    "category": coalesce(categoryRef->name, category),
     tags,
     doctor,
     fbLink,
