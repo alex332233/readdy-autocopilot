@@ -1,3 +1,4 @@
+import type {SanityClient} from '@sanity/client';
 import {sanityClient} from './client';
 import {defaultTeamPageContent} from './defaults/teamPage';
 import {teamPageQuery} from './queries';
@@ -10,6 +11,8 @@ import type {
   SanityImage,
   TeamPageContent,
 } from './types';
+
+type SanityFetchClient = Pick<SanityClient, 'fetch'>;
 
 const mergeImage = (incoming: unknown, fallback?: SanityImage): SanityImage => {
   const image = incoming as Partial<SanityImage> | null;
@@ -113,10 +116,11 @@ const mergeDoctorProfile = (incoming: unknown, fallback?: DoctorProfileContent):
   };
 };
 
-export async function fetchTeamPageContent() {
-  if (!sanityClient) return defaultTeamPageContent;
+export async function fetchTeamPageContent(clientOverride?: SanityFetchClient | null) {
+  const client = clientOverride || sanityClient;
+  if (!client) return defaultTeamPageContent;
 
-  const data = (await sanityClient.fetch(teamPageQuery)) as
+  const data = (await client.fetch(teamPageQuery)) as
     | {page?: Partial<TeamPageContent>; doctors?: unknown[]}
     | null;
   if (!data) return defaultTeamPageContent;

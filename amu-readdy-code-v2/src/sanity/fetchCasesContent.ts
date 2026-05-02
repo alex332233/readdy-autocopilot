@@ -169,10 +169,11 @@ const mergeArticle = (incoming: unknown, fallback?: CaseArticleContent): CaseArt
   };
 };
 
-export async function fetchCasesPageContent() {
-  if (!sanityClient) return defaultCasesPageContent;
+export async function fetchCasesPageContent(clientOverride?: SanityFetchClient | null) {
+  const client = clientOverride || sanityClient;
+  if (!client) return defaultCasesPageContent;
 
-  const data = (await sanityClient.fetch(casesPageQuery)) as { page?: Partial<CasesPageContent>; articles?: unknown[] } | null;
+  const data = (await client.fetch(casesPageQuery)) as { page?: Partial<CasesPageContent>; articles?: unknown[] } | null;
   if (!data) return defaultCasesPageContent;
 
   return {

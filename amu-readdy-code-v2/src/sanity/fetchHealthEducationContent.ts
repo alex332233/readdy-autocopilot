@@ -203,10 +203,11 @@ const mergeArticle = (
   };
 };
 
-export async function fetchHealthEducationPageContent() {
-  if (!sanityClient) return defaultHealthEducationPageContent;
+export async function fetchHealthEducationPageContent(clientOverride?: SanityFetchClient | null) {
+  const client = clientOverride || sanityClient;
+  if (!client) return defaultHealthEducationPageContent;
 
-  const data = (await sanityClient.fetch(healthEducationPageQuery)) as
+  const data = (await client.fetch(healthEducationPageQuery)) as
     | {page?: Partial<HealthEducationPageContent>; articles?: unknown[]}
     | null;
   if (!data) return defaultHealthEducationPageContent;

@@ -48,7 +48,7 @@ const routes: RouteObject[] = [
       {
         path: '/featured-treatments',
         id: 'featuredTreatments',
-        loader: fetchFeaturedTreatmentsPageContent,
+        loader: () => fetchFeaturedTreatmentsPageContent(),
         element: <FeaturedTreatmentsPage />,
       },
       {
@@ -59,13 +59,13 @@ const routes: RouteObject[] = [
       {
         path: '/about',
         id: 'about',
-        loader: fetchAboutPageContent,
+        loader: () => fetchAboutPageContent(),
         element: <AboutPage />,
       },
       {
         path: '/cases',
         id: 'cases',
-        loader: fetchCasesPageContent,
+        loader: () => fetchCasesPageContent(),
         element: <CasesPage />,
       },
       {
@@ -76,13 +76,13 @@ const routes: RouteObject[] = [
       {
         path: '/team',
         id: 'team',
-        loader: fetchTeamPageContent,
+        loader: () => fetchTeamPageContent(),
         element: <TeamPage />,
       },
       {
         path: '/health-education',
         id: 'healthEducation',
-        loader: fetchHealthEducationPageContent,
+        loader: () => fetchHealthEducationPageContent(),
         element: <HealthEducationPage />,
       },
       {

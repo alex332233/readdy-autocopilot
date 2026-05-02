@@ -1,15 +1,20 @@
 export { default } from "../pages/featured-treatments/DetailPage";
+import type { LoaderFunctionArgs } from "react-router";
 import {
   fetchFeaturedTreatmentDetailContent,
   fetchFeaturedTreatmentsPageContent,
 } from "../sanity/fetchFeaturedTreatmentsContent";
+import { getPreviewState } from "../sanity/previewState.server";
+import { createSanityServerClient } from "../sanity/serverClient";
 import type { FeaturedTreatmentDetailContent } from "../sanity/types";
 import { createSeoMeta } from "../seo/meta";
 
-export async function clientLoader({ params }: { params: { slug?: string } }) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
+  const preview = await getPreviewState(request);
+  const client = createSanityServerClient(preview.perspective);
   const [detail, page] = await Promise.all([
-    fetchFeaturedTreatmentDetailContent({ params }),
-    fetchFeaturedTreatmentsPageContent(),
+    fetchFeaturedTreatmentDetailContent({ params }, client),
+    fetchFeaturedTreatmentsPageContent(client),
   ]);
 
   return { detail, page };

@@ -1,3 +1,4 @@
+import type { SanityClient } from '@sanity/client';
 import { sanityClient } from './client';
 import { defaultFeaturedTreatmentDetails, defaultFeaturedTreatmentsPageContent } from './defaults/featuredTreatments';
 import { featuredTreatmentDetailQuery, featuredTreatmentsPageQuery } from './queries';
@@ -9,6 +10,8 @@ import type {
   FeaturedTreatmentCase,
   SanityImage,
 } from './types';
+
+type SanityFetchClient = Pick<SanityClient, 'fetch'>;
 
 const mergeImage = (incoming: unknown, fallback?: SanityImage): SanityImage | undefined => {
   const image = incoming as Partial<SanityImage> | null;
@@ -88,10 +91,11 @@ const mergeSection = (incoming: unknown, fallback?: FeaturedTreatmentSection): F
   };
 };
 
-export async function fetchFeaturedTreatmentsPageContent() {
-  if (!sanityClient) return defaultFeaturedTreatmentsPageContent;
+export async function fetchFeaturedTreatmentsPageContent(clientOverride?: SanityFetchClient | null) {
+  const client = clientOverride || sanityClient;
+  if (!client) return defaultFeaturedTreatmentsPageContent;
 
-  const data = (await sanityClient.fetch(featuredTreatmentsPageQuery)) as Partial<typeof defaultFeaturedTreatmentsPageContent> | null;
+  const data = (await client.fetch(featuredTreatmentsPageQuery)) as Partial<typeof defaultFeaturedTreatmentsPageContent> | null;
   if (!data) return defaultFeaturedTreatmentsPageContent;
 
   const incomingCards = Array.isArray(data.cards) ? (data.cards as Partial<FeaturedTreatmentCardContent>[]) : [];
@@ -124,12 +128,16 @@ export async function fetchFeaturedTreatmentsPageContent() {
   };
 }
 
-export async function fetchFeaturedTreatmentDetailContent({ params }: { params: { slug?: string } }) {
+export async function fetchFeaturedTreatmentDetailContent(
+  { params }: { params: { slug?: string } },
+  clientOverride?: SanityFetchClient | null,
+) {
   const slug = params.slug || 'facial';
   const fallback = defaultFeaturedTreatmentDetails[slug] || defaultFeaturedTreatmentDetails.facial;
-  if (!sanityClient) return fallback;
+  const client = clientOverride || sanityClient;
+  if (!client) return fallback;
 
-  const data = (await sanityClient.fetch(featuredTreatmentDetailQuery, { slug })) as Partial<FeaturedTreatmentDetailContent> | null;
+  const data = (await client.fetch(featuredTreatmentDetailQuery, { slug })) as Partial<FeaturedTreatmentDetailContent> | null;
   if (!data) return fallback;
 
   return {

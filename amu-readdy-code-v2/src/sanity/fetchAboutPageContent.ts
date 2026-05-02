@@ -1,3 +1,4 @@
+import type {SanityClient} from '@sanity/client';
 import {sanityClient} from './client';
 import {defaultAboutPageContent} from './defaults/aboutPage';
 import {aboutPageQuery} from './queries';
@@ -9,6 +10,8 @@ import type {
   AboutStoryBlock,
   SanityImage,
 } from './types';
+
+type SanityFetchClient = Pick<SanityClient, 'fetch'>;
 
 const mergeImage = (incoming: unknown, fallback?: SanityImage): SanityImage => {
   const image = incoming as Partial<SanityImage> | null;
@@ -67,10 +70,11 @@ const mergeCoreValue = (incoming: unknown, fallback?: AboutCoreValue): AboutCore
   };
 };
 
-export async function fetchAboutPageContent() {
-  if (!sanityClient) return defaultAboutPageContent;
+export async function fetchAboutPageContent(clientOverride?: SanityFetchClient | null) {
+  const client = clientOverride || sanityClient;
+  if (!client) return defaultAboutPageContent;
 
-  const data = (await sanityClient.fetch(aboutPageQuery)) as Partial<AboutPageContent> | null;
+  const data = (await client.fetch(aboutPageQuery)) as Partial<AboutPageContent> | null;
   if (!data) return defaultAboutPageContent;
 
   return {
