@@ -50,6 +50,7 @@ import {serviceItem} from './objects/serviceItem'
 import {siteLink} from './objects/siteLink'
 import {siteNavItem} from './objects/siteNavItem'
 import {footerLinkGroup} from './objects/footerLinkGroup'
+import {footerSiteLink} from './objects/footerSiteLink'
 import {socialLink} from './objects/socialLink'
 import {testimonialItem} from './objects/testimonialItem'
 
@@ -58,6 +59,7 @@ export const schemaTypes = [
   siteLink,
   siteNavItem,
   footerLinkGroup,
+  footerSiteLink,
   socialLink,
   externalImage,
   seo,

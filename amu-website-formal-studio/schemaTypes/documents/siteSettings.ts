@@ -170,6 +170,8 @@ export const siteSettings = defineType({
       title: '右下角連結',
       type: 'object',
       group: 'footer',
+      hidden: true,
+      readOnly: true,
       fields: [
         defineField({
           name: 'label',

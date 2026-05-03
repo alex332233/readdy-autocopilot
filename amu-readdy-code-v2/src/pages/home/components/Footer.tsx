@@ -111,18 +111,6 @@ export default function Footer() {
                 </a>
               ))}
             </div>
-            {siteSettings.builderLink?.label ? (
-              <button
-                type="button"
-                onClick={() => runSiteLink(siteSettings.builderLink!)}
-                className="text-white/70 text-sm whitespace-nowrap hover:text-white transition-colors cursor-pointer"
-                data-sanity-edit-group
-                data-sanity-edit-target
-                data-sanity={getSiteSettingsDataAttribute('builderLink')}
-              >
-                {siteSettings.builderLink.label}
-              </button>
-            ) : null}
           </div>
         </div>
       </div>

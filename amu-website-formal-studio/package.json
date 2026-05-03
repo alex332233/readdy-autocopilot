@@ -30,6 +30,8 @@
     "seed:doctor-specialty-types": "sanity exec ./scripts/seed-doctor-specialty-types.cli.mjs --with-user-token",
     "seed:article-slugs": "sanity exec ./scripts/seed-article-slugs.cli.mjs --with-user-token",
     "normalize:article-dates": "sanity exec ./scripts/normalize-article-dates.cli.mjs --with-user-token",
+    "migrate:footer-links": "sanity exec ./scripts/migrate-footer-links-to-footer-site-link.cli.mjs --with-user-token",
+    "unset:article-null-fields": "sanity exec ./scripts/unset-article-null-fields.cli.mjs --with-user-token",
     "audit:article-seo": "sanity exec ./scripts/audit-article-seo.cli.mjs --with-user-token",
     "clear:health-education-views": "sanity exec ./scripts/clear-health-education-views.cli.mjs --with-user-token"
   },

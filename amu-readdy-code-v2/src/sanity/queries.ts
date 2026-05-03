@@ -58,11 +58,6 @@ export const siteSettingsQuery = groq`
       }
     },
     copyright,
-    builderLink{
-      label,
-      kind,
-      target
-    },
     floatingLineButton{
       enabled,
       ariaLabel,
@@ -243,14 +238,15 @@ export const healthEducationPageQuery = groq`
       ctaButtonText
     },
     "categories": *[_type == "healthEducationCategory"] | order(_id asc){
-      _id,
+      "id": _id,
       name,
       "subcategories": subcategories[]->{
-        _id,
+        "id": _id,
         name
       }
     },
     "articles": *[_type == "healthEducationArticle"] | order(articleId asc){
+      "documentId": _id,
       articleId,
       "slug": slug.current,
       title,
@@ -282,7 +278,9 @@ export const healthEducationPageQuery = groq`
 `;
 
 export const healthEducationArticleQuery = groq`
-  *[_type == "healthEducationArticle" && (articleId == $articleId || slug.current == $slug)][0]{
+  *[_type == "healthEducationArticle" && (articleId == $articleId || slug.current == $slug)]{
+    "_draftRank": select(_id in path("drafts.**") => 1, 0),
+    "documentId": _id,
     articleId,
     "slug": slug.current,
     title,
@@ -316,7 +314,7 @@ export const healthEducationArticleQuery = groq`
       "title": seo.title,
       "description": seo.description
     }
-  }
+  } | order(_draftRank desc)[0]
 `;
 
 export const caseArticleQuery = groq`

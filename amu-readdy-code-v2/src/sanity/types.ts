@@ -215,10 +215,17 @@ export interface LinkItem {
 }
 
 export type SiteLinkKind = 'route' | 'scroll' | 'external';
+export type FooterLinkKind = 'route' | 'external';
 
 export interface SiteLinkContent {
   label: string;
   kind: SiteLinkKind;
+  target: string;
+}
+
+export interface FooterLinkContent {
+  label: string;
+  kind: FooterLinkKind;
   target: string;
 }
 
@@ -228,7 +235,7 @@ export interface SiteNavItemContent extends SiteLinkContent {
 
 export interface FooterLinkGroupContent {
   title: string;
-  links: SiteLinkContent[];
+  links: FooterLinkContent[];
 }
 
 export interface SocialLinkContent {
@@ -261,7 +268,6 @@ export interface SiteSettingsContent {
     image: SanityImage;
   };
   copyright: string;
-  builderLink?: SiteLinkContent;
   floatingLineButton: {
     enabled: boolean;
     ariaLabel: string;
@@ -335,6 +341,7 @@ export interface HealthEducationFaqItem {
 }
 
 export interface HealthEducationArticleContent {
+  documentId?: string;
   articleId: number;
   slug?: string;
   title: string;

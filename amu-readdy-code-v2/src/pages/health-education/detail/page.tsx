@@ -6,6 +6,7 @@ import CTASection from '../../cases/components/CTASection';
 import RichArticleRenderer from '../../../components/RichArticleRenderer';
 import {
   getHealthEducationArticleDataAttribute,
+  getHealthEducationArticleDocumentDataAttribute,
   getHealthEducationPageDataAttribute,
 } from '../../../sanity/dataAttributes';
 import type { HealthEducationArticleContent, HealthEducationPageContent } from '../../../sanity/types';
@@ -40,6 +41,10 @@ export default function HealthEducationDetailPage() {
   }
 
   const { page, article } = data;
+  const getArticleDataAttribute = (path: string) =>
+    article.documentId
+      ? getHealthEducationArticleDocumentDataAttribute(article.documentId, path)
+      : getHealthEducationArticleDataAttribute(article.articleId, path);
 
   return (
     <div className="min-h-screen bg-white">
@@ -50,17 +55,17 @@ export default function HealthEducationDetailPage() {
           src={article.coverImage.url}
           alt={article.coverImage.alt || article.title}
           className="w-full h-full object-cover object-top"
-          data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'coverImage')}
+          data-sanity={getArticleDataAttribute('coverImage')}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent pointer-events-none" />
         <div className="absolute bottom-0 left-0 right-0 px-6 pb-10 max-w-3xl mx-auto pointer-events-none">
           <span
             className="inline-block text-[10px] font-semibold tracking-widest uppercase bg-[#cd9651] text-white px-3 py-1 rounded-sm mb-3"
-            data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'subcategory')}
+            data-sanity={getArticleDataAttribute('subcategory')}
           >
             {article.subcategory}
           </span>
-          <h1 className="text-2xl md:text-3xl font-bold text-white leading-snug" data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'title')}>
+          <h1 className="text-2xl md:text-3xl font-bold text-white leading-snug" data-sanity={getArticleDataAttribute('title')}>
             {article.title}
           </h1>
         </div>
@@ -78,7 +83,7 @@ export default function HealthEducationDetailPage() {
             返回健康教育列表
           </button>
           <div className="flex items-center gap-3">
-            <span className="text-[11px] text-gray-400 tracking-wide" data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'updatedDate')}>
+            <span className="text-[11px] text-gray-400 tracking-wide" data-sanity={getArticleDataAttribute('updatedDate')}>
               {article.updatedDate}
             </span>
             <span className="text-gray-200">·</span>
@@ -86,7 +91,7 @@ export default function HealthEducationDetailPage() {
               <div className="w-4 h-4 flex items-center justify-center">
                 <i className="ri-user-line text-[#cd9651]" style={{ fontSize: '12px' }}></i>
               </div>
-              <span className="text-[11px] text-[#cd9651] font-medium tracking-wide" data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'author')}>
+              <span className="text-[11px] text-[#cd9651] font-medium tracking-wide" data-sanity={getArticleDataAttribute('author')}>
                 {article.author}
               </span>
             </div>
@@ -98,26 +103,26 @@ export default function HealthEducationDetailPage() {
             <div className="w-4 h-4 flex items-center justify-center">
               <i className="ri-time-line" style={{ fontSize: '13px' }}></i>
             </div>
-            <span data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'readTime')}>{article.readTime}</span>
+            <span data-sanity={getArticleDataAttribute('readTime')}>{article.readTime}</span>
           </div>
         </div>
 
-        <p className="text-sm text-gray-500 leading-relaxed mb-10 border-l-2 border-[#cd9651]/30 pl-4" data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'summary')}>
+        <p className="text-sm text-gray-500 leading-relaxed mb-10 border-l-2 border-[#cd9651]/30 pl-4" data-sanity={getArticleDataAttribute('summary')}>
           {article.summary}
         </p>
 
         {article.body && article.body.length > 0 ? (
           <RichArticleRenderer
-            getDataAttribute={(path) => getHealthEducationArticleDataAttribute(article.articleId, path)}
+            getDataAttribute={getArticleDataAttribute}
             blocks={article.body}
           />
         ) : (
           article.content.map((section, idx) => (
             <div key={idx} className="mb-10">
-              <h2 className="text-lg font-bold text-gray-800 mb-4 tracking-wide" data-sanity={getHealthEducationArticleDataAttribute(article.articleId, `content[${idx}].heading`)}>
+              <h2 className="text-lg font-bold text-gray-800 mb-4 tracking-wide" data-sanity={getArticleDataAttribute(`content[${idx}].heading`)}>
                 {section.heading}
               </h2>
-              <p className="text-sm text-gray-600 leading-relaxed mb-4" data-sanity={getHealthEducationArticleDataAttribute(article.articleId, `content[${idx}].text`)}>
+              <p className="text-sm text-gray-600 leading-relaxed mb-4" data-sanity={getArticleDataAttribute(`content[${idx}].text`)}>
                 {section.text}
               </p>
               {section.image?.url && (
@@ -126,7 +131,7 @@ export default function HealthEducationDetailPage() {
                     src={section.image.url}
                     alt={section.image.alt || section.heading}
                     className="w-full h-full object-cover object-top"
-                    data-sanity={getHealthEducationArticleDataAttribute(article.articleId, `content[${idx}].image.url`)}
+                    data-sanity={getArticleDataAttribute(`content[${idx}].image.url`)}
                   />
                 </div>
               )}
@@ -136,10 +141,10 @@ export default function HealthEducationDetailPage() {
 
         {article.tips && (
           <div className="border border-stone-100 rounded-xl p-6 mb-10">
-            <p className="text-xs font-semibold text-[#cd9651] tracking-widest mb-3 uppercase" data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'tips.title')}>
+            <p className="text-xs font-semibold text-[#cd9651] tracking-widest mb-3 uppercase" data-sanity={getArticleDataAttribute('tips.title')}>
               {article.tips.title}
             </p>
-            <p className="text-xs text-gray-500 leading-relaxed" data-sanity={getHealthEducationArticleDataAttribute(article.articleId, 'tips.content')}>
+            <p className="text-xs text-gray-500 leading-relaxed" data-sanity={getArticleDataAttribute('tips.content')}>
               {article.tips.content}
             </p>
           </div>
@@ -173,7 +178,7 @@ export default function HealthEducationDetailPage() {
 
                       <span
                         className="flex-1 text-sm font-semibold text-gray-800 leading-relaxed tracking-wide"
-                        data-sanity={getHealthEducationArticleDataAttribute(article.articleId, `faq[${idx}].question`)}
+                        data-sanity={getArticleDataAttribute(`faq[${idx}].question`)}
                       >
                         {item.question}
                       </span>
@@ -190,7 +195,7 @@ export default function HealthEducationDetailPage() {
                     >
                       <p
                         className="pl-[52px] pr-8 pb-6 text-sm text-gray-600 leading-relaxed"
-                        data-sanity={getHealthEducationArticleDataAttribute(article.articleId, `faq[${idx}].answer`)}
+                        data-sanity={getArticleDataAttribute(`faq[${idx}].answer`)}
                       >
                         {item.answer}
                       </p>
@@ -217,7 +222,7 @@ export default function HealthEducationDetailPage() {
                   <div className="w-4 h-4 flex items-center justify-center flex-shrink-0">
                     <i className="ri-link text-xs"></i>
                   </div>
-                  <span className="underline underline-offset-2 break-all" data-sanity={getHealthEducationArticleDataAttribute(article.articleId, `references[${idx}].text`)}>
+                  <span className="underline underline-offset-2 break-all" data-sanity={getArticleDataAttribute(`references[${idx}].text`)}>
                     {ref.text}
                   </span>
                 </a>
@@ -231,7 +236,7 @@ export default function HealthEducationDetailPage() {
             <span
               key={idx}
               className="text-[11px] text-gray-400 tracking-wide bg-gray-50 px-2.5 py-1 rounded-full"
-              data-sanity={getHealthEducationArticleDataAttribute(article.articleId, `tags[${idx}]`)}
+              data-sanity={getArticleDataAttribute(`tags[${idx}]`)}
             >
               #{tag}
             </span>

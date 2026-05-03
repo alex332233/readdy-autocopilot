@@ -76,16 +76,17 @@ export const healthEducationArticle = defineType({
     }),
     defineField({
       name: 'body',
-      title: '新版文章內文',
+      title: '文章內文',
       type: 'richArticleContent',
-      description: '新版文章編輯器欄位。若有填寫，前台將優先使用此欄位。',
     }),
     defineField({
       name: 'content',
-      title: '文章段落',
+      title: '文章段落（舊欄位）',
       type: 'array',
       of: [{type: 'healthArticleSection'}],
       description: '舊版欄位，保留給既有文章使用。新版文章請優先使用「新版文章內文」。',
+      readOnly: true,
+      hidden: true,
     }),
     defineField({
       name: 'faq',

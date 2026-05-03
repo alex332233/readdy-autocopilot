@@ -2,6 +2,7 @@ import {sanityClient} from './client';
 import {defaultSiteSettingsContent} from './defaults/siteSettings';
 import {siteSettingsQuery} from './queries';
 import type {
+  FooterLinkContent,
   FooterLinkGroupContent,
   SanityImage,
   SiteLinkContent,
@@ -56,12 +57,35 @@ const getSocialIcon = (platform: string, fallbackIcon = '') => {
 
 const mergeFooterGroup = (incoming: unknown, fallback?: FooterLinkGroupContent): FooterLinkGroupContent => {
   const group = incoming as Partial<FooterLinkGroupContent> | null;
+  const normalizeFooterLink = (link: SiteLinkContent | FooterLinkContent): FooterLinkContent => {
+    if (link.kind !== 'scroll') {
+      return {
+        label: link.label,
+        kind: link.kind,
+        target: link.target,
+      };
+    }
+
+    const targetMap: Record<string, string> = {
+      services: '/insurance',
+      'why-choose': '/about',
+      location: '/about',
+      booking: '/',
+    };
+
+    return {
+      ...link,
+      kind: 'route',
+      target: targetMap[link.target] || '/',
+    };
+  };
+
   return {
     title: group?.title || fallback?.title || '',
     links:
       Array.isArray(group?.links) && group.links.length > 0
-        ? group.links.map((link, index) => mergeSiteLink(link, fallback?.links?.[index]))
-        : fallback?.links || [],
+        ? group.links.map((link, index) => normalizeFooterLink(mergeSiteLink(link, fallback?.links?.[index])))
+        : (fallback?.links || []).map(normalizeFooterLink),
   };
 };
 
@@ -119,14 +143,6 @@ export const normalizeSiteSettings = (incoming: unknown): SiteSettingsContent =>
         : fallback.socialLinks,
     locationSection: mergeLocationSection(settings?.locationSection, fallback.locationSection),
     copyright: settings?.copyright || fallback.copyright,
-    builderLink:
-      settings?.builderLink && (settings.builderLink.label || settings.builderLink.target)
-        ? {
-            label: settings.builderLink.label || '',
-            kind: settings.builderLink.kind || 'external',
-            target: settings.builderLink.target || '',
-          }
-        : undefined,
     floatingLineButton: {
       enabled: settings?.floatingLineButton?.enabled ?? fallback.floatingLineButton.enabled,
       ariaLabel:

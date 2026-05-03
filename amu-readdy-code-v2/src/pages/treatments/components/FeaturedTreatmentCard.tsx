@@ -40,7 +40,6 @@ export default function FeaturedTreatmentCard({
     (category.treatmentKey && category.treatmentKey in forestToneColors) ||
     forestToneTitles.has(category.title);
   const titleColor = isForestTone ? treatmentColor : '#2f2a25';
-  const cardBackground = isForestTone ? '#fcfaf6' : '#ffffff';
 
   const handleCardClick = () => {
     if (hasDetail && detailPath) {
@@ -50,9 +49,9 @@ export default function FeaturedTreatmentCard({
 
   return (
     <div
-      className="group cursor-pointer overflow-hidden rounded-[28px] transition-all duration-500"
+      className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-[28px] transition-all duration-500"
       style={{
-        backgroundColor: cardBackground,
+        backgroundColor: '#ffffff',
         boxShadow: '0 1px 8px 0 rgba(205,150,81,0.06)',
         border: '1px solid #e8dece',
       }}
@@ -68,7 +67,7 @@ export default function FeaturedTreatmentCard({
     >
       <div className="h-1 w-full" style={{ backgroundColor: `${treatmentColor}85` }} />
 
-      <div className="flex h-full flex-col p-7">
+      <div className="flex flex-1 flex-col p-7">
         <div className="flex items-center gap-4 mb-5">
           <div
             className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full transition-transform duration-300 group-hover:scale-110"

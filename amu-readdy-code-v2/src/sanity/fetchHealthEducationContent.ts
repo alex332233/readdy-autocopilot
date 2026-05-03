@@ -164,6 +164,7 @@ const mergeArticle = (
 ): HealthEducationArticleContent => {
   const article = incoming as Partial<HealthEducationArticleContent> | null;
   return {
+    documentId: article?.documentId || fallback?.documentId,
     articleId: Number(article?.articleId || fallback?.articleId || 0),
     slug: article?.slug || fallback?.slug,
     title: article?.title || fallback?.title || '',

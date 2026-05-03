@@ -48,6 +48,7 @@ export default function RelatedTreatmentsSection({ cards, currentSlug }: Related
             return (
               <div
                 key={item._key || item.detailSlug || index}
+                className="h-full"
                 data-sanity={getFeaturedTreatmentsPageDataAttribute(
                   item._key ? `cards[_key=="${item._key}"].title` : `cards[${index}].title`,
                 )}
