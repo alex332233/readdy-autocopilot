@@ -16,7 +16,6 @@ export const healthEducationSubcategory = defineType({
       title: '主分類 ID',
       type: 'string',
       hidden: true,
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'categoryName',

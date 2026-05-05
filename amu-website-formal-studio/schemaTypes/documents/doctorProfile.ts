@@ -60,7 +60,6 @@ export const doctorProfile = defineType({
       of: [{type: 'doctorSpecialtyGroup'}],
       readOnly: true,
       hidden: true,
-      validation: (Rule) => Rule.required().min(1),
     }),
     defineField({
       name: 'featuredTreatmentRefs',
