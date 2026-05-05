@@ -15,7 +15,7 @@ export const footerLinkGroup = defineType({
       name: 'links',
       title: '連結',
       type: 'array',
-      of: [{type: 'siteLink'}],
+      of: [{type: 'footerSiteLink'}],
       validation: (Rule) => Rule.required().min(1),
     }),
   ],

@@ -1,5 +1,10 @@
+import { Link } from 'react-router-dom';
 import FadeIn from '../../../components/base/FadeIn';
+import { getHomePageDataAttribute } from '../../../sanity/dataAttributes';
 import { useHomePageContent } from '../useHomePageContent';
+
+const getServiceFieldBase = (service: { _key?: string }, index: number) =>
+  service._key ? `services.items[_key=="${service._key}"]` : `services.items[${index}]`;
 
 export default function ServicesSection() {
   const { services } = useHomePageContent();
@@ -23,17 +28,24 @@ export default function ServicesSection() {
           <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             {services.items.map((service, index) => (
-              <div
-                key={index}
+              <Link
+                to={service.href || '/insurance'}
+                key={service._key || index}
                 className="group bg-white rounded-lg p-6 shadow-sm border border-[#cd9651]/40 flex-shrink-0 snap-start"
                 style={{ width: '72vw', maxWidth: '280px' }}
+                aria-label={`了解更多：${service.title}`}
               >
                 <div className="flex items-start justify-between mb-4">
                   <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#cd9651]/10 text-[#cd9651]">
                     {service.number}
                   </span>
                   <div className="w-12 h-12 rounded-full bg-[#cd9651] flex items-center justify-center">
-                    <i className={`${service.icon} text-2xl text-white`}></i>
+                    <i
+                      className={`${service.icon} text-2xl text-white`}
+                      data-sanity={getHomePageDataAttribute(
+                        service.treatmentKey ? getServiceFieldBase(service, index) : `${getServiceFieldBase(service, index)}.icon`,
+                      )}
+                    ></i>
                   </div>
                 </div>
                 <h3 className="font-serif text-xl font-bold text-gray-800 mb-1">
@@ -45,7 +57,7 @@ export default function ServicesSection() {
                   <span className="text-xs font-medium text-[#cd9651]">了解更多</span>
                   <i className="ri-arrow-right-line text-sm text-[#cd9651]"></i>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
           {/* 滑動提示點 */}
@@ -59,14 +71,23 @@ export default function ServicesSection() {
         {/* 桌面版：原有 grid */}
         <div className="hidden md:grid max-w-6xl mx-auto grid-cols-2 lg:grid-cols-4 gap-6">
           {services.items.map((service, index) => (
-            <FadeIn key={index} direction="up" delay={index * 80} threshold={0.08}>
-              <div className="group bg-white rounded-lg p-6 shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer border border-[#cd9651]/40 hover:border-[#cd9651] h-full">
+            <FadeIn key={service._key || index} direction="up" delay={index * 80} threshold={0.08}>
+              <Link
+                to={service.href || '/insurance'}
+                className="group block bg-white rounded-lg p-6 shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer border border-[#cd9651]/40 hover:border-[#cd9651] h-full"
+                aria-label={`了解更多：${service.title}`}
+              >
                 <div className="flex items-start justify-between mb-4">
                   <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#cd9651]/10 text-[#cd9651]">
                     {service.number}
                   </span>
                   <div className="w-12 h-12 rounded-full bg-[#cd9651] flex items-center justify-center transition-all duration-300 group-hover:scale-110">
-                    <i className={`${service.icon} text-2xl text-white`}></i>
+                    <i
+                      className={`${service.icon} text-2xl text-white`}
+                      data-sanity={getHomePageDataAttribute(
+                        service.treatmentKey ? getServiceFieldBase(service, index) : `${getServiceFieldBase(service, index)}.icon`,
+                      )}
+                    ></i>
                   </div>
                 </div>
                 <h3 className="font-serif text-xl font-bold text-gray-800 mb-1 group-hover:text-[#cd9651] transition-colors duration-300">
@@ -78,7 +99,7 @@ export default function ServicesSection() {
                   <span className="text-xs font-medium text-[#cd9651]">了解更多</span>
                   <i className="ri-arrow-right-line text-sm text-[#cd9651]"></i>
                 </div>
-              </div>
+              </Link>
             </FadeIn>
           ))}
         </div>

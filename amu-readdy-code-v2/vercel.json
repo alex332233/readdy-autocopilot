@@ -1,23 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "vite",
-  "buildCommand": "npm run build",
-  "outputDirectory": "out",
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, nofollow"
-        }
-      ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/((?!assets/|locales/|favicon.ico|robots.txt|sitemap.xml).*)",
-      "destination": "/index.html"
-    }
-  ]
+  "framework": "react-router",
+  "buildCommand": "npm run build"
 }

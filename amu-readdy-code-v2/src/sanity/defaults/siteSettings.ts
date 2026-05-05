@@ -16,6 +16,10 @@ export const defaultSiteSettingsContent: SiteSettingsContent = {
       children: [
         { label: '御顏・緊緻', kind: 'route', target: '/featured-treatments/facial' },
         { label: '登峰・轉骨', kind: 'route', target: '/featured-treatments/growth' },
+        { label: '輕盈・體雕', kind: 'route', target: '/featured-treatments/body' },
+        { label: '明眸・亮視', kind: 'route', target: '/featured-treatments/eye' },
+        { label: '光能・修復', kind: 'route', target: '/featured-treatments/laser' },
+        { label: '深癒・淬鍊', kind: 'route', target: '/featured-treatments/decoction' },
       ],
     },
     { label: '醫師團隊', kind: 'route', target: '/team' },
@@ -37,18 +41,18 @@ export const defaultSiteSettingsContent: SiteSettingsContent = {
       title: '關於艾苜',
       links: [
         { label: '診所介紹', kind: 'route', target: '/about' },
-        { label: '醫療理念', kind: 'scroll', target: 'why-choose' },
+        { label: '醫療理念', kind: 'route', target: '/about' },
         { label: '醫師團隊', kind: 'route', target: '/team' },
-        { label: '聯絡我們', kind: 'scroll', target: 'location' },
+        { label: '聯絡我們', kind: 'route', target: '/about' },
       ],
     },
     {
       title: '醫療服務',
       links: [
-        { label: '內科調理', kind: 'scroll', target: 'services' },
-        { label: '婦科治療', kind: 'scroll', target: 'services' },
-        { label: '兒科調理', kind: 'scroll', target: 'services' },
-        { label: '美顏針灸', kind: 'scroll', target: 'services' },
+        { label: '內科調理', kind: 'route', target: '/insurance' },
+        { label: '婦科治療', kind: 'route', target: '/insurance' },
+        { label: '兒科調理', kind: 'route', target: '/insurance' },
+        { label: '美顏針灸', kind: 'route', target: '/featured-treatments/facial' },
       ],
     },
   ],
@@ -75,9 +79,6 @@ export const defaultSiteSettingsContent: SiteSettingsContent = {
     },
   },
   copyright: '© 2025 艾苜中醫診所. All rights reserved.',
-  builderLink: {
-    label: 'Website Builder',
-  },
   floatingLineButton: {
     enabled: true,
     ariaLabel: 'Line客服',

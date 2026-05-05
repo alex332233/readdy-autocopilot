@@ -1,3 +1,4 @@
+import type { SanityClient } from '@sanity/client';
 import { sanityClient } from './client';
 import { defaultFeaturedTreatmentDetails, defaultFeaturedTreatmentsPageContent } from './defaults/featuredTreatments';
 import { featuredTreatmentDetailQuery, featuredTreatmentsPageQuery } from './queries';
@@ -9,6 +10,8 @@ import type {
   FeaturedTreatmentCase,
   SanityImage,
 } from './types';
+
+type SanityFetchClient = Pick<SanityClient, 'fetch'>;
 
 const mergeImage = (incoming: unknown, fallback?: SanityImage): SanityImage | undefined => {
   const image = incoming as Partial<SanityImage> | null;
@@ -27,16 +30,32 @@ const mergeTags = (incoming: unknown, fallback: string[]) => {
 const mergeCard = (incoming: unknown, fallback?: FeaturedTreatmentCardContent): FeaturedTreatmentCardContent => {
   const card = incoming as Partial<FeaturedTreatmentCardContent> | null;
   return {
-    title: card?.title || fallback?.title || '',
-    englishTitle: card?.englishTitle || fallback?.englishTitle || '',
-    icon: card?.icon || fallback?.icon || '',
-    color: card?.color || fallback?.color || '#cd9651',
-    treatmentTitle: card?.treatmentTitle || fallback?.treatmentTitle || '',
+    _key: card?._key || fallback?._key,
+    treatmentKey: card?.treatmentKey || fallback?.treatmentKey,
+    treatmentIcon: card?.treatmentIcon || fallback?.treatmentIcon,
+    treatmentFeaturedName: card?.treatmentFeaturedName || fallback?.treatmentFeaturedName,
+    title: fallback?.title || card?.title || '',
+    englishTitle: fallback?.englishTitle || card?.englishTitle || '',
+    icon: card?.treatmentIcon || fallback?.treatmentIcon || fallback?.icon || card?.icon || '',
+    color: fallback?.color || card?.color || '#cd9651',
+    image: mergeImage(card?.image, fallback?.image),
+    treatmentTitle: fallback?.treatmentTitle || card?.treatmentTitle || '',
     description: card?.description || fallback?.description || '',
     tags: mergeTags(card?.tags, fallback?.tags || []),
-    detailSlug: card?.detailSlug || fallback?.detailSlug,
+    detailSlug: fallback?.detailSlug || card?.detailSlug,
   };
 };
+
+const findMatchingCard = (
+  cards: FeaturedTreatmentCardContent[],
+  fallback: FeaturedTreatmentCardContent,
+) =>
+  cards.find((card) =>
+    (card.treatmentKey && fallback.treatmentKey && card.treatmentKey === fallback.treatmentKey) ||
+    (card.detailSlug && fallback.detailSlug && card.detailSlug === fallback.detailSlug) ||
+    (card.title && card.title === fallback.title) ||
+    (card.englishTitle && card.englishTitle === fallback.englishTitle),
+  );
 
 const mergeItem = (incoming: unknown, fallback?: FeaturedTreatmentSectionItem): FeaturedTreatmentSectionItem => {
   const item = incoming as Partial<FeaturedTreatmentSectionItem> | null;
@@ -50,7 +69,10 @@ const mergeCase = (incoming: unknown, fallback?: FeaturedTreatmentCase): Feature
   const item = incoming as Partial<FeaturedTreatmentCase> | null;
   return {
     label: item?.label || fallback?.label || '',
+    name: item?.name || fallback?.name,
     text: item?.text || fallback?.text || '',
+    link: item?.link || fallback?.link,
+    image: mergeImage(item?.image, fallback?.image),
   };
 };
 
@@ -69,38 +91,71 @@ const mergeSection = (incoming: unknown, fallback?: FeaturedTreatmentSection): F
   };
 };
 
-export async function fetchFeaturedTreatmentsPageContent() {
-  if (!sanityClient) return defaultFeaturedTreatmentsPageContent;
+export async function fetchFeaturedTreatmentsPageContent(clientOverride?: SanityFetchClient | null) {
+  const client = clientOverride || sanityClient;
+  if (!client) return defaultFeaturedTreatmentsPageContent;
 
-  const data = (await sanityClient.fetch(featuredTreatmentsPageQuery)) as Partial<typeof defaultFeaturedTreatmentsPageContent> | null;
+  const data = (await client.fetch(featuredTreatmentsPageQuery)) as Partial<typeof defaultFeaturedTreatmentsPageContent> | null;
   if (!data) return defaultFeaturedTreatmentsPageContent;
+
+  const incomingCards = Array.isArray(data.cards) ? (data.cards as Partial<FeaturedTreatmentCardContent>[]) : [];
+  const mergedCards =
+    incomingCards.length > 0
+      ? incomingCards.map((card) => {
+          const fallback = findMatchingCard(defaultFeaturedTreatmentsPageContent.cards, {
+            _key: card._key,
+            treatmentKey: card.treatmentKey,
+            title: card.title || '',
+            englishTitle: card.englishTitle || '',
+            icon: card.icon || '',
+            color: card.color || '#cd9651',
+            image: undefined,
+            treatmentTitle: card.treatmentTitle || '',
+            description: card.description || '',
+            tags: Array.isArray(card.tags) ? card.tags.map((tag) => String(tag)) : [],
+            detailSlug: card.detailSlug,
+          });
+
+          return mergeCard(card, fallback);
+        })
+      : defaultFeaturedTreatmentsPageContent.cards;
 
   return {
     title: data.title || defaultFeaturedTreatmentsPageContent.title,
     heroTitle: data.heroTitle || defaultFeaturedTreatmentsPageContent.heroTitle,
     heroDescription: data.heroDescription || defaultFeaturedTreatmentsPageContent.heroDescription,
-    cards: Array.isArray(data.cards) && data.cards.length > 0
-      ? data.cards.map((card, index) => mergeCard(card, defaultFeaturedTreatmentsPageContent.cards[index]))
-      : defaultFeaturedTreatmentsPageContent.cards,
+    cards: mergedCards,
   };
 }
 
-export async function fetchFeaturedTreatmentDetailContent({ params }: { params: { slug?: string } }) {
+export async function fetchFeaturedTreatmentDetailContent(
+  { params }: { params: { slug?: string } },
+  clientOverride?: SanityFetchClient | null,
+) {
   const slug = params.slug || 'facial';
   const fallback = defaultFeaturedTreatmentDetails[slug] || defaultFeaturedTreatmentDetails.facial;
-  if (!sanityClient) return fallback;
+  const client = clientOverride || sanityClient;
+  if (!client) return fallback;
 
-  const data = (await sanityClient.fetch(featuredTreatmentDetailQuery, { slug })) as Partial<FeaturedTreatmentDetailContent> | null;
+  const data = (await client.fetch(featuredTreatmentDetailQuery, { slug })) as Partial<FeaturedTreatmentDetailContent> | null;
   if (!data) return fallback;
 
   return {
-    title: data.title || fallback.title,
+    _id: data._id || fallback._id,
+    treatmentKey: data.treatmentKey || fallback.treatmentKey,
+    title: fallback.title || data.title || '',
     slug: data.slug || fallback.slug,
-    subtitle: data.subtitle || fallback.subtitle,
-    themeColor: data.themeColor || fallback.themeColor,
+    subtitle: fallback.subtitle || data.subtitle || '',
+    themeColor: fallback.themeColor || data.themeColor || '#cd9651',
+    primaryImage: mergeImage(data.primaryImage, fallback.primaryImage),
+    secondaryImage: mergeImage(data.secondaryImage, fallback.secondaryImage),
     sections: Array.isArray(data.sections) && data.sections.length > 0
       ? data.sections.map((section, index) => mergeSection(section, fallback.sections[index]))
       : fallback.sections,
+    featuredCases:
+      Array.isArray(data.featuredCases) && data.featuredCases.length > 0
+        ? data.featuredCases.map((item, index) => mergeCase(item, fallback.featuredCases?.[index]))
+        : fallback.featuredCases,
     disclaimer: data.disclaimer || fallback.disclaimer,
     cta: {
       title: data.cta?.title || fallback.cta.title,

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
+import { stegaClean } from '@sanity/client/stega';
 import Navbar from '../home/components/Navbar';
 import Footer from '../home/components/Footer';
 import HeroSection from './components/HeroSection';
@@ -19,8 +20,14 @@ export default function CasesPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const allCategories = ['全部', ...Array.from(new Set(content.articles.map((c) => c.category)))];
-  const filtered = activeCategory === '全部' ? content.articles : content.articles.filter((c) => c.category === activeCategory);
+  const allCategories = [
+    '全部',
+    ...Array.from(new Set(content.articles.map((caseItem) => stegaClean(caseItem.category)).filter(Boolean))),
+  ];
+  const filtered =
+    activeCategory === '全部'
+      ? content.articles
+      : content.articles.filter((caseItem) => stegaClean(caseItem.category) === activeCategory);
 
   return (
     <div className="min-h-screen bg-white">
@@ -53,7 +60,12 @@ export default function CasesPage() {
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
             {filtered.map((caseItem, index) => (
-              <FadeIn key={caseItem.caseId} delay={index * 120} direction="up" duration={1600}>
+              <FadeIn
+                key={caseItem.documentId || caseItem.slug || caseItem.caseId || `case-${index}`}
+                delay={index * 120}
+                direction="up"
+                duration={1600}
+              >
                 <BlogCard caseData={caseItem} />
               </FadeIn>
             ))}

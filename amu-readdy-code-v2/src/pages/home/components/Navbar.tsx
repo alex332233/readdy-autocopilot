@@ -1,18 +1,16 @@
 import { useState } from 'react';
-import { useRouteLoaderData } from 'react-router-dom';
 import { stegaClean } from '@sanity/client/stega';
 import { getSiteSettingsDataAttribute } from '../../../sanity/dataAttributes';
-import { defaultSiteSettingsContent } from '../../../sanity/defaults/siteSettings';
 import { runSiteLink } from '../../../sanity/siteLinkActions';
-import type { SiteNavItemContent, SiteSettingsContent } from '../../../sanity/types';
+import { useSiteSettingsContent } from '../../../sanity/useSiteSettingsContent';
+import type { SiteNavItemContent } from '../../../sanity/types';
 
 interface NavbarProps {
   scrolled: boolean;
 }
 
 export default function Navbar({ scrolled }: NavbarProps) {
-  const siteSettings =
-    (useRouteLoaderData('root') as SiteSettingsContent | undefined) ?? defaultSiteSettingsContent;
+  const siteSettings = useSiteSettingsContent();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdownLabel, setOpenDropdownLabel] = useState<string | null>(null);
 

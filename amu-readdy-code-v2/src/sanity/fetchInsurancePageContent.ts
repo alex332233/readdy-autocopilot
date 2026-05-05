@@ -14,10 +14,13 @@ const mergeImage = (incoming: unknown, fallback?: SanityImage): SanityImage => {
 const mergeOverviewCard = (incoming: unknown, fallback?: InsuranceOverviewCard): InsuranceOverviewCard => {
   const card = incoming as Partial<InsuranceOverviewCard> | null;
   return {
+    _key: card?._key || fallback?._key,
     title: card?.title || fallback?.title || '',
     englishTitle: card?.englishTitle || fallback?.englishTitle || '',
     subtitle: card?.subtitle || fallback?.subtitle || '',
-    icon: card?.icon || fallback?.icon || '',
+    treatmentKey: card?.treatmentKey || fallback?.treatmentKey,
+    treatmentIcon: card?.treatmentIcon || fallback?.treatmentIcon,
+    icon: card?.treatmentIcon || card?.icon || fallback?.treatmentIcon || fallback?.icon || '',
     anchorId: card?.anchorId || fallback?.anchorId || '',
     image: mergeImage(card?.image, fallback?.image),
   };
@@ -39,10 +42,13 @@ const mergeTreatmentCategory = (
 ): InsuranceTreatmentCategory => {
   const category = incoming as Partial<InsuranceTreatmentCategory> | null;
   return {
+    _key: category?._key || fallback?._key,
     title: category?.title || fallback?.title || '',
     subtitle: category?.subtitle || fallback?.subtitle || '',
     englishTitle: category?.englishTitle || fallback?.englishTitle || '',
-    icon: category?.icon || fallback?.icon || '',
+    treatmentKey: category?.treatmentKey || fallback?.treatmentKey,
+    treatmentIcon: category?.treatmentIcon || fallback?.treatmentIcon,
+    icon: category?.treatmentIcon || category?.icon || fallback?.treatmentIcon || fallback?.icon || '',
     color: category?.color || fallback?.color || '#cd9651',
     treatments:
       Array.isArray(category?.treatments) && category.treatments.length > 0
@@ -51,12 +57,8 @@ const mergeTreatmentCategory = (
   };
 };
 
-export async function fetchInsurancePageContent() {
-  if (!sanityClient) return defaultInsurancePageContent;
-
-  const data = (await sanityClient.fetch(insurancePageQuery)) as Partial<InsurancePageContent> | null;
+export function normalizeInsurancePageContent(data?: Partial<InsurancePageContent> | null): InsurancePageContent {
   if (!data) return defaultInsurancePageContent;
-
   return {
     title: data.title || defaultInsurancePageContent.title,
     heroTitle: data.heroTitle || defaultInsurancePageContent.heroTitle,
@@ -72,4 +74,11 @@ export async function fetchInsurancePageContent() {
           )
         : defaultInsurancePageContent.detailedCategories,
   };
+}
+
+export async function fetchInsurancePageContent() {
+  if (!sanityClient) return defaultInsurancePageContent;
+
+  const data = (await sanityClient.fetch(insurancePageQuery)) as Partial<InsurancePageContent> | null;
+  return normalizeInsurancePageContent(data);
 }

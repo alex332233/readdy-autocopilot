@@ -37,7 +37,7 @@ export default function InsurancePage() {
         <section className="py-20 bg-gradient-to-b from-white to-[#f8f6f1]">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             {content.detailedCategories.map((category, index) => (
-              <div key={index} ref={categoryRefs[index]}>
+              <div key={index} id={category.treatmentKey} ref={categoryRefs[index]}>
                 <TreatmentCategory
                   category={category}
                   index={index}

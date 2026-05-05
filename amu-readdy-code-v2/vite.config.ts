@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
 import { resolve } from "node:path";
 import AutoImport from "unplugin-auto-import/vite";
+import { reactRouter } from "@react-router/dev/vite";
 
 const base = process.env.BASE_PATH || "/";
 const isPreview = process.env.IS_PREVIEW ? true : false;
@@ -15,7 +15,7 @@ export default defineConfig({
     __READDY_AI_DOMAIN__: JSON.stringify(process.env.READDY_AI_DOMAIN || ""),
   },
   plugins: [
-    react(),
+    reactRouter(),
     AutoImport({
       imports: [
         {
@@ -67,10 +67,6 @@ export default defineConfig({
     }),
   ],
   base,
-  build: {
-    sourcemap: true,
-    outDir: "out",
-  },
   resolve: {
     alias: {
       "@": resolve(__dirname, "./src"),

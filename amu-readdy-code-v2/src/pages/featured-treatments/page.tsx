@@ -2,8 +2,11 @@ import { useLoaderData } from 'react-router-dom';
 import Navbar from '../home/components/Navbar';
 import Footer from '../home/components/Footer';
 import HeroSection from './components/HeroSection';
+import FeaturedOverviewSection from './components/FeaturedOverviewSection';
 import FeaturedTreatmentCard from '../treatments/components/FeaturedTreatmentCard';
 import type { FeaturedTreatmentPageContent } from '../../sanity/types';
+import { getFeaturedTreatmentsPageDataAttribute } from '../../sanity/dataAttributes';
+import { getFeaturedTreatmentDetailPath } from './treatmentLinks';
 
 export default function FeaturedTreatmentsPage() {
   const featuredPage = useLoaderData() as FeaturedTreatmentPageContent;
@@ -12,6 +15,7 @@ export default function FeaturedTreatmentsPage() {
     <div className="min-h-screen bg-[#faf6f0]">
       <Navbar scrolled={false} />
       <HeroSection title={featuredPage.heroTitle} description={featuredPage.heroDescription} />
+      <FeaturedOverviewSection cards={featuredPage.cards} />
 
       <section className="py-16 lg:py-20 px-4">
         <div className="max-w-7xl mx-auto">
@@ -20,6 +24,7 @@ export default function FeaturedTreatmentsPage() {
               <FeaturedTreatmentCard
                 key={index}
                 category={{
+                  treatmentKey: category.treatmentKey,
                   title: category.title,
                   englishTitle: category.englishTitle,
                   icon: category.icon,
@@ -32,8 +37,11 @@ export default function FeaturedTreatmentsPage() {
                     },
                   ],
                 }}
-                hasDetail={Boolean(category.detailSlug)}
-                detailPath={category.detailSlug ? `/featured-treatments/${category.detailSlug}` : undefined}
+                hasDetail={Boolean(getFeaturedTreatmentDetailPath(category))}
+                detailPath={getFeaturedTreatmentDetailPath(category)}
+                iconDataAttribute={getFeaturedTreatmentsPageDataAttribute(
+                  category._key ? `cards[_key=="${category._key}"].icon` : `cards[${index}].icon`,
+                )}
               />
             ))}
           </div>

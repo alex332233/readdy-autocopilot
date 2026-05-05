@@ -13,9 +13,11 @@ export const socialLink = defineType({
     }),
     defineField({
       name: 'icon',
-      title: 'Icon class',
+      title: 'Icon class（舊欄位）',
+      description: '前台會依平台名稱自動帶入 icon，此欄位僅作舊資料 fallback。',
       type: 'string',
-      validation: (Rule) => Rule.required(),
+      readOnly: true,
+      hidden: true,
     }),
     defineField({
       name: 'url',

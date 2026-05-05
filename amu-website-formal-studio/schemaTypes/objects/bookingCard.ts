@@ -1,4 +1,5 @@
 import {defineField, defineType} from 'sanity'
+import {iconFieldOptions} from '../iconOptions'
 
 export const bookingCard = defineType({
   name: 'bookingCard',
@@ -9,7 +10,7 @@ export const bookingCard = defineType({
     defineField({name: 'value', title: 'Value', type: 'string'}),
     defineField({name: 'href', title: 'Href', type: 'string'}),
     defineField({name: 'buttonText', title: 'Button text', type: 'string'}),
-    defineField({name: 'icon', title: 'Icon class', type: 'string'}),
+    defineField({name: 'icon', title: 'Icon class', type: 'string', options: iconFieldOptions}),
     defineField({
       name: 'buttonTheme',
       title: 'Button theme',

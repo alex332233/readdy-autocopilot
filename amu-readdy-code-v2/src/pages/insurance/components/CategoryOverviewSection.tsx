@@ -82,7 +82,10 @@ export default function CategoryOverviewSection({categoryRefs, categories}: Prop
                   className="w-10 h-10 flex items-center justify-center rounded-full mb-4"
                   style={{backgroundColor: 'rgba(205,150,81,0.80)'}}
                 >
-                  <i className={`${cat.icon} text-white text-lg`}></i>
+                  <i
+                    className={`${cat.icon} text-white text-lg`}
+                    data-sanity={getInsurancePageDataAttribute(`overviewCards[${index}].icon`)}
+                  ></i>
                 </div>
 
                 <p className="text-[#e8c48a] text-xs tracking-[0.25em] uppercase mb-2 font-light" data-sanity={getInsurancePageDataAttribute(`overviewCards[${index}].englishTitle`)}>

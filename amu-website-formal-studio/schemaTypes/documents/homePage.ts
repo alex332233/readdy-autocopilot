@@ -69,7 +69,34 @@ export const homePage = defineType({
       fields: [
         defineField({name: 'title', title: '標題', type: 'string'}),
         defineField({name: 'description', title: '說明', type: 'text', rows: 4}),
-        defineField({name: 'items', title: '項目', type: 'array', of: [{type: 'serviceItem'}]}),
+        defineField({
+          name: 'serviceTreatmentRefs',
+          title: '首頁要顯示的療程項目',
+          description: '從全站療程項目選擇要顯示在首頁主治項目的最多 8 個項目。拖曳可調整順序；卡片名稱、icon、文案與連結由全站療程項目帶入。',
+          type: 'array',
+          of: [
+            {
+              type: 'reference',
+              to: [{type: 'treatmentTaxonomyItem'}],
+              weak: true,
+              options: {
+                filter: 'category in ["insurance", "featured"]',
+                disableNew: true,
+              },
+            },
+          ],
+          validation: (Rule) => Rule.max(8).warning('首頁主治項目最多顯示 8 個。'),
+        }),
+        defineField({
+          name: 'items',
+          title: '項目（舊欄位）',
+          description: '已改用「首頁要顯示的療程項目」管理。此欄位僅作舊資料 fallback。',
+          type: 'array',
+          of: [{type: 'serviceItem'}],
+          readOnly: true,
+          hidden: true,
+          validation: (Rule) => Rule.max(8).warning('首頁主治項目最多顯示 8 個。'),
+        }),
       ],
     }),
     defineField({

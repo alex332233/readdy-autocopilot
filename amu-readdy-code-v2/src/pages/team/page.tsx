@@ -27,6 +27,7 @@ export default function TeamPage() {
             {content.doctors.map((doctor) => (
               <DoctorCardV5
                 key={doctor.doctorId}
+                documentId={doctor.documentId}
                 doctorId={doctor.doctorId}
                 name={doctor.name}
                 title={doctor.title}
@@ -36,6 +37,7 @@ export default function TeamPage() {
                 experience={doctor.experience}
                 specialtyGroups={doctor.specialtyGroups}
                 specialTreatments={doctor.specialTreatments}
+                specialTreatmentItems={doctor.specialTreatmentItems}
                 schedule={doctor.schedule}
                 scheduleNote={doctor.scheduleNote}
               />

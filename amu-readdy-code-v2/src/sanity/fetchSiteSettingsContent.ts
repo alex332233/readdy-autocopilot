@@ -2,6 +2,7 @@ import {sanityClient} from './client';
 import {defaultSiteSettingsContent} from './defaults/siteSettings';
 import {siteSettingsQuery} from './queries';
 import type {
+  FooterLinkContent,
   FooterLinkGroupContent,
   SanityImage,
   SiteLinkContent,
@@ -29,9 +30,13 @@ const mergeSiteLink = (incoming: unknown, fallback?: SiteLinkContent): SiteLinkC
 
 const mergeNavItem = (incoming: unknown, fallback?: SiteNavItemContent): SiteNavItemContent => {
   const item = incoming as Partial<SiteNavItemContent> | null;
-  const children = Array.isArray(item?.children) && item.children.length > 0
-    ? item.children.map((child, index) => mergeSiteLink(child, fallback?.children?.[index]))
-    : fallback?.children;
+  const incomingChildren = Array.isArray(item?.children) ? item.children : [];
+  const fallbackChildren = fallback?.children || [];
+  const children = incomingChildren.length > 0 || fallbackChildren.length > 0
+    ? Array.from({length: Math.max(incomingChildren.length, fallbackChildren.length)}, (_, index) =>
+        mergeSiteLink(incomingChildren[index], fallbackChildren[index]),
+      )
+    : undefined;
 
   return {
     label: item?.label || fallback?.label || '',
@@ -41,22 +46,55 @@ const mergeNavItem = (incoming: unknown, fallback?: SiteNavItemContent): SiteNav
   };
 };
 
+const getSocialIcon = (platform: string, fallbackIcon = '') => {
+  const key = platform.trim().toLowerCase();
+  if (key.includes('instagram') || key === 'ig') return 'ri-instagram-line';
+  if (key.includes('facebook') || key === 'fb') return 'ri-facebook-fill';
+  if (key.includes('line')) return 'ri-line-line';
+  if (key.includes('youtube')) return 'ri-youtube-line';
+  return fallbackIcon || 'ri-links-line';
+};
+
 const mergeFooterGroup = (incoming: unknown, fallback?: FooterLinkGroupContent): FooterLinkGroupContent => {
   const group = incoming as Partial<FooterLinkGroupContent> | null;
+  const normalizeFooterLink = (link: SiteLinkContent | FooterLinkContent): FooterLinkContent => {
+    if (link.kind !== 'scroll') {
+      return {
+        label: link.label,
+        kind: link.kind,
+        target: link.target,
+      };
+    }
+
+    const targetMap: Record<string, string> = {
+      services: '/insurance',
+      'why-choose': '/about',
+      location: '/about',
+      booking: '/',
+    };
+
+    return {
+      ...link,
+      kind: 'route',
+      target: targetMap[link.target] || '/',
+    };
+  };
+
   return {
     title: group?.title || fallback?.title || '',
     links:
       Array.isArray(group?.links) && group.links.length > 0
-        ? group.links.map((link, index) => mergeSiteLink(link, fallback?.links?.[index]))
-        : fallback?.links || [],
+        ? group.links.map((link, index) => normalizeFooterLink(mergeSiteLink(link, fallback?.links?.[index])))
+        : (fallback?.links || []).map(normalizeFooterLink),
   };
 };
 
 const mergeSocialLink = (incoming: unknown, fallback?: SocialLinkContent): SocialLinkContent => {
   const link = incoming as Partial<SocialLinkContent> | null;
+  const platform = link?.platform || fallback?.platform || '';
   return {
-    platform: link?.platform || fallback?.platform || '',
-    icon: link?.icon || fallback?.icon || '',
+    platform,
+    icon: getSocialIcon(platform, link?.icon || fallback?.icon),
     url: link?.url || fallback?.url || '',
   };
 };
@@ -78,7 +116,7 @@ const mergeLocationSection = (
   };
 };
 
-const mergeSiteSettings = (incoming: unknown): SiteSettingsContent => {
+export const normalizeSiteSettings = (incoming: unknown): SiteSettingsContent => {
   const settings = incoming as Partial<SiteSettingsContent> | null;
   const fallback = defaultSiteSettingsContent;
   return {
@@ -105,9 +143,6 @@ const mergeSiteSettings = (incoming: unknown): SiteSettingsContent => {
         : fallback.socialLinks,
     locationSection: mergeLocationSection(settings?.locationSection, fallback.locationSection),
     copyright: settings?.copyright || fallback.copyright,
-    builderLink: {
-      label: settings?.builderLink?.label || fallback.builderLink.label,
-    },
     floatingLineButton: {
       enabled: settings?.floatingLineButton?.enabled ?? fallback.floatingLineButton.enabled,
       ariaLabel:
@@ -122,7 +157,7 @@ export async function fetchSiteSettingsContent(): Promise<SiteSettingsContent> {
 
   try {
     const data = await sanityClient.fetch(siteSettingsQuery);
-    return mergeSiteSettings(data);
+    return normalizeSiteSettings(data);
   } catch (error) {
     console.error('Failed to fetch site settings content from Sanity', error);
     return defaultSiteSettingsContent;

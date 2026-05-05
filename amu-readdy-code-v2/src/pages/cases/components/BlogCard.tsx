@@ -1,6 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import type { CaseArticleContent } from '../../../sanity/types';
-import { getCaseArticleDataAttribute } from '../../../sanity/dataAttributes';
+import {
+  getCaseArticleDataAttribute,
+  getCaseArticleDocumentDataAttribute,
+} from '../../../sanity/dataAttributes';
 
 interface BlogCardProps {
   caseData: CaseArticleContent;
@@ -8,11 +11,16 @@ interface BlogCardProps {
 
 export default function BlogCard({ caseData }: BlogCardProps) {
   const navigate = useNavigate();
+  const casePath = caseData.slug || (caseData.caseId ? String(caseData.caseId) : caseData.documentId || '');
+  const getDataAttribute = (path: string) =>
+    caseData.documentId
+      ? getCaseArticleDocumentDataAttribute(caseData.documentId, path)
+      : getCaseArticleDataAttribute(caseData.caseId, path);
 
   return (
     <article
       className="bg-white group cursor-pointer"
-      onClick={() => navigate(`/cases/${caseData.caseId}`)}
+      onClick={() => casePath && navigate(`/cases/${encodeURIComponent(casePath)}`)}
     >
       {/* 封面圖 */}
       <div className="relative w-full h-52 overflow-hidden" data-sanity-edit-group data-sanity-edit-target>
@@ -20,11 +28,11 @@ export default function BlogCard({ caseData }: BlogCardProps) {
           src={caseData.coverImage.url}
           alt={caseData.title}
           className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-          data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'coverImage')}
+          data-sanity={getDataAttribute('coverImage')}
         />
         <span
           className="absolute top-3 right-3 text-[10px] font-semibold tracking-widest uppercase bg-white/90 text-[#cd9651] px-2.5 py-1 rounded-sm"
-          data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'category')}
+          data-sanity={getDataAttribute('category')}
         >
           {caseData.category}
         </span>
@@ -33,7 +41,7 @@ export default function BlogCard({ caseData }: BlogCardProps) {
       {/* 內容 */}
       <div className="pt-4 pb-6 px-1">
         <div className="flex items-center gap-3 mb-2">
-          <p className="text-[11px] text-gray-400 tracking-wide" data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'publishDate')}>
+          <p className="text-[11px] text-gray-400 tracking-wide" data-sanity={getDataAttribute('publishDate')}>
             {caseData.publishDate}
           </p>
           <span className="text-gray-300">·</span>
@@ -41,18 +49,18 @@ export default function BlogCard({ caseData }: BlogCardProps) {
             <div className="w-4 h-4 flex items-center justify-center">
               <i className="ri-user-line text-[#cd9651]" style={{ fontSize: '12px' }}></i>
             </div>
-            <span className="text-[11px] text-[#cd9651] font-medium tracking-wide" data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'doctor')}>
+            <span className="text-[11px] text-[#cd9651] font-medium tracking-wide" data-sanity={getDataAttribute('doctor')}>
               {caseData.doctor}
             </span>
           </div>
         </div>
         <h3
           className="text-sm font-bold text-gray-800 leading-snug mb-2 group-hover:text-[#cd9651] transition-colors line-clamp-2"
-          data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'title')}
+          data-sanity={getDataAttribute('title')}
         >
           {caseData.title}
         </h3>
-        <p className="text-xs text-gray-500 leading-relaxed line-clamp-3 mb-4" data-sanity={getCaseArticleDataAttribute(caseData.caseId, 'description')}>
+        <p className="text-xs text-gray-500 leading-relaxed line-clamp-3 mb-4" data-sanity={getDataAttribute('description')}>
           {caseData.description}
         </p>
         <span className="text-[11px] font-semibold text-gray-700 tracking-widest uppercase border-b border-gray-700 pb-0.5 group-hover:text-[#cd9651] group-hover:border-[#cd9651] transition-colors">

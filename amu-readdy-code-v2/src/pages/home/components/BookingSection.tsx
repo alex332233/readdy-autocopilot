@@ -1,5 +1,6 @@
 
 import FadeIn from '../../../components/base/FadeIn';
+import { getHomePageDataAttribute } from '../../../sanity/dataAttributes';
 import { useHomePageContent } from '../useHomePageContent';
 
 export default function BookingSection() {
@@ -26,7 +27,10 @@ export default function BookingSection() {
               <FadeIn key={index} direction="up" delay={100 + index * 100}>
                 <div className="bg-white rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition-all duration-300 h-full">
                   <div className="w-12 h-12 flex items-center justify-center bg-[#cd9651] rounded-full mx-auto mb-4">
-                    <i className={`${card.icon} text-xl text-white`}></i>
+                    <i
+                      className={`${card.icon} text-xl text-white`}
+                      data-sanity={getHomePageDataAttribute(`booking.cards[${index}].icon`)}
+                    ></i>
                   </div>
                   <h3 className="text-lg font-bold text-[#cd9651] mb-4">{card.title}</h3>
                   {card.href.startsWith('tel:') ? (
@@ -45,7 +49,10 @@ export default function BookingSection() {
                     rel={isExternal ? 'noopener noreferrer' : undefined}
                     className={`inline-flex items-center px-6 py-2.5 ${buttonClass} text-white text-sm rounded-full font-medium transition-all duration-300 whitespace-nowrap cursor-pointer`}
                   >
-                    <i className={`${card.icon} mr-2`}></i>{card.buttonText}
+                    <i
+                      className={`${card.icon} mr-2`}
+                      data-sanity={getHomePageDataAttribute(`booking.cards[${index}].icon`)}
+                    ></i>{card.buttonText}
                   </a>
                 </div>
               </FadeIn>

@@ -1,12 +1,9 @@
-import { useRouteLoaderData } from 'react-router-dom';
 import { getSiteSettingsDataAttribute } from '../../../sanity/dataAttributes';
-import { defaultSiteSettingsContent } from '../../../sanity/defaults/siteSettings';
 import { runSiteLink } from '../../../sanity/siteLinkActions';
-import type { SiteSettingsContent } from '../../../sanity/types';
+import { useSiteSettingsContent } from '../../../sanity/useSiteSettingsContent';
 
 export default function Footer() {
-  const siteSettings =
-    (useRouteLoaderData('root') as SiteSettingsContent | undefined) ?? defaultSiteSettingsContent;
+  const siteSettings = useSiteSettingsContent();
 
   return (
     <footer className="bg-[#cd9651] text-white">
@@ -45,7 +42,9 @@ export default function Footer() {
                     <button
                       onClick={() => runSiteLink(link)}
                       className="text-white/90 hover:text-white transition-colors text-sm whitespace-nowrap cursor-pointer"
-                      data-sanity={getSiteSettingsDataAttribute(`footerLinkGroups[${groupIndex}].links[${linkIndex}].label`)}
+                      data-sanity-edit-group
+                      data-sanity-edit-target
+                      data-sanity={getSiteSettingsDataAttribute(`footerLinkGroups[${groupIndex}].links[${linkIndex}]`)}
                     >
                       {link.label}
                     </button>
@@ -112,12 +111,6 @@ export default function Footer() {
                 </a>
               ))}
             </div>
-            <span
-              className="text-white/70 text-sm whitespace-nowrap"
-              data-sanity={getSiteSettingsDataAttribute('builderLink.label')}
-            >
-              {siteSettings.builderLink.label}
-            </span>
           </div>
         </div>
       </div>

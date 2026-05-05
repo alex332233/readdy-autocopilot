@@ -1,6 +1,8 @@
 import { createDataAttribute } from '@sanity/visual-editing';
 import { sanityEnv } from './env';
 
+const normalizeDocumentId = (id: string) => id.replace(/^drafts\./, '');
+
 const homePageAttribute = createDataAttribute({
   id: 'homePage',
   type: 'homePage',
@@ -46,9 +48,18 @@ const casesPageAttribute = createDataAttribute({
 
 export const getCasesPageDataAttribute = (path: string) => casesPageAttribute(path).toString();
 
+// Fallback only for static defaults. CMS-backed article views should use the real Sanity _id.
 export const getCaseArticleDataAttribute = (caseId: number | string, path: string) =>
   createDataAttribute({
     id: `caseArticle-${caseId}`,
+    type: 'caseArticle',
+    projectId: sanityEnv.projectId,
+    dataset: sanityEnv.dataset,
+  })(path).toString();
+
+export const getCaseArticleDocumentDataAttribute = (documentId: string, path: string) =>
+  createDataAttribute({
+    id: normalizeDocumentId(documentId),
     type: 'caseArticle',
     projectId: sanityEnv.projectId,
     dataset: sanityEnv.dataset,
@@ -63,9 +74,18 @@ const teamPageAttribute = createDataAttribute({
 
 export const getTeamPageDataAttribute = (path: string) => teamPageAttribute(path).toString();
 
+// Fallback only for static defaults. CMS-backed doctor views should use the real Sanity _id.
 export const getDoctorProfileDataAttribute = (doctorId: number | string, path: string) =>
   createDataAttribute({
     id: `doctorProfile-${doctorId}`,
+    type: 'doctorProfile',
+    projectId: sanityEnv.projectId,
+    dataset: sanityEnv.dataset,
+  })(path).toString();
+
+export const getDoctorProfileDocumentDataAttribute = (documentId: string, path: string) =>
+  createDataAttribute({
+    id: normalizeDocumentId(documentId),
     type: 'doctorProfile',
     projectId: sanityEnv.projectId,
     dataset: sanityEnv.dataset,
@@ -104,8 +124,20 @@ export const getHealthEducationArticleDataAttribute = (
   articleId: number | string,
   path: string,
 ) =>
+  // Fallback only for static defaults. CMS-backed article views should use the real Sanity _id.
   createDataAttribute({
     id: `healthEducationArticle-${articleId}`,
+    type: 'healthEducationArticle',
+    projectId: sanityEnv.projectId,
+    dataset: sanityEnv.dataset,
+  })(path).toString();
+
+export const getHealthEducationArticleDocumentDataAttribute = (
+  documentId: string,
+  path: string,
+) =>
+  createDataAttribute({
+    id: normalizeDocumentId(documentId),
     type: 'healthEducationArticle',
     projectId: sanityEnv.projectId,
     dataset: sanityEnv.dataset,
@@ -122,8 +154,17 @@ export const getFeaturedTreatmentsPageDataAttribute = (path: string) =>
   featuredTreatmentsPageAttribute(path).toString();
 
 export const getFeaturedTreatmentDetailDataAttribute = (slug: string, path: string) =>
+  // Fallback only for static defaults. CMS-backed detail views should use the real Sanity _id.
   createDataAttribute({
     id: `featuredTreatmentDetail-${slug}`,
+    type: 'featuredTreatmentDetail',
+    projectId: sanityEnv.projectId,
+    dataset: sanityEnv.dataset,
+  })(path).toString();
+
+export const getFeaturedTreatmentDetailDocumentDataAttribute = (documentId: string, path: string) =>
+  createDataAttribute({
+    id: normalizeDocumentId(documentId),
     type: 'featuredTreatmentDetail',
     projectId: sanityEnv.projectId,
     dataset: sanityEnv.dataset,

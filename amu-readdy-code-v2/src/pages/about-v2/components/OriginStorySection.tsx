@@ -322,6 +322,7 @@ export default function OriginStorySection({content}: {content: AboutOriginStory
 
   return (
     <section className="bg-[#f5f0e8]">
+      <h1 className="sr-only">關於艾苜中醫診所</h1>
       <div id="origin-story" className="relative min-h-screen w-full flex items-center justify-center text-center px-8">
         <FadeIn delay={600} direction="up" duration={3200}>
           <p

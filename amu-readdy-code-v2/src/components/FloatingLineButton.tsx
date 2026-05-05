@@ -1,12 +1,9 @@
-import {useRouteLoaderData} from 'react-router-dom';
 import {getSiteSettingsDataAttribute} from '../sanity/dataAttributes';
-import {defaultSiteSettingsContent} from '../sanity/defaults/siteSettings';
 import {runSiteLink} from '../sanity/siteLinkActions';
-import type {SiteSettingsContent} from '../sanity/types';
+import {useSiteSettingsContent} from '../sanity/useSiteSettingsContent';
 
 export default function FloatingLineButton() {
-  const siteSettings =
-    (useRouteLoaderData('root') as SiteSettingsContent | undefined) ?? defaultSiteSettingsContent;
+  const siteSettings = useSiteSettingsContent();
   const button = siteSettings.floatingLineButton;
 
   if (!button.enabled) return null;
