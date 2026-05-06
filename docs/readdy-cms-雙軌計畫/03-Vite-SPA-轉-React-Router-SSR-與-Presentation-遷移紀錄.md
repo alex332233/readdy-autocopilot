@@ -682,6 +682,30 @@ component props 也應保留：
 4. 產生 draft-only seed script，讓 PM 可先在 Presentation 驗收，不立即改 published production。
 5. 產生前端 projection pattern：優先讀 `treatmentRef->...`，保留舊欄位 fallback，並保留真實 `_id` / `_key` 供 `data-sanity` 使用。
 
+### 7.8 Hidden / ReadOnly 舊欄位不能保留 Blocking Required
+
+CMS 漸進式改造常會把舊欄位保留為 hidden / readOnly fallback，讓前端在 migration 完成前仍可讀舊資料。
+
+但 hidden / readOnly 欄位不能繼續保留 blocking `Rule.required()`，否則 PM 會遇到：
+
+- Studio 看不到欄位，或看得到但不能改。
+- Publish 按鈕被 validation 擋住。
+- PM 無法從畫面判斷是哪個欄位卡住。
+
+本輪遇到兩個例子：
+
+- `doctorProfile.specialtyGroups` 已改為 hidden/readOnly 舊專長 fallback，但仍有 `Rule.required().min(1)`，導致新增測試醫師不能 Publish。
+- `healthEducationSubcategory.categoryId` 是隱藏的舊分類關聯欄位，但仍 required，會讓新增衛教次分類被不可見欄位卡住。
+
+未來自動化可在 schema 變更後掃描：
+
+```text
+hidden: true + validation required
+readOnly: true + validation required
+```
+
+若欄位是 legacy fallback，應移除 blocking required，改用 optional、warning，或由 migration script 補齊資料；只有 taxonomy 系統欄位這類不讓 PM 新增且必須保持資料完整性的欄位，才應保留 required。
+
 ## 8. 這次遷移的建議結論
 
 未來如果從 Readdy 匯出 code，而最終目標仍然是：

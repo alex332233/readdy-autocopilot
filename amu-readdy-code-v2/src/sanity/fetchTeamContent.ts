@@ -102,6 +102,7 @@ const mergeDoctorProfile = (incoming: unknown, fallback?: DoctorProfileContent):
   return {
     documentId: doctor?._id || doctor?.documentId || fallback?.documentId || '',
     doctorId: Number(doctor?.doctorId || fallback?.doctorId || 0),
+    displayOrder: doctor?.displayOrder ?? fallback?.displayOrder,
     name: doctor?.name || fallback?.name || '',
     title: doctor?.title || fallback?.title || '',
     bio: doctor?.bio || fallback?.bio || '',

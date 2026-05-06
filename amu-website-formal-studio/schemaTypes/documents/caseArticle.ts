@@ -13,7 +13,20 @@ export const caseArticle = defineType({
     references: [],
   }),
   fields: [
-    defineField({name: 'caseId', title: '文章編號', type: 'number', validation: (rule) => rule.required()}),
+    defineField({
+      name: 'priorityOrder',
+      title: '優先排序',
+      type: 'number',
+      description: '可選。數字越小越前面；未填則依發布日期由新到舊排列。同序號會再依發布日期排序。',
+      validation: (rule) => rule.integer().positive(),
+    }),
+    defineField({
+      name: 'caseId',
+      title: '文章編號（舊欄位）',
+      type: 'number',
+      readOnly: true,
+      hidden: true,
+    }),
     defineField({name: 'title', title: '標題', type: 'string', validation: (rule) => rule.required()}),
     defineField({
       name: 'slug',
@@ -120,11 +133,20 @@ export const caseArticle = defineType({
     defineField({name: 'seo', title: 'SEO', type: 'seo'}),
   ],
   preview: {
-    select: {title: 'title', categoryName: 'categoryRef.name', legacyCategory: 'category'},
+    select: {
+      title: 'title',
+      categoryName: 'categoryRef.name',
+      legacyCategory: 'category',
+      publishDate: 'publishDate',
+      priorityOrder: 'priorityOrder',
+    },
     prepare(selection) {
+      const category = selection.categoryName || selection.legacyCategory
+      const prefix = selection.priorityOrder ? `置頂 #${selection.priorityOrder}` : ''
+      const details = [selection.publishDate, category].filter(Boolean).join(' / ')
       return {
         title: selection.title,
-        subtitle: selection.categoryName || selection.legacyCategory,
+        subtitle: [prefix, details].filter(Boolean).join(' / '),
       }
     },
   },

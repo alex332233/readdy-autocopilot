@@ -156,9 +156,11 @@ export const casesPageQuery = groq`
       ctaDescription,
       ctaButtonText
     },
-    "articles": *[_type == "caseArticle"] | order(caseId asc){
+    "articles": *[_type == "caseArticle"]{
+      "_priorityRank": select(defined(priorityOrder) => 0, 1),
       "documentId": _id,
       caseId,
+      priorityOrder,
       "slug": slug.current,
       title,
       "category": coalesce(categoryRef->name, category),
@@ -181,7 +183,7 @@ export const casesPageQuery = groq`
         "title": seo.title,
         "description": seo.description
       }
-    }
+    } | order(_priorityRank asc, priorityOrder asc, publishDate desc, _createdAt desc)
   }
 `;
 
@@ -192,9 +194,11 @@ export const teamPageQuery = groq`
       heroTitle,
       heroSubtitle
     },
-    "doctors": *[_type == "doctorProfile"] | order(doctorId asc){
+    "doctors": *[_type == "doctorProfile"]{
+      "_displayOrderRank": select(defined(displayOrder) => 0, 1),
       "_id": _id,
       doctorId,
+      displayOrder,
       name,
       title,
       bio,
@@ -223,7 +227,7 @@ export const teamPageQuery = groq`
       specialTreatments,
       schedule,
       scheduleNote
-    }
+    } | order(_displayOrderRank asc, displayOrder asc, doctorId asc, _createdAt asc)
   }
 `;
 
@@ -245,9 +249,11 @@ export const healthEducationPageQuery = groq`
         name
       }
     },
-    "articles": *[_type == "healthEducationArticle"] | order(articleId asc){
+    "articles": *[_type == "healthEducationArticle"]{
+      "_priorityRank": select(defined(priorityOrder) => 0, 1),
       "documentId": _id,
       articleId,
+      priorityOrder,
       "slug": slug.current,
       title,
       "category": category->name,
@@ -273,7 +279,7 @@ export const healthEducationPageQuery = groq`
         "title": seo.title,
         "description": seo.description
       }
-    }
+    } | order(_priorityRank asc, priorityOrder asc, publishDate desc, _createdAt desc)
   }
 `;
 
@@ -282,6 +288,7 @@ export const healthEducationArticleQuery = groq`
     "_draftRank": select(_id in path("drafts.**") => 1, 0),
     "documentId": _id,
     articleId,
+    priorityOrder,
     "slug": slug.current,
     title,
     "category": category->name,
@@ -329,6 +336,7 @@ export const caseArticleQuery = groq`
   ][0]{
     "documentId": _id,
     caseId,
+    priorityOrder,
     "slug": slug.current,
     title,
     "category": coalesce(categoryRef->name, category),

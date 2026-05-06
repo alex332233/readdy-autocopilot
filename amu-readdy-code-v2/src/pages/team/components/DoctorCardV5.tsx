@@ -8,7 +8,6 @@ import { getDoctorProfileDocumentDataAttribute } from '../../../sanity/dataAttri
 
 interface DoctorCardV5Props {
   documentId: string;
-  doctorId: number;
   name: string;
   title: string;
   image: DoctorProfileContent['image'];
@@ -127,7 +126,6 @@ function ScheduleTable({
 
 export default function DoctorCardV5({
   documentId,
-  doctorId,
   name,
   title,
   image,

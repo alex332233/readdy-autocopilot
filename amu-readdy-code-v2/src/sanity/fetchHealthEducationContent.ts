@@ -166,6 +166,7 @@ const mergeArticle = (
   return {
     documentId: article?.documentId || fallback?.documentId,
     articleId: Number(article?.articleId || fallback?.articleId || 0),
+    priorityOrder: article?.priorityOrder ?? fallback?.priorityOrder,
     slug: article?.slug || fallback?.slug,
     title: article?.title || fallback?.title || '',
     category: article?.category || fallback?.category || '',

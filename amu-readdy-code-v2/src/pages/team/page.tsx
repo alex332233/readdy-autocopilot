@@ -26,9 +26,8 @@ export default function TeamPage() {
           <div className="space-y-6">
             {content.doctors.map((doctor) => (
               <DoctorCardV5
-                key={doctor.doctorId}
+                key={doctor.documentId}
                 documentId={doctor.documentId}
-                doctorId={doctor.doctorId}
                 name={doctor.name}
                 title={doctor.title}
                 image={doctor.image}

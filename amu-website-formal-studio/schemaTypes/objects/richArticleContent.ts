@@ -1,9 +1,13 @@
 import {defineArrayMember, defineField, defineType} from 'sanity'
+import {RichArticleContentInput} from '../components/RichArticleContentInput'
 
 export const richArticleContent = defineType({
   name: 'richArticleContent',
   title: '文章內文',
   type: 'array',
+  components: {
+    input: RichArticleContentInput,
+  },
   of: [
     defineArrayMember({
       type: 'block',
