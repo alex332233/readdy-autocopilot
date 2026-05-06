@@ -21,6 +21,23 @@ const documentListItem = (
     .id(schemaType)
     .child(S.documentTypeList(schemaType).title(title))
 
+const articleDocumentListItem = (
+  S: StructureBuilder,
+  schemaType: 'caseArticle' | 'healthEducationArticle',
+  title: string,
+) =>
+  S.listItem()
+    .title(title)
+    .id(schemaType)
+    .child(
+      S.documentTypeList(schemaType)
+        .title(title)
+        .defaultOrdering([
+          {field: 'priorityOrder', direction: 'asc'},
+          {field: 'publishDate', direction: 'desc'},
+        ]),
+    )
+
 const readonlyDocumentListItem = (
   S: StructureBuilder,
   schemaType: string,
@@ -79,7 +96,7 @@ export const studioStructure = (S: StructureBuilder) =>
             .items([
               singletonItem(S, 'casesPage', 'casesPage', '頁面設定'),
               documentListItem(S, 'caseCategory', '分類'),
-              documentListItem(S, 'caseArticle', '真實見證文章'),
+              articleDocumentListItem(S, 'caseArticle', '真實見證文章'),
             ]),
         ),
       S.listItem()
@@ -93,7 +110,7 @@ export const studioStructure = (S: StructureBuilder) =>
               singletonItem(S, 'healthEducationPage', 'healthEducationPage', '頁面設定'),
               documentListItem(S, 'healthEducationCategory', '主分類'),
               documentListItem(S, 'healthEducationSubcategory', '次分類'),
-              documentListItem(S, 'healthEducationArticle', '衛教文章'),
+              articleDocumentListItem(S, 'healthEducationArticle', '衛教文章'),
             ]),
         ),
     ])
