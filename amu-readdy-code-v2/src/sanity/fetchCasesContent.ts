@@ -149,6 +149,7 @@ const mergeArticle = (incoming: unknown, fallback?: CaseArticleContent): CaseArt
   return {
     documentId: article?.documentId || fallback?.documentId,
     caseId: Number(article?.caseId || fallback?.caseId || 0),
+    priorityOrder: article?.priorityOrder ?? fallback?.priorityOrder,
     slug: article?.slug || fallback?.slug,
     title: article?.title || fallback?.title || '',
     category: article?.category || fallback?.category || '',

@@ -17,7 +17,20 @@ export const healthEducationArticle = defineType({
     references: [],
   }),
   fields: [
-    defineField({name: 'articleId', title: '文章編號', type: 'number', validation: (Rule) => Rule.required()}),
+    defineField({
+      name: 'priorityOrder',
+      title: '優先排序',
+      type: 'number',
+      description: '可選。數字越小越前面；未填則依發布日期由新到舊排列。同序號會再依發布日期排序。',
+      validation: (Rule) => Rule.integer().positive(),
+    }),
+    defineField({
+      name: 'articleId',
+      title: '文章編號（舊欄位）',
+      type: 'number',
+      readOnly: true,
+      hidden: true,
+    }),
     defineField({name: 'title', title: '標題', type: 'string', validation: (Rule) => Rule.required()}),
     defineField({
       name: 'slug',
@@ -101,9 +114,32 @@ export const healthEducationArticle = defineType({
     defineField({name: 'seo', title: 'SEO', type: 'seo'}),
   ],
   orderings: [
-    {title: '文章編號', name: 'articleIdAsc', by: [{field: 'articleId', direction: 'asc'}]},
+    {
+      title: '優先排序 + 發布日期',
+      name: 'priorityAndPublishDate',
+      by: [
+        {field: 'priorityOrder', direction: 'asc'},
+        {field: 'publishDate', direction: 'desc'},
+      ],
+    },
+    {title: '發布日期新到舊', name: 'publishDateDesc', by: [{field: 'publishDate', direction: 'desc'}]},
   ],
   preview: {
-    select: {title: 'title', subtitle: 'subcategory.name', media: 'coverImage'},
+    select: {
+      title: 'title',
+      subcategory: 'subcategory.name',
+      publishDate: 'publishDate',
+      priorityOrder: 'priorityOrder',
+      media: 'coverImage',
+    },
+    prepare(selection) {
+      const prefix = selection.priorityOrder ? `置頂 #${selection.priorityOrder}` : ''
+      const details = [selection.publishDate, selection.subcategory].filter(Boolean).join(' / ')
+      return {
+        title: selection.title,
+        subtitle: [prefix, details].filter(Boolean).join(' / '),
+        media: selection.media,
+      }
+    },
   },
 })

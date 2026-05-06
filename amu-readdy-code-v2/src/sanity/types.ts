@@ -122,6 +122,7 @@ export interface CaseInfoBox {
 export interface CaseArticleContent {
   documentId?: string;
   caseId: number;
+  priorityOrder?: number;
   slug?: string;
   title: string;
   category: string;
@@ -189,6 +190,7 @@ export interface DoctorSchedule {
 export interface DoctorProfileContent {
   documentId: string;
   doctorId: number;
+  displayOrder?: number;
   name: string;
   title: string;
   bio: string;
@@ -343,6 +345,7 @@ export interface HealthEducationFaqItem {
 export interface HealthEducationArticleContent {
   documentId?: string;
   articleId: number;
+  priorityOrder?: number;
   slug?: string;
   title: string;
   category: string;

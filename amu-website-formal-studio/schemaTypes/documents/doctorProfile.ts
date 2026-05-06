@@ -5,7 +5,20 @@ export const doctorProfile = defineType({
   title: '醫師資料',
   type: 'document',
   fields: [
-    defineField({name: 'doctorId', title: '醫師編號', type: 'number', validation: (Rule) => Rule.required()}),
+    defineField({
+      name: 'displayOrder',
+      title: '顯示順序',
+      type: 'number',
+      description: '可選。數字越小越前面；未填則排在已設定順序的醫師後面。',
+      validation: (Rule) => Rule.integer().positive(),
+    }),
+    defineField({
+      name: 'doctorId',
+      title: '醫師編號（舊欄位）',
+      type: 'number',
+      readOnly: true,
+      hidden: true,
+    }),
     defineField({name: 'name', title: '姓名', type: 'string', validation: (Rule) => Rule.required()}),
     defineField({name: 'title', title: '職稱', type: 'string', validation: (Rule) => Rule.required()}),
     defineField({name: 'bio', title: '醫師介紹', type: 'text', rows: 5, validation: (Rule) => Rule.required()}),
@@ -91,16 +104,28 @@ export const doctorProfile = defineType({
   ],
   orderings: [
     {
-      title: '醫師編號',
-      name: 'doctorIdAsc',
-      by: [{field: 'doctorId', direction: 'asc'}],
+      title: '顯示順序',
+      name: 'displayOrderAsc',
+      by: [
+        {field: 'displayOrder', direction: 'asc'},
+        {field: 'doctorId', direction: 'asc'},
+      ],
     },
   ],
   preview: {
     select: {
       title: 'name',
       subtitle: 'title',
+      displayOrder: 'displayOrder',
       media: 'image',
+    },
+    prepare(selection) {
+      const prefix = selection.displayOrder ? `排序 #${selection.displayOrder}` : ''
+      return {
+        title: selection.title,
+        subtitle: [prefix, selection.subtitle].filter(Boolean).join(' / '),
+        media: selection.media,
+      }
     },
   },
 })
