@@ -195,7 +195,7 @@ export default function HealthEducationDetailPage() {
                       }`}
                     >
                       <p
-                        className="pl-[52px] pr-8 pb-6 text-sm text-gray-600 leading-relaxed whitespace-pre-line"
+                        className="pl-[52px] pr-8 pb-6 text-sm text-gray-600 leading-relaxed whitespace-pre-wrap"
                         data-sanity={getArticleDataAttribute(`faq[${idx}].answer`)}
                       >
                         {item.answer}

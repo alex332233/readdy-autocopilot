@@ -110,7 +110,7 @@ export default function CaseDetailPage() {
         ) : (
           <>
             <p
-              className="text-sm text-gray-500 leading-relaxed mb-10 border-l-2 border-[#cd9651]/30 pl-4 whitespace-pre-line"
+              className="text-sm text-gray-500 leading-relaxed mb-10 border-l-2 border-[#cd9651]/30 pl-4 whitespace-pre-wrap"
               data-sanity={getDataAttribute('description')}
             >
               {caseData.description}
@@ -176,7 +176,7 @@ export default function CaseDetailPage() {
               <div className="w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">
                 <i className="ri-double-quotes-l text-[#cd9651] text-xl"></i>
               </div>
-              <p className="text-sm text-gray-600 leading-relaxed italic whitespace-pre-line" data-sanity={getDataAttribute('conclusion')}>
+              <p className="text-sm text-gray-600 leading-relaxed italic whitespace-pre-wrap" data-sanity={getDataAttribute('conclusion')}>
                 {caseData.conclusion}
               </p>
             </div>
@@ -192,7 +192,7 @@ export default function CaseDetailPage() {
               </span>
             </p>
             <p
-              className="text-xs text-gray-500 leading-relaxed whitespace-pre-line"
+              className="text-xs text-gray-500 leading-relaxed whitespace-pre-wrap"
               data-sanity={getDataAttribute(caseData.tips ? 'tips.content' : 'medicalInfo.content')}
             >
               {caseData.tips?.content || caseData.medicalInfo?.content}

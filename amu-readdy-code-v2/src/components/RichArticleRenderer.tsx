@@ -60,6 +60,7 @@ const renderTextBlock = (
   block: RichArticleTextBlock,
 ) => {
   const content = renderSpans(getDataAttribute, blockIndex, block);
+  const isBlankBlock = !block.children.some((child) => child.text && child.text.length > 0);
 
   if (block.listItem === 'bullet' || block.listItem === 'number') {
     return content;
@@ -90,7 +91,7 @@ const renderTextBlock = (
   if (block.style === 'blockquote') {
     return (
       <blockquote
-        className="my-8 border-l-4 border-[#cd9651]/40 bg-[#faf7f2] px-5 py-4 text-gray-600 italic leading-relaxed rounded-r-xl whitespace-pre-line"
+        className="my-8 border-l-4 border-[#cd9651]/40 bg-[#faf7f2] px-5 py-4 text-gray-600 italic leading-relaxed rounded-r-xl whitespace-pre-wrap"
         data-sanity={getDataAttribute(`body[${blockIndex}]`)}
       >
         {content}
@@ -100,10 +101,10 @@ const renderTextBlock = (
 
   return (
     <p
-      className="text-sm text-gray-600 leading-relaxed mb-4 whitespace-pre-line"
+      className="text-sm text-gray-600 leading-relaxed mb-4 whitespace-pre-wrap"
       data-sanity={getDataAttribute(`body[${blockIndex}]`)}
     >
-      {content}
+      {isBlankBlock ? '\u00a0' : content}
     </p>
   );
 };
@@ -141,7 +142,7 @@ export default function RichArticleRenderer({ getDataAttribute, blocks }: RichAr
           {listItems.map((item, listIndex) => (
             <li
               key={item._key || `${block._key}-${listIndex}`}
-              className="leading-relaxed whitespace-pre-line"
+              className="leading-relaxed whitespace-pre-wrap"
               data-sanity={getDataAttribute(`body[${index - listItems.length + listIndex}]`)}
             >
               {renderSpans(getDataAttribute, index - listItems.length + listIndex, item)}
