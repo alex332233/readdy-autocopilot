@@ -323,7 +323,13 @@ export const healthEducationPageQuery = groq`
 `;
 
 export const healthEducationArticleQuery = groq`
-  *[_type == "healthEducationArticle" && (articleId == $articleId || slug.current == $slug)]{
+  *[
+    _type == "healthEducationArticle" &&
+    (
+      (defined($articleId) && articleId == $articleId) ||
+      slug.current == $slug
+    )
+  ]{
     "_draftRank": select(_id in path("drafts.**") => 1, 0),
     "documentId": _id,
     articleId,
@@ -379,7 +385,7 @@ export const caseArticleQuery = groq`
   *[
     _type == "caseArticle" &&
     (
-      caseId == $caseId ||
+      (defined($caseId) && caseId == $caseId) ||
       slug.current == $slug ||
       _id == $documentId ||
       _id == $draftDocumentId
