@@ -5,6 +5,7 @@ import {
   getFeaturedTreatmentDetailDataAttribute,
   getFeaturedTreatmentDetailDocumentDataAttribute,
 } from '../../../sanity/dataAttributes';
+import { getSanityImageUrl } from '../../../sanity/imageUrl';
 
 const ACCENT = '#5a7a6e';
 
@@ -30,14 +31,14 @@ export default function DecoctionDetailSection({ detail }: DecoctionDetailSectio
       text: item?.text || fallback.text,
     };
   };
-  const secondaryImage = detail.secondaryImage?.url || 'https://readdy.ai/api/search-image?query=A%20professional%20Chinese%20medicine%20doctor%20in%20a%20clean%20white%20coat%20carefully%20measuring%20and%20blending%20dried%20herbal%20ingredients%20at%20a%20wooden%20apothecary%20counter%2C%20vacuum-sealed%20herbal%20decoction%20pouches%20arranged%20neatly%20beside%20the%20workspace%2C%20warm%20natural%20daylight%20streaming%20through%20large%20windows%2C%20organized%20wooden%20shelving%20with%20labeled%20herbal%20jars%20in%20the%20background%2C%20the%20scene%20conveys%20precision%20craftsmanship%20and%20personalized%20care%2C%20forest%20green%20and%20warm%20earth%20tones%2C%20calm%20clinical%20aesthetic&width=600&height=500&seq=decoction-solution-v2-01&orientation=landscape';
+  const secondaryImage = getSanityImageUrl(detail.secondaryImage, { width: 900, height: 720, fit: 'crop', quality: 86 }) || 'https://readdy.ai/api/search-image?query=A%20professional%20Chinese%20medicine%20doctor%20in%20a%20clean%20white%20coat%20carefully%20measuring%20and%20blending%20dried%20herbal%20ingredients%20at%20a%20wooden%20apothecary%20counter%2C%20vacuum-sealed%20herbal%20decoction%20pouches%20arranged%20neatly%20beside%20the%20workspace%2C%20warm%20natural%20daylight%20streaming%20through%20large%20windows%2C%20organized%20wooden%20shelving%20with%20labeled%20herbal%20jars%20in%20the%20background%2C%20the%20scene%20conveys%20precision%20craftsmanship%20and%20personalized%20care%2C%20forest%20green%20and%20warm%20earth%20tones%2C%20calm%20clinical%20aesthetic&width=600&height=500&seq=decoction-solution-v2-01&orientation=landscape';
   const cases = detail.featuredCases?.length
     ? detail.featuredCases.map((item, index) => ({
         label: item.label,
         name: item.name || '',
         content: item.text,
         link: item.link || '/cases',
-        image: item.image?.url,
+        image: item.image,
         dataPathPrefix: `featuredCases[${index}]`,
       }))
     : decoctionCases;

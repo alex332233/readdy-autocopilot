@@ -4,6 +4,7 @@ import {
   getCaseArticleDataAttribute,
   getCaseArticleDocumentDataAttribute,
 } from '../../../sanity/dataAttributes';
+import {getSanityImageUrl} from '../../../sanity/imageUrl';
 
 interface BlogCardProps {
   caseData: CaseArticleContent;
@@ -25,7 +26,7 @@ export default function BlogCard({ caseData }: BlogCardProps) {
       {/* 封面圖 */}
       <div className="relative w-full h-52 overflow-hidden" data-sanity-edit-group data-sanity-edit-target>
         <img
-          src={caseData.coverImage.url}
+          src={getSanityImageUrl(caseData.coverImage, {width: 768, height: 416, fit: 'crop', quality: 85})}
           alt={caseData.title}
           className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
           data-sanity={getDataAttribute('coverImage')}

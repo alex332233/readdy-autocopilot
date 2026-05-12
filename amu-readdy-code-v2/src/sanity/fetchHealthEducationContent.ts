@@ -20,6 +20,8 @@ type SanityFetchClient = Pick<SanityClient, 'fetch'>;
 const mergeImage = (incoming: unknown, fallback?: SanityImage): SanityImage => {
   const image = incoming as Partial<SanityImage> | null;
   return {
+    ...fallback,
+    ...image,
     url: image?.url || fallback?.url || '',
     alt: image?.alt || fallback?.alt || '',
   };
@@ -30,6 +32,7 @@ const mergeOptionalImage = (incoming: unknown): SanityImage | undefined => {
   if (!image?.url) return undefined;
 
   return {
+    ...image,
     url: image.url,
     alt: image.alt || '',
   };

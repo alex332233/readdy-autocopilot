@@ -5,6 +5,7 @@ import {
   getFeaturedTreatmentDetailDataAttribute,
   getFeaturedTreatmentDetailDocumentDataAttribute,
 } from '../../../sanity/dataAttributes';
+import { getSanityImageUrl } from '../../../sanity/imageUrl';
 
 const ACCENT = '#b87d3a';
 
@@ -20,15 +21,15 @@ export default function EyeDetailSection({ detail }: EyeDetailSectionProps) {
     detail._id
       ? getFeaturedTreatmentDetailDocumentDataAttribute(detail._id, path)
       : getFeaturedTreatmentDetailDataAttribute(detail.slug, path);
-  const primaryImage = detail.primaryImage?.url || 'https://readdy.ai/api/search-image?query=A%20tired%20Asian%20office%20worker%20in%20his%20late%20twenties%20sitting%20at%20a%20desk%20in%20a%20modern%20bright%20office%2C%20rubbing%20his%20eyes%20with%20both%20hands%2C%20multiple%20computer%20monitors%20glowing%20in%20the%20background%20showing%20code%20and%20spreadsheets%2C%20a%20clean%20minimal%20workspace%20with%20soft%20warm%20white%20and%20light%20gray%20tones%2C%20the%20scene%20conveys%20digital%20eye%20strain%20and%20fatigue%20from%20prolonged%20screen%20use%2C%20professional%20lifestyle%20photography%20with%20shallow%20depth%20of%20field%2C%20natural%20morning%20light%20from%20the%20side%20windows&width=600&height=500&seq=eye-concern-img-01&orientation=landscape';
-  const secondaryImage = detail.secondaryImage?.url || 'https://readdy.ai/api/search-image?query=A%20serene%20traditional%20Chinese%20medicine%20treatment%20room%2C%20a%20skilled%20doctor%20in%20a%20white%20coat%20gently%20performing%20eye%20acupuncture%20on%20a%20relaxed%20patient%20lying%20on%20a%20clean%20treatment%20bed%2C%20extremely%20fine%20delicate%20silver%20needles%20carefully%20placed%20around%20the%20eye%20area%20on%20acupoints%2C%20soft%20warm%20natural%20window%20light%2C%20the%20background%20shows%20green%20potted%20plants%20and%20wooden%20shelving%20with%20herbal%20jars%20in%20the%20background%2C%20clean%20clinical%20yet%20warm%20atmosphere%2C%20peaceful%20healing%20medical%20photography%20with%20soft%20teal%20and%20ivory%20color%20palette&width=600&height=500&seq=eye-solution-img-02&orientation=landscape';
+  const primaryImage = getSanityImageUrl(detail.primaryImage, { width: 900, height: 720, fit: 'crop', quality: 86 }) || 'https://readdy.ai/api/search-image?query=A%20tired%20Asian%20office%20worker%20in%20his%20late%20twenties%20sitting%20at%20a%20desk%20in%20a%20modern%20bright%20office%2C%20rubbing%20his%20eyes%20with%20both%20hands%2C%20multiple%20computer%20monitors%20glowing%20in%20the%20background%20showing%20code%20and%20spreadsheets%2C%20a%20clean%20minimal%20workspace%20with%20soft%20warm%20white%20and%20light%20gray%20tones%2C%20the%20scene%20conveys%20digital%20eye%20strain%20and%20fatigue%20from%20prolonged%20screen%20use%2C%20professional%20lifestyle%20photography%20with%20shallow%20depth%20of%20field%2C%20natural%20morning%20light%20from%20the%20side%20windows&width=600&height=500&seq=eye-concern-img-01&orientation=landscape';
+  const secondaryImage = getSanityImageUrl(detail.secondaryImage, { width: 900, height: 720, fit: 'crop', quality: 86 }) || 'https://readdy.ai/api/search-image?query=A%20serene%20traditional%20Chinese%20medicine%20treatment%20room%2C%20a%20skilled%20doctor%20in%20a%20white%20coat%20gently%20performing%20eye%20acupuncture%20on%20a%20relaxed%20patient%20lying%20on%20a%20clean%20treatment%20bed%2C%20extremely%20fine%20delicate%20silver%20needles%20carefully%20placed%20around%20the%20eye%20area%20on%20acupoints%2C%20soft%20warm%20natural%20window%20light%2C%20the%20background%20shows%20green%20potted%20plants%20and%20wooden%20shelving%20with%20herbal%20jars%20in%20the%20background%2C%20clean%20clinical%20yet%20warm%20atmosphere%2C%20peaceful%20healing%20medical%20photography%20with%20soft%20teal%20and%20ivory%20color%20palette&width=600&height=500&seq=eye-solution-img-02&orientation=landscape';
   const cases = detail.featuredCases?.length
     ? detail.featuredCases.map((item, index) => ({
         label: item.label,
         name: item.name || '',
         content: item.text,
         link: item.link || '/cases',
-        image: item.image?.url,
+        image: item.image,
         dataPathPrefix: `featuredCases[${index}]`,
       }))
     : eyeCases;

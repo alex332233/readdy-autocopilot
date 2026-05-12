@@ -9,6 +9,7 @@ import {
   getHealthEducationArticleDocumentDataAttribute,
   getHealthEducationPageDataAttribute,
 } from '../../../sanity/dataAttributes';
+import {getSanityImageUrl} from '../../../sanity/imageUrl';
 import type { HealthEducationArticleContent, HealthEducationPageContent } from '../../../sanity/types';
 
 export default function HealthEducationDetailPage() {
@@ -52,7 +53,7 @@ export default function HealthEducationDetailPage() {
 
       <div className="relative w-full h-[420px] mt-24 overflow-hidden" data-sanity-edit-group data-sanity-edit-target>
         <img
-          src={article.coverImage.url}
+          src={getSanityImageUrl(article.coverImage, {width: 1920, height: 420, fit: 'crop', quality: 88})}
           alt={article.coverImage.alt || article.title}
           className="w-full h-full object-cover object-top"
           data-sanity={getArticleDataAttribute('coverImage')}
@@ -128,7 +129,7 @@ export default function HealthEducationDetailPage() {
               {section.image?.url && (
                 <div className="w-full h-[420px] rounded-xl overflow-hidden mb-4" data-sanity-edit-group data-sanity-edit-target>
                   <img
-                    src={section.image.url}
+                    src={getSanityImageUrl(section.image, { width: 1200, height: 620, fit: 'crop', quality: 86 })}
                     alt={section.image.alt || section.heading}
                     className="w-full h-full object-cover object-top"
                     data-sanity={getArticleDataAttribute(`content[${idx}].image.url`)}
@@ -190,11 +191,11 @@ export default function HealthEducationDetailPage() {
 
                     <div
                       className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                        isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                        isOpen ? 'max-h-[720px] opacity-100' : 'max-h-0 opacity-0'
                       }`}
                     >
                       <p
-                        className="pl-[52px] pr-8 pb-6 text-sm text-gray-600 leading-relaxed"
+                        className="pl-[52px] pr-8 pb-6 text-sm text-gray-600 leading-relaxed whitespace-pre-line"
                         data-sanity={getArticleDataAttribute(`faq[${idx}].answer`)}
                       >
                         {item.answer}

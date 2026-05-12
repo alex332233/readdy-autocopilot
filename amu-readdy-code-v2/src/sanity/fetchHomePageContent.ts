@@ -21,13 +21,16 @@ import type {
   HomeWhyChooseContent,
   HomeDoctorSummary,
   TestimonialItem,
+  SanityImage,
 } from './types';
 
-const mergeImage = (incoming: unknown, fallback: { url: string; alt: string }) => {
-  const image = incoming as Partial<{ url: string; alt: string }> | null;
+const mergeImage = (incoming: unknown, fallback?: SanityImage): SanityImage => {
+  const image = incoming as Partial<SanityImage> | null;
   return {
-    url: image?.url || fallback.url,
-    alt: image?.alt || fallback.alt,
+    ...fallback,
+    ...image,
+    url: image?.url || fallback?.url || '',
+    alt: image?.alt || fallback?.alt || '',
   };
 };
 

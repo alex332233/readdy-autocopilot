@@ -5,6 +5,7 @@ import {
   getFeaturedTreatmentDetailDataAttribute,
   getFeaturedTreatmentDetailDocumentDataAttribute,
 } from '../../../sanity/dataAttributes';
+import { getSanityImageUrl } from '../../../sanity/imageUrl';
 
 const ACCENT = '#5a7a6e';
 
@@ -20,15 +21,15 @@ export default function LaserDetailSection({ detail }: LaserDetailSectionProps) 
     detail._id
       ? getFeaturedTreatmentDetailDocumentDataAttribute(detail._id, path)
       : getFeaturedTreatmentDetailDataAttribute(detail.slug, path);
-  const primaryImage = detail.primaryImage?.url || 'https://readdy.ai/api/search-image?query=A%20worried%20parent%20sitting%20beside%20a%20young%20child%20in%20a%20warm%20Chinese%20medicine%20clinic%20waiting%20room%2C%20the%20child%20looking%20nervous%20and%20hesitant%20about%20the%20upcoming%20treatment%2C%20soft%20amber%20warm%20lighting%20illuminating%20the%20cozy%20interior%20space%2C%20potted%20green%20plants%20and%20wooden%20shelves%20with%20herbal%20jars%20in%20background%2C%20gentle%20calming%20environment%20with%20beige%20ivory%20and%20warm%20gold%20tones%2C%20lifestyle%20medical%20photography%20with%20a%20sense%20of%20empathy%20and%20care%2C%20shallow%20depth%20of%20field&width=600&height=500&seq=laser-concern-v2-01&orientation=landscape';
-  const secondaryImage = detail.secondaryImage?.url || 'https://readdy.ai/api/search-image?query=A%20skilled%20Chinese%20medicine%20practitioner%20gently%20holding%20a%20small%20low-level%20laser%20therapy%20device%20near%20acupuncture%20points%20on%20a%20relaxed%20child%20patient%20lying%20on%20a%20clean%20treatment%20bed%2C%20soft%20warm%20amber%20golden%20light%20effect%20emanating%20from%20the%20laser%2C%20no%20needles%20visible%2C%20peaceful%20modern%20clinical%20setting%20with%20wooden%20elements%20and%20green%20plants%2C%20the%20child%20looks%20calm%20and%20comfortable%2C%20warm%20beige%20and%20ivory%20interior%20palette%2C%20professional%20medical%20photography&width=600&height=500&seq=laser-solution-v2-02&orientation=landscape';
+  const primaryImage = getSanityImageUrl(detail.primaryImage, { width: 900, height: 720, fit: 'crop', quality: 86 }) || 'https://readdy.ai/api/search-image?query=A%20worried%20parent%20sitting%20beside%20a%20young%20child%20in%20a%20warm%20Chinese%20medicine%20clinic%20waiting%20room%2C%20the%20child%20looking%20nervous%20and%20hesitant%20about%20the%20upcoming%20treatment%2C%20soft%20amber%20warm%20lighting%20illuminating%20the%20cozy%20interior%20space%2C%20potted%20green%20plants%20and%20wooden%20shelves%20with%20herbal%20jars%20in%20background%2C%20gentle%20calming%20environment%20with%20beige%20ivory%20and%20warm%20gold%20tones%2C%20lifestyle%20medical%20photography%20with%20a%20sense%20of%20empathy%20and%20care%2C%20shallow%20depth%20of%20field&width=600&height=500&seq=laser-concern-v2-01&orientation=landscape';
+  const secondaryImage = getSanityImageUrl(detail.secondaryImage, { width: 900, height: 720, fit: 'crop', quality: 86 }) || 'https://readdy.ai/api/search-image?query=A%20skilled%20Chinese%20medicine%20practitioner%20gently%20holding%20a%20small%20low-level%20laser%20therapy%20device%20near%20acupuncture%20points%20on%20a%20relaxed%20child%20patient%20lying%20on%20a%20clean%20treatment%20bed%2C%20soft%20warm%20amber%20golden%20light%20effect%20emanating%20from%20the%20laser%2C%20no%20needles%20visible%2C%20peaceful%20modern%20clinical%20setting%20with%20wooden%20elements%20and%20green%20plants%2C%20the%20child%20looks%20calm%20and%20comfortable%2C%20warm%20beige%20and%20ivory%20interior%20palette%2C%20professional%20medical%20photography&width=600&height=500&seq=laser-solution-v2-02&orientation=landscape';
   const cases = detail.featuredCases?.length
     ? detail.featuredCases.map((item, index) => ({
         label: item.label,
         name: item.name || '',
         content: item.text,
         link: item.link || '/cases',
-        image: item.image?.url,
+        image: item.image,
         dataPathPrefix: `featuredCases[${index}]`,
       }))
     : laserCases;

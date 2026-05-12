@@ -1,5 +1,6 @@
 import { Fragment, type ReactNode } from 'react';
 import type { RichArticleBlock, RichArticleTextBlock, RichArticleSpan } from '../sanity/types';
+import { getSanityImageUrl } from '../sanity/imageUrl';
 
 interface RichArticleRendererProps {
   getDataAttribute: (path: string) => string;
@@ -89,7 +90,7 @@ const renderTextBlock = (
   if (block.style === 'blockquote') {
     return (
       <blockquote
-        className="my-8 border-l-4 border-[#cd9651]/40 bg-[#faf7f2] px-5 py-4 text-gray-600 italic leading-relaxed rounded-r-xl"
+        className="my-8 border-l-4 border-[#cd9651]/40 bg-[#faf7f2] px-5 py-4 text-gray-600 italic leading-relaxed rounded-r-xl whitespace-pre-line"
         data-sanity={getDataAttribute(`body[${blockIndex}]`)}
       >
         {content}
@@ -99,7 +100,7 @@ const renderTextBlock = (
 
   return (
     <p
-      className="text-sm text-gray-600 leading-relaxed mb-4"
+      className="text-sm text-gray-600 leading-relaxed mb-4 whitespace-pre-line"
       data-sanity={getDataAttribute(`body[${blockIndex}]`)}
     >
       {content}
@@ -140,7 +141,7 @@ export default function RichArticleRenderer({ getDataAttribute, blocks }: RichAr
           {listItems.map((item, listIndex) => (
             <li
               key={item._key || `${block._key}-${listIndex}`}
-              className="leading-relaxed"
+              className="leading-relaxed whitespace-pre-line"
               data-sanity={getDataAttribute(`body[${index - listItems.length + listIndex}]`)}
             >
               {renderSpans(getDataAttribute, index - listItems.length + listIndex, item)}
@@ -164,7 +165,7 @@ export default function RichArticleRenderer({ getDataAttribute, blocks }: RichAr
             data-sanity={getDataAttribute(`body[${index}]`)}
           >
             <img
-              src={block.url}
+              src={getSanityImageUrl(block, { width: 1200, quality: 88 }) || block.url}
               alt={block.alt}
               className="w-full h-auto object-cover"
             />

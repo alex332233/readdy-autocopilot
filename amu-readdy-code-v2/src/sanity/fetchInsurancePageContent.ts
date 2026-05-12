@@ -6,6 +6,8 @@ import type {InsuranceOverviewCard, InsurancePageContent, InsuranceTreatmentCate
 const mergeImage = (incoming: unknown, fallback?: SanityImage): SanityImage => {
   const image = incoming as Partial<SanityImage> | null;
   return {
+    ...fallback,
+    ...image,
     url: image?.url || fallback?.url || '',
     alt: image?.alt || fallback?.alt || '',
   };

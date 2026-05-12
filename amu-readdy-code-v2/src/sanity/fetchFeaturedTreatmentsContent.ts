@@ -17,6 +17,8 @@ const mergeImage = (incoming: unknown, fallback?: SanityImage): SanityImage | un
   const image = incoming as Partial<SanityImage> | null;
   if (!image && !fallback) return undefined;
   return {
+    ...fallback,
+    ...image,
     url: image?.url || fallback?.url || '',
     alt: image?.alt || fallback?.alt || '',
   };

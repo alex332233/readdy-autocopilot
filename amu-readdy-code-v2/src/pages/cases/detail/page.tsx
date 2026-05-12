@@ -9,6 +9,7 @@ import {
   getCaseArticleDataAttribute,
   getCaseArticleDocumentDataAttribute,
 } from '../../../sanity/dataAttributes';
+import {getSanityImageUrl} from '../../../sanity/imageUrl';
 
 export default function CaseDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -52,7 +53,7 @@ export default function CaseDetailPage() {
       {/* Hero 封面圖 */}
       <div className="relative w-full h-[420px] mt-24 overflow-hidden" data-sanity-edit-group data-sanity-edit-target>
         <img
-          src={caseData.coverImage.url}
+          src={getSanityImageUrl(caseData.coverImage, {width: 1920, height: 420, fit: 'crop', quality: 88})}
           alt={caseData.title}
           className="w-full h-full object-cover object-top"
           data-sanity={getDataAttribute('coverImage')}
@@ -109,7 +110,7 @@ export default function CaseDetailPage() {
         ) : (
           <>
             <p
-              className="text-sm text-gray-500 leading-relaxed mb-10 border-l-2 border-[#cd9651]/30 pl-4"
+              className="text-sm text-gray-500 leading-relaxed mb-10 border-l-2 border-[#cd9651]/30 pl-4 whitespace-pre-line"
               data-sanity={getDataAttribute('description')}
             >
               {caseData.description}
@@ -175,7 +176,7 @@ export default function CaseDetailPage() {
               <div className="w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">
                 <i className="ri-double-quotes-l text-[#cd9651] text-xl"></i>
               </div>
-              <p className="text-sm text-gray-600 leading-relaxed italic" data-sanity={getDataAttribute('conclusion')}>
+              <p className="text-sm text-gray-600 leading-relaxed italic whitespace-pre-line" data-sanity={getDataAttribute('conclusion')}>
                 {caseData.conclusion}
               </p>
             </div>
@@ -191,7 +192,7 @@ export default function CaseDetailPage() {
               </span>
             </p>
             <p
-              className="text-xs text-gray-500 leading-relaxed"
+              className="text-xs text-gray-500 leading-relaxed whitespace-pre-line"
               data-sanity={getDataAttribute(caseData.tips ? 'tips.content' : 'medicalInfo.content')}
             >
               {caseData.tips?.content || caseData.medicalInfo?.content}

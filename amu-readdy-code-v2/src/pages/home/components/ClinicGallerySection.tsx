@@ -1,6 +1,7 @@
 import FadeIn from '../../../components/base/FadeIn';
 import { useHomePageContent } from '../useHomePageContent';
 import { getHomePageDataAttribute } from '../../../sanity/dataAttributes';
+import {getSanityImageUrl} from '../../../sanity/imageUrl';
 
 export default function ClinicGallerySection() {
   const { gallery } = useHomePageContent();
@@ -17,7 +18,7 @@ export default function ClinicGallerySection() {
             style={{ height: '680px' }}
           >
             <img
-              src={gallery.images[0].url}
+              src={getSanityImageUrl(gallery.images[0], {width: 1000, height: 1360, fit: 'crop', quality: 86})}
               alt={gallery.images[0].alt || gallery.images[0].label}
               className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 block"
               data-sanity={getHomePageDataAttribute('gallery.images[0].image')}
@@ -46,7 +47,7 @@ export default function ClinicGallerySection() {
                 data-sanity-edit-target
               >
                 <img
-                  src={img.url}
+                  src={getSanityImageUrl(img, {width: 900, height: 680, fit: 'crop', quality: 86})}
                   alt={img.alt || img.label}
                   className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 block"
                   data-sanity={getHomePageDataAttribute(`gallery.images[${i + 1}].image`)}

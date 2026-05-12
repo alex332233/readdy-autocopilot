@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useHomePageContent } from '../useHomePageContent';
 import { getHomePageDataAttribute } from '../../../sanity/dataAttributes';
+import {getSanityImageUrl} from '../../../sanity/imageUrl';
 
 export default function HeroSection() {
   const [mounted, setMounted] = useState(false);
@@ -38,7 +39,7 @@ export default function HeroSection() {
           alt={hero.image.alt}
           className="w-full h-full object-cover object-center"
           data-sanity={getHomePageDataAttribute('hero.image')}
-          src={hero.image.url}
+          src={getSanityImageUrl(hero.image, {width: 1400, height: 1200, fit: 'crop', quality: 88})}
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#f8f6f1] via-[#f8f6f1]/40 to-transparent"></div>
       </div>

@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router';
 import FadeIn from '../../../components/base/FadeIn';
 import { useHomePageContent } from '../useHomePageContent';
 import { getHomePageDataAttribute } from '../../../sanity/dataAttributes';
+import {getSanityImageUrl} from '../../../sanity/imageUrl';
 
 export default function TeamSection() {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ export default function TeamSection() {
                 data-sanity-edit-target
               >
                 <img
-                  src={team.image.url}
+                  src={getSanityImageUrl(team.image, {width: 1100, height: 620, fit: 'crop', quality: 86})}
                   alt={team.image.alt}
                   className="w-full h-full object-cover object-top transition-transform duration-700 ease-out hover:scale-105"
                   data-sanity={getHomePageDataAttribute('team.image')}

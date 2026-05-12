@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import type {InsuranceOverviewCard} from '../../../sanity/types';
 import {getInsurancePageDataAttribute} from '../../../sanity/dataAttributes';
+import {getSanityImageUrl} from '../../../sanity/imageUrl';
 
 interface Props {
   categoryRefs: React.RefObject<HTMLDivElement>[];
@@ -36,7 +37,7 @@ export default function CategoryOverviewSection({categoryRefs, categories}: Prop
             >
               <div className="absolute inset-0" data-sanity-edit-group data-sanity-edit-target>
                 <img
-                  src={cat.image.url}
+                  src={getSanityImageUrl(cat.image, {width: 900, height: 520, fit: 'crop', quality: 86})}
                   alt={cat.image.alt}
                   className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700"
                   style={{transform: hoveredIndex === index ? 'scale(1.05)' : 'scale(1)'}}

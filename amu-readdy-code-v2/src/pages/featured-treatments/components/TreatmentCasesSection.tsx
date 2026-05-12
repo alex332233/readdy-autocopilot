@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
+import { getSanityImageUrl } from '../../../sanity/imageUrl';
+import type { SanityImage } from '../../../sanity/types';
 
 interface TreatmentCase {
   label: string;
   name: string;
   content: string;
   link: string;
-  image?: string;
+  image?: SanityImage | string;
   dataPathPrefix?: string;
 }
 
@@ -54,12 +56,15 @@ export default function TreatmentCasesSection({ cases, accent, getDataAttribute 
           {cases.map((c, idx) => {
             const href = c.link && c.link !== '#' ? c.link : '/cases';
             const isInternal = href.startsWith('/');
+            const imageUrl = typeof c.image === 'string'
+              ? c.image
+              : getSanityImageUrl(c.image, { width: 720, height: 560, fit: 'crop', quality: 86 });
             const content = (
               <>
                 <div className="relative w-full md:w-64 lg:w-72 flex-shrink-0 h-60 md:h-auto md:min-h-[220px] overflow-hidden bg-gray-100">
-                  {c.image ? (
+                  {imageUrl ? (
                     <img
-                      src={c.image}
+                      src={imageUrl}
                       alt=""
                       className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                     />

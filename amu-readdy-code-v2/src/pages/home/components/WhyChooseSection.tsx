@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import FadeIn from '../../../components/base/FadeIn';
 import { useHomePageContent } from '../useHomePageContent';
 import { getHomePageDataAttribute } from '../../../sanity/dataAttributes';
+import {getSanityImageUrl} from '../../../sanity/imageUrl';
 
 export default function WhyChooseSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -81,7 +82,7 @@ export default function WhyChooseSection() {
                   transition: 'transform 0.15s linear',
                   willChange: 'transform',
                 }}
-                src={whyChoose.image.url}
+                src={getSanityImageUrl(whyChoose.image, {width: 900, height: 760, fit: 'crop', quality: 86})}
               />
             </div>
           </FadeIn>
