@@ -131,6 +131,12 @@ export interface CaseAfterSection {
   phases: CaseAfterPhase[];
 }
 
+export interface CaseBeforeAfterSection {
+  enabled?: boolean;
+  before?: CaseBeforeSection;
+  after?: CaseAfterSection;
+}
+
 export interface CaseInfoBox {
   title: string;
   content: string;
@@ -149,13 +155,14 @@ export interface CaseArticleContent {
   publishDate: string;
   coverImage: SanityImage;
   body?: RichArticleBlock[];
+  beforeAfter?: CaseBeforeAfterSection;
   description: string;
   before: CaseBeforeSection;
   after: CaseAfterSection;
   conclusion: string;
   tips?: CaseInfoBox;
   medicalInfo?: CaseInfoBox;
-  references?: string[];
+  references?: LinkItem[];
   seo?: SeoMetadata;
 }
 
@@ -231,6 +238,7 @@ export interface TeamPageContent {
 export interface LinkItem {
   text: string;
   href: string;
+  kind?: 'internal' | 'external' | 'healthEducationArticle' | 'caseArticle';
 }
 
 export type SiteLinkKind = 'route' | 'scroll' | 'external';
@@ -379,6 +387,7 @@ export interface HealthEducationArticleContent {
   coverImage: SanityImage;
   body?: RichArticleBlock[];
   content: HealthEducationArticleSection[];
+  faqTitle?: string;
   faq: HealthEducationFaqItem[];
   tips?: CaseInfoBox;
   references?: LinkItem[];

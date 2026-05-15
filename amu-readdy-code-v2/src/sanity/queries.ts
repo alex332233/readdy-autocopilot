@@ -197,12 +197,28 @@ export const casesPageQuery = groq`
         "alt": coverImage.alt
       },
       description,
+      beforeAfter,
       before,
       after,
       conclusion,
       tips,
       medicalInfo,
-      references,
+      "references": references[]{
+        "text": select(_type == "link" => coalesce(text, healthEducationArticleRef->title, caseArticleRef->title, href, internalPath, target), @),
+        "href": select(
+          _type == "link" => select(
+            kind == "healthEducationArticle" => "/health-education/" + healthEducationArticleRef->slug.current,
+            kind == "caseArticle" => "/cases/" + caseArticleRef->slug.current,
+            kind == "external" => href,
+            coalesce(internalPath, href, target)
+          ),
+          @
+        ),
+        "kind": select(
+          _type == "link" => coalesce(kind, select(defined(internalPath) => "internal", "external")),
+          "external"
+        )
+      },
       "seo": {
         "title": seo.title,
         "description": seo.description
@@ -312,8 +328,18 @@ export const healthEducationPageQuery = groq`
         question,
         answer
       },
+      faqTitle,
       tips,
-      references,
+      "references": references[]{
+        "text": coalesce(text, healthEducationArticleRef->title, caseArticleRef->title, href, internalPath, target),
+        "href": select(
+          kind == "healthEducationArticle" => "/health-education/" + healthEducationArticleRef->slug.current,
+          kind == "caseArticle" => "/cases/" + caseArticleRef->slug.current,
+          kind == "external" => href,
+          coalesce(internalPath, href, target)
+        ),
+        "kind": coalesce(kind, select(defined(internalPath) => "internal", "external"))
+      },
       "seo": {
         "title": seo.title,
         "description": seo.description
@@ -372,8 +398,18 @@ export const healthEducationArticleQuery = groq`
       question,
       answer
     },
+    faqTitle,
     tips,
-    references,
+    "references": references[]{
+      "text": coalesce(text, healthEducationArticleRef->title, caseArticleRef->title, href, internalPath, target),
+      "href": select(
+        kind == "healthEducationArticle" => "/health-education/" + healthEducationArticleRef->slug.current,
+        kind == "caseArticle" => "/cases/" + caseArticleRef->slug.current,
+        kind == "external" => href,
+        coalesce(internalPath, href, target)
+      ),
+      "kind": coalesce(kind, select(defined(internalPath) => "internal", "external"))
+    },
     "seo": {
       "title": seo.title,
       "description": seo.description
@@ -416,12 +452,28 @@ export const caseArticleQuery = groq`
       }
     },
     description,
+    beforeAfter,
     before,
     after,
     conclusion,
     tips,
     medicalInfo,
-    references,
+    "references": references[]{
+      "text": select(_type == "link" => coalesce(text, healthEducationArticleRef->title, caseArticleRef->title, href, internalPath, target), @),
+      "href": select(
+        _type == "link" => select(
+          kind == "healthEducationArticle" => "/health-education/" + healthEducationArticleRef->slug.current,
+          kind == "caseArticle" => "/cases/" + caseArticleRef->slug.current,
+          kind == "external" => href,
+          coalesce(internalPath, href, target)
+        ),
+        @
+      ),
+      "kind": select(
+        _type == "link" => coalesce(kind, select(defined(internalPath) => "internal", "external")),
+        "external"
+      )
+    },
     "seo": {
       "title": seo.title,
       "description": seo.description

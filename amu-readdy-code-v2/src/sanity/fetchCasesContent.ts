@@ -8,8 +8,10 @@ import type {
   CaseAfterSection,
   CaseArticleContent,
   CaseBeforeSection,
+  CaseBeforeAfterSection,
   CaseInfoBox,
   CasesPageContent,
+  LinkItem,
   RichArticleBlock,
   SanityImage,
   SeoMetadata,
@@ -51,6 +53,34 @@ const mergeAfter = (incoming: unknown, fallback?: CaseAfterSection): CaseAfterSe
       Array.isArray(section?.phases) && section.phases.length > 0
         ? section.phases.map((phase, index) => mergePhase(phase, fallback?.phases[index]))
         : fallback?.phases || [],
+  };
+};
+
+const mergeBeforeAfter = (incoming: unknown, fallback?: CaseBeforeAfterSection): CaseBeforeAfterSection | undefined => {
+  if (!incoming && !fallback) return undefined;
+  const section = incoming as Partial<CaseBeforeAfterSection> | null;
+  return {
+    enabled: section?.enabled ?? fallback?.enabled ?? false,
+    before: mergeBefore(section?.before, fallback?.before),
+    after: mergeAfter(section?.after, fallback?.after),
+  };
+};
+
+const mergeLink = (incoming: unknown, fallback?: LinkItem): LinkItem => {
+  if (typeof incoming === 'string') {
+    return {
+      text: fallback?.text || incoming,
+      href: incoming,
+      kind: incoming.startsWith('/') ? 'internal' : 'external',
+    };
+  }
+
+  const link = incoming as Partial<LinkItem> | null;
+  const href = link?.href || fallback?.href || '';
+  return {
+    text: link?.text || fallback?.text || href,
+    href,
+    kind: link?.kind || fallback?.kind || (href.startsWith('/') ? 'internal' : 'external'),
   };
 };
 
@@ -161,13 +191,16 @@ const mergeArticle = (incoming: unknown, fallback?: CaseArticleContent): CaseArt
     publishDate: article?.publishDate || fallback?.publishDate || '',
     coverImage: mergeImage(article?.coverImage, fallback?.coverImage),
     body: mergeRichArticleBody(article?.body),
+    beforeAfter: mergeBeforeAfter(article?.beforeAfter, fallback?.beforeAfter),
     description: article?.description || fallback?.description || '',
     before: mergeBefore(article?.before, fallback?.before),
     after: mergeAfter(article?.after, fallback?.after),
     conclusion: article?.conclusion || fallback?.conclusion || '',
     tips: mergeInfoBox(article?.tips, fallback?.tips),
     medicalInfo: mergeInfoBox(article?.medicalInfo, fallback?.medicalInfo),
-    references: Array.isArray(article?.references) ? article.references.filter(Boolean) : fallback?.references,
+    references: Array.isArray(article?.references)
+      ? article.references.map((reference, index) => mergeLink(reference, fallback?.references?.[index]))
+      : fallback?.references,
     seo: mergeSeo(article?.seo, fallback?.seo),
   };
 };

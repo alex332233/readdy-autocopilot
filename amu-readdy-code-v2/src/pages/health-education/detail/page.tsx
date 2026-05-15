@@ -5,7 +5,6 @@ import Footer from '../../home/components/Footer';
 import CTASection from '../../cases/components/CTASection';
 import RichArticleRenderer from '../../../components/RichArticleRenderer';
 import {
-  getHealthEducationArticleDataAttribute,
   getHealthEducationArticleDocumentDataAttribute,
   getHealthEducationPageDataAttribute,
 } from '../../../sanity/dataAttributes';
@@ -45,7 +44,8 @@ export default function HealthEducationDetailPage() {
   const getArticleDataAttribute = (path: string) =>
     article.documentId
       ? getHealthEducationArticleDocumentDataAttribute(article.documentId, path)
-      : getHealthEducationArticleDataAttribute(article.articleId, path);
+      : undefined;
+  const isExternalHref = (href: string) => /^https?:\/\//i.test(href);
 
   return (
     <div className="min-h-screen bg-white">
@@ -142,10 +142,10 @@ export default function HealthEducationDetailPage() {
 
         {article.tips && (
           <div className="border border-stone-100 rounded-xl p-6 mb-10">
-            <p className="text-xs font-semibold text-[#cd9651] tracking-widest mb-3 uppercase" data-sanity={getArticleDataAttribute('tips.title')}>
+            <p className="text-xs font-semibold text-[#cd9651] tracking-widest mb-3 uppercase">
               {article.tips.title}
             </p>
-            <p className="text-xs text-gray-500 leading-relaxed" data-sanity={getArticleDataAttribute('tips.content')}>
+            <p className="text-xs text-gray-500 leading-relaxed">
               {article.tips.content}
             </p>
           </div>
@@ -153,11 +153,17 @@ export default function HealthEducationDetailPage() {
 
         {article.faq.length > 0 && (
           <section className="mt-12 mb-10 rounded-2xl overflow-hidden border border-[#e8ddd0] bg-[#faf7f2]">
-            <div className="px-8 pt-8 pb-6">
-              <h2 className="text-xl font-bold tracking-wide text-[#cd9651]" style={{ fontFamily: "'Noto Serif TC', serif" }}>
-                衛教小教室：考考你
-              </h2>
-            </div>
+            {article.faqTitle && (
+              <div className="px-8 pt-8 pb-6">
+                <h2
+                  className="text-xl font-bold tracking-wide text-[#cd9651]"
+                  style={{ fontFamily: "'Noto Serif TC', serif" }}
+                  data-sanity={getArticleDataAttribute('faqTitle')}
+                >
+                  {article.faqTitle}
+                </h2>
+              </div>
+            )}
 
             <div className="divide-y divide-[#e8ddd0]">
               {article.faq.map((item, idx) => {
@@ -191,7 +197,7 @@ export default function HealthEducationDetailPage() {
 
                     <div
                       className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                        isOpen ? 'max-h-[720px] opacity-100' : 'max-h-0 opacity-0'
+                        isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
                       }`}
                     >
                       <p
@@ -216,8 +222,8 @@ export default function HealthEducationDetailPage() {
                 <a
                   key={idx}
                   href={ref.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target={isExternalHref(ref.href) ? '_blank' : undefined}
+                  rel={isExternalHref(ref.href) ? 'noopener noreferrer' : undefined}
                   className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-[#cd9651] transition-colors cursor-pointer"
                 >
                   <div className="w-4 h-4 flex items-center justify-center flex-shrink-0">

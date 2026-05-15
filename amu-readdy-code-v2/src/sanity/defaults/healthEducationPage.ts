@@ -31,6 +31,7 @@ const defaultArticles: HealthEducationArticleContent[] = healthEducationData.map
   references: article.references?.map((reference) => ({
     text: reference.label,
     href: reference.url,
+    kind: 'external',
   })),
 }));
 

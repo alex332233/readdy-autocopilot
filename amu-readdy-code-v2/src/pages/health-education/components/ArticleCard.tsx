@@ -1,9 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import FadeIn from '../../../components/base/FadeIn';
-import {
-  getHealthEducationArticleDataAttribute,
-  getHealthEducationArticleDocumentDataAttribute,
-} from '../../../sanity/dataAttributes';
+import {getHealthEducationArticleDocumentDataAttribute} from '../../../sanity/dataAttributes';
 import {getSanityImageUrl} from '../../../sanity/imageUrl';
 import type { HealthEducationArticleContent } from '../../../sanity/types';
 
@@ -18,7 +15,7 @@ export default function ArticleCard({ article, index = 0 }: ArticleCardProps) {
   const getDataAttribute = (path: string) =>
     article.documentId
       ? getHealthEducationArticleDocumentDataAttribute(article.documentId, path)
-      : getHealthEducationArticleDataAttribute(article.articleId, path);
+      : undefined;
 
   return (
     <FadeIn delay={index * 80} direction="up" duration={1400}>

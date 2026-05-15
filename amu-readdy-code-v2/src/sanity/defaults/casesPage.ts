@@ -1,4 +1,11 @@
-import type {CasesPageContent} from '../types';
+import type {CasesPageContent, LinkItem} from '../types';
+
+const externalReferences = (urls: string[]): LinkItem[] =>
+  urls.map((href) => ({
+    text: href,
+    href,
+    kind: 'external',
+  }));
 
 export const defaultCasesPageContent: CasesPageContent = {
   title: '真實見證',
@@ -33,7 +40,7 @@ export const defaultCasesPageContent: CasesPageContent = {
         ],
       },
       conclusion: '腦中風除了西醫常規治療外，適當的中醫介入讓您的生活品質大大提升!!',
-      references: ['http://kcm.tcm.tw/files/20181207204956371.PDF', 'https://drctlee.wordpress.com/acupuncture-on'],
+      references: externalReferences(['http://kcm.tcm.tw/files/20181207204956371.PDF', 'https://drctlee.wordpress.com/acupuncture-on']),
     },
     {
       caseId: 2,
@@ -60,7 +67,7 @@ export const defaultCasesPageContent: CasesPageContent = {
         ],
       },
       conclusion: '第一型糖尿病患者透過中醫調理，不僅血糖控制更穩定，連帶其他症狀也一併改善！',
-      references: ['https://drctlee.wordpress.com/2019/02/02/dm/', 'https://drctlee.wordpress.com/tcm-gut-microbiota-dm/'],
+      references: externalReferences(['https://drctlee.wordpress.com/2019/02/02/dm/', 'https://drctlee.wordpress.com/tcm-gut-microbiota-dm/']),
     },
     {
       caseId: 3,
@@ -88,7 +95,7 @@ export const defaultCasesPageContent: CasesPageContent = {
         title: '貼心小提醒',
         content: '根據一般婦產科建議，想要懷孕的夫妻何時應積極求診？在沒有避孕的情況下：小於35歲嘗試懷孕時間：一年 / 35-38歲嘗試懷孕時間：半年 / 大於39歲嘗試懷孕時間：立即求診',
       },
-      references: ['https://drctlee.wordpress.com/2020/11/20/tcm-infertility/'],
+      references: externalReferences(['https://drctlee.wordpress.com/2020/11/20/tcm-infertility/']),
     },
     {
       caseId: 4,
@@ -116,7 +123,7 @@ export const defaultCasesPageContent: CasesPageContent = {
         content: '子宮內膜息肉，是由子宮內膜的上皮黏膜細胞增生而生成的腺體腫瘤，數量可從單一個到多個，息肉不但會增生還可能變大。對於想要懷孕的女性而言，一般會依照息肉的「大小」和「位置」，來評估需採取的治療。',
       },
       conclusion: '中醫調理不僅改善了睡眠問題，更成功幫助患者自然受孕，目前已進入第三孕期！',
-      references: ['https://drctlee.wordpress.com/2020/11/20/tcm-infertility/'],
+      references: externalReferences(['https://drctlee.wordpress.com/2020/11/20/tcm-infertility/']),
     },
     {
       caseId: 5,
