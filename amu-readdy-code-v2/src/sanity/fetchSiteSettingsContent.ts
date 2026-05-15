@@ -14,6 +14,8 @@ import type {
 const mergeImage = (incoming: unknown, fallback: SanityImage): SanityImage => {
   const image = incoming as Partial<SanityImage> | null;
   return {
+    ...fallback,
+    ...image,
     url: image?.url || fallback.url,
     alt: image?.alt || fallback.alt,
   };
@@ -28,6 +30,15 @@ const mergeSiteLink = (incoming: unknown, fallback?: SiteLinkContent): SiteLinkC
   };
 };
 
+const canonicalHeaderRouteByLabel: Record<string, string> = {
+  '關於艾苜': '/about',
+  '健保項目': '/insurance',
+  '特色療程': '/featured-treatments',
+  '醫師團隊': '/team',
+  '真實見證': '/cases',
+  '衛教資訊': '/health-education',
+};
+
 const mergeNavItem = (incoming: unknown, fallback?: SiteNavItemContent): SiteNavItemContent => {
   const item = incoming as Partial<SiteNavItemContent> | null;
   const incomingChildren = Array.isArray(item?.children) ? item.children : [];
@@ -38,10 +49,13 @@ const mergeNavItem = (incoming: unknown, fallback?: SiteNavItemContent): SiteNav
       )
     : undefined;
 
+  const label = item?.label || fallback?.label || '';
+  const canonicalRoute = canonicalHeaderRouteByLabel[label];
+
   return {
-    label: item?.label || fallback?.label || '',
-    kind: item?.kind || fallback?.kind || 'route',
-    target: item?.target || fallback?.target || '',
+    label,
+    kind: canonicalRoute ? 'route' : item?.kind || fallback?.kind || 'route',
+    target: canonicalRoute || item?.target || fallback?.target || '',
     ...(children && children.length > 0 ? {children} : {}),
   };
 };

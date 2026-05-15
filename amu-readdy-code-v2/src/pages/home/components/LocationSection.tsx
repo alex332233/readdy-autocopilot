@@ -1,5 +1,6 @@
 import FadeIn from '../../../components/base/FadeIn';
 import {getSiteSettingsDataAttribute} from '../../../sanity/dataAttributes';
+import {getSanityImageUrl} from '../../../sanity/imageUrl';
 import {useSiteSettingsContent} from '../../../sanity/useSiteSettingsContent';
 
 export default function LocationSection() {
@@ -30,7 +31,7 @@ export default function LocationSection() {
             <img
               alt={section.image.alt}
               className="w-full rounded-3xl shadow-2xl"
-              src={section.image.url}
+              src={getSanityImageUrl(section.image, {width: 1200, height: 800, fit: 'crop', quality: 86})}
               data-sanity={getSiteSettingsDataAttribute('locationSection.image')}
             />
           </FadeIn>

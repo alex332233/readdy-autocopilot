@@ -4,6 +4,9 @@ export const siteSettingsQuery = groq`
   *[_type == "siteSettings"][0]{
     title,
     "headerLogo": {
+      "asset": headerLogo.asset,
+      "crop": headerLogo.crop,
+      "hotspot": headerLogo.hotspot,
       "url": headerLogo.asset->url,
       "alt": headerLogo.alt
     },
@@ -23,6 +26,9 @@ export const siteSettingsQuery = groq`
       target
     },
     "footerLogo": {
+      "asset": footerLogo.asset,
+      "crop": footerLogo.crop,
+      "hotspot": footerLogo.hotspot,
       "url": footerLogo.asset->url,
       "alt": footerLogo.alt
     },
@@ -53,6 +59,9 @@ export const siteSettingsQuery = groq`
       "mapLink": locationSection.mapLink,
       "mapEmbedUrl": locationSection.mapEmbedUrl,
       "image": {
+        "asset": locationSection.image.asset,
+        "crop": locationSection.image.crop,
+        "hotspot": locationSection.image.hotspot,
         "url": locationSection.image.asset->url,
         "alt": locationSection.image.alt
       }
@@ -86,12 +95,18 @@ export const aboutPageQuery = groq`
         paragraphs,
         "primaryImage": select(
           defined(primaryImage.asset) => {
+            "asset": primaryImage.asset,
+            "crop": primaryImage.crop,
+            "hotspot": primaryImage.hotspot,
             "url": primaryImage.asset->url,
             "alt": primaryImage.alt
           }
         ),
         "secondaryImage": select(
           defined(secondaryImage.asset) => {
+            "asset": secondaryImage.asset,
+            "crop": secondaryImage.crop,
+            "hotspot": secondaryImage.hotspot,
             "url": secondaryImage.asset->url,
             "alt": secondaryImage.alt
           }
@@ -106,6 +121,9 @@ export const aboutPageQuery = groq`
       title,
       description,
       "image": {
+        "asset": image.asset,
+        "crop": image.crop,
+        "hotspot": image.hotspot,
         "url": coalesce(image.asset->url, imageUrl),
         "alt": image.alt
       }
@@ -128,6 +146,9 @@ export const insurancePageQuery = groq`
       "icon": coalesce(treatmentRef->icon, icon),
       anchorId,
       "image": {
+        "asset": image.asset,
+        "crop": image.crop,
+        "hotspot": image.hotspot,
         "url": coalesce(image.asset->url, imageUrl),
         "alt": image.alt
       }
@@ -169,16 +190,35 @@ export const casesPageQuery = groq`
       fbLink,
       publishDate,
       "coverImage": {
+        "asset": coverImage.asset,
+        "crop": coverImage.crop,
+        "hotspot": coverImage.hotspot,
         "url": coverImage.asset->url,
         "alt": coverImage.alt
       },
       description,
+      beforeAfter,
       before,
       after,
       conclusion,
       tips,
       medicalInfo,
-      references,
+      "references": references[]{
+        "text": select(_type == "link" => coalesce(text, healthEducationArticleRef->title, caseArticleRef->title, href, internalPath, target), @),
+        "href": select(
+          _type == "link" => select(
+            kind == "healthEducationArticle" => "/health-education/" + healthEducationArticleRef->slug.current,
+            kind == "caseArticle" => "/cases/" + caseArticleRef->slug.current,
+            kind == "external" => href,
+            coalesce(internalPath, href, target)
+          ),
+          @
+        ),
+        "kind": select(
+          _type == "link" => coalesce(kind, select(defined(internalPath) => "internal", "external")),
+          "external"
+        )
+      },
       "seo": {
         "title": seo.title,
         "description": seo.description
@@ -203,6 +243,9 @@ export const teamPageQuery = groq`
       title,
       bio,
       "image": {
+        "asset": image.asset,
+        "crop": image.crop,
+        "hotspot": image.hotspot,
         "url": image.asset->url,
         "alt": image.alt
       },
@@ -265,16 +308,38 @@ export const healthEducationPageQuery = groq`
       readTime,
       summary,
       "coverImage": {
+        "asset": coverImage.asset,
+        "crop": coverImage.crop,
+        "hotspot": coverImage.hotspot,
         "url": coverImage.asset->url,
         "alt": coverImage.alt
       },
-      content,
+      "content": content[]{
+        ...,
+        "image": {
+          "asset": image.asset,
+          "crop": image.crop,
+          "hotspot": image.hotspot,
+          "url": image.asset->url,
+          "alt": image.alt
+        }
+      },
       "faq": faq[]{
         question,
         answer
       },
+      faqTitle,
       tips,
-      references,
+      "references": references[]{
+        "text": coalesce(text, healthEducationArticleRef->title, caseArticleRef->title, href, internalPath, target),
+        "href": select(
+          kind == "healthEducationArticle" => "/health-education/" + healthEducationArticleRef->slug.current,
+          kind == "caseArticle" => "/cases/" + caseArticleRef->slug.current,
+          kind == "external" => href,
+          coalesce(internalPath, href, target)
+        ),
+        "kind": coalesce(kind, select(defined(internalPath) => "internal", "external"))
+      },
       "seo": {
         "title": seo.title,
         "description": seo.description
@@ -284,7 +349,13 @@ export const healthEducationPageQuery = groq`
 `;
 
 export const healthEducationArticleQuery = groq`
-  *[_type == "healthEducationArticle" && (articleId == $articleId || slug.current == $slug)]{
+  *[
+    _type == "healthEducationArticle" &&
+    (
+      (defined($articleId) && articleId == $articleId) ||
+      slug.current == $slug
+    )
+  ]{
     "_draftRank": select(_id in path("drafts.**") => 1, 0),
     "documentId": _id,
     articleId,
@@ -300,6 +371,9 @@ export const healthEducationArticleQuery = groq`
     readTime,
     summary,
     "coverImage": {
+      "asset": coverImage.asset,
+      "crop": coverImage.crop,
+      "hotspot": coverImage.hotspot,
       "url": coverImage.asset->url,
       "alt": coverImage.alt
     },
@@ -310,13 +384,32 @@ export const healthEducationArticleQuery = groq`
         "url": asset->url
       }
     },
-    content,
+    "content": content[]{
+      ...,
+      "image": {
+        "asset": image.asset,
+        "crop": image.crop,
+        "hotspot": image.hotspot,
+        "url": image.asset->url,
+        "alt": image.alt
+      }
+    },
     "faq": faq[]{
       question,
       answer
     },
+    faqTitle,
     tips,
-    references,
+    "references": references[]{
+      "text": coalesce(text, healthEducationArticleRef->title, caseArticleRef->title, href, internalPath, target),
+      "href": select(
+        kind == "healthEducationArticle" => "/health-education/" + healthEducationArticleRef->slug.current,
+        kind == "caseArticle" => "/cases/" + caseArticleRef->slug.current,
+        kind == "external" => href,
+        coalesce(internalPath, href, target)
+      ),
+      "kind": coalesce(kind, select(defined(internalPath) => "internal", "external"))
+    },
     "seo": {
       "title": seo.title,
       "description": seo.description
@@ -328,7 +421,7 @@ export const caseArticleQuery = groq`
   *[
     _type == "caseArticle" &&
     (
-      caseId == $caseId ||
+      (defined($caseId) && caseId == $caseId) ||
       slug.current == $slug ||
       _id == $documentId ||
       _id == $draftDocumentId
@@ -345,6 +438,9 @@ export const caseArticleQuery = groq`
     fbLink,
     publishDate,
     "coverImage": {
+      "asset": coverImage.asset,
+      "crop": coverImage.crop,
+      "hotspot": coverImage.hotspot,
       "url": coverImage.asset->url,
       "alt": coverImage.alt
     },
@@ -356,12 +452,28 @@ export const caseArticleQuery = groq`
       }
     },
     description,
+    beforeAfter,
     before,
     after,
     conclusion,
     tips,
     medicalInfo,
-    references,
+    "references": references[]{
+      "text": select(_type == "link" => coalesce(text, healthEducationArticleRef->title, caseArticleRef->title, href, internalPath, target), @),
+      "href": select(
+        _type == "link" => select(
+          kind == "healthEducationArticle" => "/health-education/" + healthEducationArticleRef->slug.current,
+          kind == "caseArticle" => "/cases/" + caseArticleRef->slug.current,
+          kind == "external" => href,
+          coalesce(internalPath, href, target)
+        ),
+        @
+      ),
+      "kind": select(
+        _type == "link" => coalesce(kind, select(defined(internalPath) => "internal", "external")),
+        "external"
+      )
+    },
     "seo": {
       "title": seo.title,
       "description": seo.description
@@ -374,6 +486,9 @@ export const homePageQuery = groq`
     "hero": {
       ...hero,
       "image": {
+        "asset": hero.image.asset,
+        "crop": hero.image.crop,
+        "hotspot": hero.image.hotspot,
         "url": hero.image.asset->url,
         "alt": hero.image.alt
       }
@@ -381,6 +496,9 @@ export const homePageQuery = groq`
     "about": {
       ...about,
       "image": {
+        "asset": about.image.asset,
+        "crop": about.image.crop,
+        "hotspot": about.image.hotspot,
         "url": about.image.asset->url,
         "alt": about.image.alt
       }
@@ -418,6 +536,9 @@ export const homePageQuery = groq`
     "whyChoose": {
       ...whyChoose,
       "image": {
+        "asset": whyChoose.image.asset,
+        "crop": whyChoose.image.crop,
+        "hotspot": whyChoose.image.hotspot,
         "url": whyChoose.image.asset->url,
         "alt": whyChoose.image.alt
       }
@@ -425,6 +546,9 @@ export const homePageQuery = groq`
     "team": {
       ...team,
       "image": {
+        "asset": team.image.asset,
+        "crop": team.image.crop,
+        "hotspot": team.image.hotspot,
         "url": team.image.asset->url,
         "alt": team.image.alt
       }
@@ -436,6 +560,9 @@ export const homePageQuery = groq`
         title,
         description,
         "image": {
+          "asset": image.asset,
+          "crop": image.crop,
+          "hotspot": image.hotspot,
           "url": image.asset->url,
           "alt": image.alt
         }
@@ -445,6 +572,9 @@ export const homePageQuery = groq`
     faq,
     "gallery": {
       "images": gallery.images[]{
+        "asset": image.asset,
+        "crop": image.crop,
+        "hotspot": image.hotspot,
         "url": image.asset->url,
         "alt": image.alt,
         label,
@@ -470,6 +600,9 @@ export const featuredTreatmentsPageQuery = groq`
       icon,
       color,
       "image": {
+        "asset": image.asset,
+        "crop": image.crop,
+        "hotspot": image.hotspot,
         "url": image.asset->url,
         "alt": image.alt
       },
@@ -490,10 +623,16 @@ export const featuredTreatmentDetailQuery = groq`
     themeColor,
     "slug": slug.current,
     "primaryImage": {
+      "asset": primaryImage.asset,
+      "crop": primaryImage.crop,
+      "hotspot": primaryImage.hotspot,
       "url": primaryImage.asset->url,
       "alt": primaryImage.alt
     },
     "secondaryImage": {
+      "asset": secondaryImage.asset,
+      "crop": secondaryImage.crop,
+      "hotspot": secondaryImage.hotspot,
       "url": secondaryImage.asset->url,
       "alt": secondaryImage.alt
     },
@@ -505,6 +644,9 @@ export const featuredTreatmentDetailQuery = groq`
       content,
       additionalContent,
       "image": {
+        "asset": image.asset,
+        "crop": image.crop,
+        "hotspot": image.hotspot,
         "url": image.asset->url,
         "alt": image.alt
       },
@@ -515,6 +657,9 @@ export const featuredTreatmentDetailQuery = groq`
         "text": coalesce(content, text),
         link,
         "image": {
+          "asset": image.asset,
+          "crop": image.crop,
+          "hotspot": image.hotspot,
           "url": image.asset->url,
           "alt": image.alt
         }
@@ -526,6 +671,9 @@ export const featuredTreatmentDetailQuery = groq`
       "text": coalesce(content, text),
       link,
       "image": {
+        "asset": image.asset,
+        "crop": image.crop,
+        "hotspot": image.hotspot,
         "url": image.asset->url,
         "alt": image.alt
       }

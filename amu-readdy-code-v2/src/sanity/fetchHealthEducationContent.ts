@@ -20,6 +20,8 @@ type SanityFetchClient = Pick<SanityClient, 'fetch'>;
 const mergeImage = (incoming: unknown, fallback?: SanityImage): SanityImage => {
   const image = incoming as Partial<SanityImage> | null;
   return {
+    ...fallback,
+    ...image,
     url: image?.url || fallback?.url || '',
     alt: image?.alt || fallback?.alt || '',
   };
@@ -30,6 +32,7 @@ const mergeOptionalImage = (incoming: unknown): SanityImage | undefined => {
   if (!image?.url) return undefined;
 
   return {
+    ...image,
     url: image.url,
     alt: image.alt || '',
   };
@@ -37,9 +40,11 @@ const mergeOptionalImage = (incoming: unknown): SanityImage | undefined => {
 
 const mergeLink = (incoming: unknown, fallback?: LinkItem): LinkItem => {
   const link = incoming as Partial<LinkItem> | null;
+  const href = link?.href || fallback?.href || '';
   return {
-    text: link?.text || fallback?.text || '',
-    href: link?.href || fallback?.href || '',
+    text: link?.text || fallback?.text || href,
+    href,
+    kind: link?.kind || fallback?.kind || (href.startsWith('/') ? 'internal' : 'external'),
   };
 };
 
@@ -191,6 +196,7 @@ const mergeArticle = (
             };
           })
         : fallback?.content || [],
+    faqTitle: article?.faqTitle || fallback?.faqTitle,
     faq:
       Array.isArray(article?.faq) && article.faq.length > 0
         ? article.faq

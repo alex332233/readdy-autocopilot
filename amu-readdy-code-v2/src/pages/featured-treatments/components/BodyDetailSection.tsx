@@ -5,6 +5,7 @@ import {
   getFeaturedTreatmentDetailDataAttribute,
   getFeaturedTreatmentDetailDocumentDataAttribute,
 } from '../../../sanity/dataAttributes';
+import { getSanityImageUrl } from '../../../sanity/imageUrl';
 
 const ACCENT = '#b87d3a';
 
@@ -20,15 +21,15 @@ export default function BodyDetailSection({ detail }: BodyDetailSectionProps) {
     detail._id
       ? getFeaturedTreatmentDetailDocumentDataAttribute(detail._id, path)
       : getFeaturedTreatmentDetailDataAttribute(detail.slug, path);
-  const primaryImage = detail.primaryImage?.url || 'https://readdy.ai/api/search-image?query=A%20thoughtful%20Asian%20woman%20in%20her%20thirties%20looking%20at%20herself%20in%20a%20mirror%20with%20a%20gentle%20concerned%20expression%2C%20wearing%20casual%20comfortable%20clothing%20in%20soft%20morning%20light%2C%20a%20clean%20minimal%20bedroom%20setting%20with%20warm%20ivory%20and%20soft%20beige%20tones%2C%20subtle%20natural%20light%20casting%20soft%20shadows%2C%20the%20scene%20evokes%20quiet%20determination%20and%20self-reflection%20rather%20than%20distress%2C%20peaceful%20mood%2C%20professional%20lifestyle%20photography%20with%20shallow%20depth%20of%20field%2C%20warm%20neutral%20background%20tones&width=600&height=500&seq=body-concern-img-01&orientation=landscape';
-  const secondaryImage = detail.secondaryImage?.url || 'https://readdy.ai/api/search-image?query=A%20serene%20and%20modern%20traditional%20Chinese%20medicine%20clinic%20interior%2C%20a%20doctor%20in%20white%20coat%20performing%20acupuncture%20treatment%20on%20a%20patient%20lying%20on%20a%20clean%20treatment%20bed%2C%20warm%20soft%20lighting%20with%20earthy%20beige%20and%20warm%20wood%20tones%2C%20neatly%20arranged%20herbal%20medicine%20jars%20in%20the%20background%2C%20potted%20green%20plants%20adding%20calm%20vitality%2C%20the%20atmosphere%20is%20professional%20yet%20gentle%20and%20healing%2C%20medical%20lifestyle%20photography%20with%20natural%20window%20light%20streaming%20in&width=600&height=500&seq=body-solution-img-02&orientation=landscape';
+  const primaryImage = getSanityImageUrl(detail.primaryImage, { width: 900, height: 720, fit: 'crop', quality: 86 }) || 'https://readdy.ai/api/search-image?query=A%20thoughtful%20Asian%20woman%20in%20her%20thirties%20looking%20at%20herself%20in%20a%20mirror%20with%20a%20gentle%20concerned%20expression%2C%20wearing%20casual%20comfortable%20clothing%20in%20soft%20morning%20light%2C%20a%20clean%20minimal%20bedroom%20setting%20with%20warm%20ivory%20and%20soft%20beige%20tones%2C%20subtle%20natural%20light%20casting%20soft%20shadows%2C%20the%20scene%20evokes%20quiet%20determination%20and%20self-reflection%20rather%20than%20distress%2C%20peaceful%20mood%2C%20professional%20lifestyle%20photography%20with%20shallow%20depth%20of%20field%2C%20warm%20neutral%20background%20tones&width=600&height=500&seq=body-concern-img-01&orientation=landscape';
+  const secondaryImage = getSanityImageUrl(detail.secondaryImage, { width: 900, height: 720, fit: 'crop', quality: 86 }) || 'https://readdy.ai/api/search-image?query=A%20serene%20and%20modern%20traditional%20Chinese%20medicine%20clinic%20interior%2C%20a%20doctor%20in%20white%20coat%20performing%20acupuncture%20treatment%20on%20a%20patient%20lying%20on%20a%20clean%20treatment%20bed%2C%20warm%20soft%20lighting%20with%20earthy%20beige%20and%20warm%20wood%20tones%2C%20neatly%20arranged%20herbal%20medicine%20jars%20in%20the%20background%2C%20potted%20green%20plants%20adding%20calm%20vitality%2C%20the%20atmosphere%20is%20professional%20yet%20gentle%20and%20healing%2C%20medical%20lifestyle%20photography%20with%20natural%20window%20light%20streaming%20in&width=600&height=500&seq=body-solution-img-02&orientation=landscape';
   const cases = detail.featuredCases?.length
     ? detail.featuredCases.map((item, index) => ({
         label: item.label,
         name: item.name || '',
         content: item.text,
         link: item.link || '/cases',
-        image: item.image?.url,
+        image: item.image,
         dataPathPrefix: `featuredCases[${index}]`,
       }))
     : bodyCases;

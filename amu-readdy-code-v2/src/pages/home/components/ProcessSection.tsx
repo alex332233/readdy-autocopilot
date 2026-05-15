@@ -3,6 +3,7 @@ import { useState } from 'react';
 import FadeIn from '../../../components/base/FadeIn';
 import { useHomePageContent } from '../useHomePageContent';
 import { getHomePageDataAttribute } from '../../../sanity/dataAttributes';
+import {getSanityImageUrl} from '../../../sanity/imageUrl';
 
 export default function ProcessSection() {
   const { process } = useHomePageContent();
@@ -67,7 +68,7 @@ export default function ProcessSection() {
               data-sanity-edit-target
             >
               <img
-                src={current.image.url}
+                src={getSanityImageUrl(current.image, {width: 900, height: 560, fit: 'crop', quality: 86})}
                 alt={current.image.alt || current.title}
                 className="w-full h-full object-cover object-top"
                 data-sanity={getHomePageDataAttribute(`process.steps[${activeStep}].image`)}

@@ -5,10 +5,10 @@ import Footer from '../../home/components/Footer';
 import CTASection from '../../cases/components/CTASection';
 import RichArticleRenderer from '../../../components/RichArticleRenderer';
 import {
-  getHealthEducationArticleDataAttribute,
   getHealthEducationArticleDocumentDataAttribute,
   getHealthEducationPageDataAttribute,
 } from '../../../sanity/dataAttributes';
+import {getSanityImageUrl} from '../../../sanity/imageUrl';
 import type { HealthEducationArticleContent, HealthEducationPageContent } from '../../../sanity/types';
 
 export default function HealthEducationDetailPage() {
@@ -44,7 +44,8 @@ export default function HealthEducationDetailPage() {
   const getArticleDataAttribute = (path: string) =>
     article.documentId
       ? getHealthEducationArticleDocumentDataAttribute(article.documentId, path)
-      : getHealthEducationArticleDataAttribute(article.articleId, path);
+      : undefined;
+  const isExternalHref = (href: string) => /^https?:\/\//i.test(href);
 
   return (
     <div className="min-h-screen bg-white">
@@ -52,7 +53,7 @@ export default function HealthEducationDetailPage() {
 
       <div className="relative w-full h-[420px] mt-24 overflow-hidden" data-sanity-edit-group data-sanity-edit-target>
         <img
-          src={article.coverImage.url}
+          src={getSanityImageUrl(article.coverImage, {width: 1920, height: 420, fit: 'crop', quality: 88})}
           alt={article.coverImage.alt || article.title}
           className="w-full h-full object-cover object-top"
           data-sanity={getArticleDataAttribute('coverImage')}
@@ -128,7 +129,7 @@ export default function HealthEducationDetailPage() {
               {section.image?.url && (
                 <div className="w-full h-[420px] rounded-xl overflow-hidden mb-4" data-sanity-edit-group data-sanity-edit-target>
                   <img
-                    src={section.image.url}
+                    src={getSanityImageUrl(section.image, { width: 1200, height: 620, fit: 'crop', quality: 86 })}
                     alt={section.image.alt || section.heading}
                     className="w-full h-full object-cover object-top"
                     data-sanity={getArticleDataAttribute(`content[${idx}].image.url`)}
@@ -141,10 +142,10 @@ export default function HealthEducationDetailPage() {
 
         {article.tips && (
           <div className="border border-stone-100 rounded-xl p-6 mb-10">
-            <p className="text-xs font-semibold text-[#cd9651] tracking-widest mb-3 uppercase" data-sanity={getArticleDataAttribute('tips.title')}>
+            <p className="text-xs font-semibold text-[#cd9651] tracking-widest mb-3 uppercase">
               {article.tips.title}
             </p>
-            <p className="text-xs text-gray-500 leading-relaxed" data-sanity={getArticleDataAttribute('tips.content')}>
+            <p className="text-xs text-gray-500 leading-relaxed">
               {article.tips.content}
             </p>
           </div>
@@ -152,11 +153,17 @@ export default function HealthEducationDetailPage() {
 
         {article.faq.length > 0 && (
           <section className="mt-12 mb-10 rounded-2xl overflow-hidden border border-[#e8ddd0] bg-[#faf7f2]">
-            <div className="px-8 pt-8 pb-6">
-              <h2 className="text-xl font-bold tracking-wide text-[#cd9651]" style={{ fontFamily: "'Noto Serif TC', serif" }}>
-                衛教小教室：考考你
-              </h2>
-            </div>
+            {article.faqTitle && (
+              <div className="px-8 pt-8 pb-6">
+                <h2
+                  className="text-xl font-bold tracking-wide text-[#cd9651]"
+                  style={{ fontFamily: "'Noto Serif TC', serif" }}
+                  data-sanity={getArticleDataAttribute('faqTitle')}
+                >
+                  {article.faqTitle}
+                </h2>
+              </div>
+            )}
 
             <div className="divide-y divide-[#e8ddd0]">
               {article.faq.map((item, idx) => {
@@ -190,11 +197,11 @@ export default function HealthEducationDetailPage() {
 
                     <div
                       className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                        isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                        isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
                       }`}
                     >
                       <p
-                        className="pl-[52px] pr-8 pb-6 text-sm text-gray-600 leading-relaxed"
+                        className="pl-[52px] pr-8 pb-6 text-sm text-gray-600 leading-relaxed whitespace-pre-wrap"
                         data-sanity={getArticleDataAttribute(`faq[${idx}].answer`)}
                       >
                         {item.answer}
@@ -215,8 +222,8 @@ export default function HealthEducationDetailPage() {
                 <a
                   key={idx}
                   href={ref.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target={isExternalHref(ref.href) ? '_blank' : undefined}
+                  rel={isExternalHref(ref.href) ? 'noopener noreferrer' : undefined}
                   className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-[#cd9651] transition-colors cursor-pointer"
                 >
                   <div className="w-4 h-4 flex items-center justify-center flex-shrink-0">

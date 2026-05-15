@@ -22,6 +22,7 @@ import {aboutPhilosophyCard} from './objects/aboutPhilosophyCard'
 import {aboutStoryBlock} from './objects/aboutStoryBlock'
 import {bookingCard} from './objects/bookingCard'
 import {caseAfterPhase} from './objects/caseAfterPhase'
+import {caseBeforeAfterSection} from './objects/caseBeforeAfterSection'
 import {caseAfterSection} from './objects/caseAfterSection'
 import {caseBeforeSection} from './objects/caseBeforeSection'
 import {caseInfoBox} from './objects/caseInfoBox'
@@ -79,6 +80,7 @@ export const schemaTypes = [
   richArticleContent,
   bookingCard,
   caseBeforeSection,
+  caseBeforeAfterSection,
   caseAfterPhase,
   caseAfterSection,
   caseInfoBox,

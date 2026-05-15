@@ -1,9 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import type { CaseArticleContent } from '../../../sanity/types';
-import {
-  getCaseArticleDataAttribute,
-  getCaseArticleDocumentDataAttribute,
-} from '../../../sanity/dataAttributes';
+import {getCaseArticleDocumentDataAttribute} from '../../../sanity/dataAttributes';
+import {getSanityImageUrl} from '../../../sanity/imageUrl';
 
 interface BlogCardProps {
   caseData: CaseArticleContent;
@@ -12,10 +10,11 @@ interface BlogCardProps {
 export default function BlogCard({ caseData }: BlogCardProps) {
   const navigate = useNavigate();
   const casePath = caseData.slug || (caseData.caseId ? String(caseData.caseId) : caseData.documentId || '');
+  const coverImageUrl = getSanityImageUrl(caseData.coverImage, {width: 768, height: 416, fit: 'crop', quality: 85});
   const getDataAttribute = (path: string) =>
     caseData.documentId
       ? getCaseArticleDocumentDataAttribute(caseData.documentId, path)
-      : getCaseArticleDataAttribute(caseData.caseId, path);
+      : undefined;
 
   return (
     <article
@@ -24,12 +23,21 @@ export default function BlogCard({ caseData }: BlogCardProps) {
     >
       {/* 封面圖 */}
       <div className="relative w-full h-52 overflow-hidden" data-sanity-edit-group data-sanity-edit-target>
-        <img
-          src={caseData.coverImage.url}
-          alt={caseData.title}
-          className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-          data-sanity={getDataAttribute('coverImage')}
-        />
+        {coverImageUrl ? (
+          <img
+            src={coverImageUrl}
+            alt={caseData.title}
+            className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+            data-sanity={getDataAttribute('coverImage')}
+          />
+        ) : (
+          <div
+            className="w-full h-full bg-stone-100 flex items-center justify-center text-stone-300"
+            data-sanity={getDataAttribute('coverImage')}
+          >
+            <i className="ri-image-line text-2xl"></i>
+          </div>
+        )}
         <span
           className="absolute top-3 right-3 text-[10px] font-semibold tracking-widest uppercase bg-white/90 text-[#cd9651] px-2.5 py-1 rounded-sm"
           data-sanity={getDataAttribute('category')}
@@ -60,7 +68,7 @@ export default function BlogCard({ caseData }: BlogCardProps) {
         >
           {caseData.title}
         </h3>
-        <p className="text-xs text-gray-500 leading-relaxed line-clamp-3 mb-4" data-sanity={getDataAttribute('description')}>
+        <p className="text-xs text-gray-500 leading-relaxed line-clamp-3 mb-4">
           {caseData.description}
         </p>
         <span className="text-[11px] font-semibold text-gray-700 tracking-widest uppercase border-b border-gray-700 pb-0.5 group-hover:text-[#cd9651] group-hover:border-[#cd9651] transition-colors">

@@ -101,6 +101,14 @@ export const healthEducationArticle = defineType({
       readOnly: true,
       hidden: true,
     }),
+    defineField({name: 'tips', title: '提醒區塊', type: 'caseInfoBox'}),
+    defineField({
+      name: 'faqTitle',
+      title: '問答區塊標題',
+      type: 'string',
+      description: '可自訂「衛教小教室：考考你」這個區塊標題。未填時前台使用預設標題。',
+      hidden: ({document}) => !Array.isArray(document?.faq) || document.faq.length === 0,
+    }),
     defineField({
       name: 'faq',
       title: '問答區塊',
@@ -109,8 +117,13 @@ export const healthEducationArticle = defineType({
       validation: (Rule) => Rule.max(7),
       description: '可選，最多 7 題。',
     }),
-    defineField({name: 'tips', title: '提醒區塊', type: 'caseInfoBox'}),
-    defineField({name: 'references', title: '延伸閱讀', type: 'array', of: [{type: 'link'}]}),
+    defineField({
+      name: 'references',
+      title: '延伸閱讀',
+      type: 'array',
+      of: [{type: 'link'}],
+      description: '可選內部頁面或外部網址。內部頁面請填 / 開頭路徑，正式網域切換時不受影響。',
+    }),
     defineField({name: 'seo', title: 'SEO', type: 'seo'}),
   ],
   orderings: [

@@ -5,10 +5,8 @@ import Footer from '../../home/components/Footer';
 import CTASection from '../components/CTASection';
 import RichArticleRenderer from '../../../components/RichArticleRenderer';
 import type { CaseArticleContent, CasesPageContent } from '../../../sanity/types';
-import {
-  getCaseArticleDataAttribute,
-  getCaseArticleDocumentDataAttribute,
-} from '../../../sanity/dataAttributes';
+import {getCaseArticleDocumentDataAttribute} from '../../../sanity/dataAttributes';
+import {getSanityImageUrl} from '../../../sanity/imageUrl';
 
 export default function CaseDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -20,7 +18,28 @@ export default function CaseDetailPage() {
   const getDataAttribute = (path: string) =>
     caseData?.documentId
       ? getCaseArticleDocumentDataAttribute(caseData.documentId, path)
-      : getCaseArticleDataAttribute(caseData?.caseId || 0, path);
+      : undefined;
+  const isExternalHref = (href: string) => /^https?:\/\//i.test(href);
+  const hasText = (value?: string) => Boolean(value?.trim());
+  const beforeItems =
+    caseData?.beforeAfter?.before?.items
+      ?.map((item, sourceIndex) => ({item, sourceIndex}))
+      .filter(({item}) => hasText(item)) || [];
+  const afterPhases =
+    caseData?.beforeAfter?.after?.phases
+      ?.map((phase, sourceIndex) => ({
+        phase,
+        sourceIndex,
+        improvements: phase.improvements
+          .map((item, improvementIndex) => ({item, improvementIndex}))
+          .filter(({item}) => hasText(item)),
+      }))
+      .filter(({phase, improvements}) => hasText(phase.period) || improvements.length > 0) || [];
+  const showBefore = hasText(caseData?.beforeAfter?.before?.title) || beforeItems.length > 0;
+  const showAfter = hasText(caseData?.beforeAfter?.after?.title) || afterPhases.length > 0;
+  const hasBeforeAfter =
+    caseData?.beforeAfter?.enabled && (showBefore || showAfter);
+  const coverImageUrl = getSanityImageUrl(caseData?.coverImage, {width: 1920, height: 420, fit: 'crop', quality: 88});
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -50,13 +69,15 @@ export default function CaseDetailPage() {
       <Navbar scrolled={scrolled} />
 
       {/* Hero 封面圖 */}
-      <div className="relative w-full h-[420px] mt-24 overflow-hidden" data-sanity-edit-group data-sanity-edit-target>
-        <img
-          src={caseData.coverImage.url}
-          alt={caseData.title}
-          className="w-full h-full object-cover object-top"
-          data-sanity={getDataAttribute('coverImage')}
-        />
+      <div className="relative w-full h-[420px] mt-24 overflow-hidden bg-stone-200" data-sanity-edit-group data-sanity-edit-target>
+        {coverImageUrl && (
+          <img
+            src={coverImageUrl}
+            alt={caseData.title}
+            className="w-full h-full object-cover object-top"
+            data-sanity={getDataAttribute('coverImage')}
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 px-6 pb-10 max-w-3xl mx-auto">
           <span
@@ -101,64 +122,66 @@ export default function CaseDetailPage() {
           </div>
         </div>
 
-        {caseData.body && caseData.body.length > 0 ? (
-          <RichArticleRenderer
-            getDataAttribute={getDataAttribute}
-            blocks={caseData.body}
-          />
-        ) : (
-          <>
-            <p
-              className="text-sm text-gray-500 leading-relaxed mb-10 border-l-2 border-[#cd9651]/30 pl-4"
-              data-sanity={getDataAttribute('description')}
-            >
-              {caseData.description}
-            </p>
-
-            <div className="grid md:grid-cols-2 gap-5 mb-10">
+        {hasBeforeAfter && (
+          <div className="grid md:grid-cols-2 gap-5 mb-10">
+            {showBefore && caseData.beforeAfter?.before && (
               <div className="bg-[#fdf8f8] rounded-xl p-6">
                 <div className="flex items-center gap-2 mb-4">
                   <span className="w-2 h-2 rounded-full bg-red-300 flex-shrink-0"></span>
-                  <span className="text-sm font-bold text-gray-700 tracking-widest" data-sanity={getDataAttribute('before.title')}>
-                    {caseData.before.title}
+                  <span
+                    className="text-sm font-bold text-gray-700 tracking-widest"
+                    data-sanity={getDataAttribute('beforeAfter.before.title')}
+                  >
+                    {caseData.beforeAfter.before.title}
                   </span>
                 </div>
                 <ul className="space-y-2.5">
-                  {caseData.before.items.map((item, idx) => (
-                    <li key={idx} className="flex items-start gap-2">
+                  {beforeItems.map(({item, sourceIndex}) => (
+                    <li key={sourceIndex} className="flex items-start gap-2">
                       <div className="w-4 h-4 flex items-center justify-center flex-shrink-0 mt-0.5">
                         <i className="ri-subtract-line text-red-300 text-sm"></i>
                       </div>
-                      <span className="text-xs text-gray-600 leading-relaxed" data-sanity={getDataAttribute(`before.items[${idx}]`)}>
+                      <span
+                        className="text-xs text-gray-600 leading-relaxed whitespace-pre-wrap"
+                        data-sanity={getDataAttribute(`beforeAfter.before.items[${sourceIndex}]`)}
+                      >
                         {item}
                       </span>
                     </li>
                   ))}
                 </ul>
               </div>
+            )}
 
+            {showAfter && caseData.beforeAfter?.after && (
               <div className="bg-[#f7fdf9] rounded-xl p-6">
                 <div className="flex items-center gap-2 mb-4">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"></span>
-                  <span className="text-sm font-bold text-gray-700 tracking-widest" data-sanity={getDataAttribute('after.title')}>
-                    {caseData.after.title}
+                  <span
+                    className="text-sm font-bold text-gray-700 tracking-widest"
+                    data-sanity={getDataAttribute('beforeAfter.after.title')}
+                  >
+                    {caseData.beforeAfter.after.title}
                   </span>
                 </div>
                 <div className="space-y-4">
-                  {caseData.after.phases.map((phase, idx) => (
-                    <div key={idx}>
-                      <span className="text-xs text-emerald-600 font-semibold mb-2 block" data-sanity={getDataAttribute(`after.phases[${idx}].period`)}>
+                  {afterPhases.map(({phase, sourceIndex, improvements}) => (
+                    <div key={sourceIndex}>
+                      <span
+                        className="text-xs text-emerald-600 font-semibold mb-2 block"
+                        data-sanity={getDataAttribute(`beforeAfter.after.phases[${sourceIndex}].period`)}
+                      >
                         {phase.period}
                       </span>
                       <ul className="space-y-1.5">
-                        {phase.improvements.map((item, impIdx) => (
-                          <li key={impIdx} className="flex items-start gap-2">
+                        {improvements.map(({item, improvementIndex}) => (
+                          <li key={improvementIndex} className="flex items-start gap-2">
                             <div className="w-4 h-4 flex items-center justify-center flex-shrink-0 mt-0.5">
                               <i className="ri-check-line text-emerald-400 text-sm"></i>
                             </div>
                             <span
-                              className="text-xs text-gray-600 leading-relaxed"
-                              data-sanity={getDataAttribute(`after.phases[${idx}].improvements[${impIdx}]`)}
+                              className="text-xs text-gray-600 leading-relaxed whitespace-pre-wrap"
+                              data-sanity={getDataAttribute(`beforeAfter.after.phases[${sourceIndex}].improvements[${improvementIndex}]`)}
                             >
                               {item}
                             </span>
@@ -169,13 +192,83 @@ export default function CaseDetailPage() {
                   ))}
                 </div>
               </div>
-            </div>
+            )}
+          </div>
+        )}
+
+        {caseData.body && caseData.body.length > 0 ? (
+          <RichArticleRenderer
+            getDataAttribute={getDataAttribute}
+            blocks={caseData.body}
+          />
+        ) : (
+          <>
+            <p
+              className="text-sm text-gray-500 leading-relaxed mb-10 border-l-2 border-[#cd9651]/30 pl-4 whitespace-pre-wrap"
+            >
+              {caseData.description}
+            </p>
+
+            {!hasBeforeAfter && <div className="grid md:grid-cols-2 gap-5 mb-10">
+              <div className="bg-[#fdf8f8] rounded-xl p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="w-2 h-2 rounded-full bg-red-300 flex-shrink-0"></span>
+                  <span className="text-sm font-bold text-gray-700 tracking-widest">
+                    {caseData.before.title}
+                  </span>
+                </div>
+                <ul className="space-y-2.5">
+                  {caseData.before.items.map((item, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <div className="w-4 h-4 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <i className="ri-subtract-line text-red-300 text-sm"></i>
+                      </div>
+                      <span className="text-xs text-gray-600 leading-relaxed">
+                        {item}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="bg-[#f7fdf9] rounded-xl p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"></span>
+                  <span className="text-sm font-bold text-gray-700 tracking-widest">
+                    {caseData.after.title}
+                  </span>
+                </div>
+                <div className="space-y-4">
+                  {caseData.after.phases.map((phase, idx) => (
+                    <div key={idx}>
+                      <span className="text-xs text-emerald-600 font-semibold mb-2 block">
+                        {phase.period}
+                      </span>
+                      <ul className="space-y-1.5">
+                        {phase.improvements.map((item, impIdx) => (
+                          <li key={impIdx} className="flex items-start gap-2">
+                            <div className="w-4 h-4 flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <i className="ri-check-line text-emerald-400 text-sm"></i>
+                            </div>
+                            <span
+                              className="text-xs text-gray-600 leading-relaxed"
+                            >
+                              {item}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>}
 
             <div className="flex items-start gap-3 mb-10 bg-[#faf6f0] rounded-xl p-6">
               <div className="w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">
                 <i className="ri-double-quotes-l text-[#cd9651] text-xl"></i>
               </div>
-              <p className="text-sm text-gray-600 leading-relaxed italic" data-sanity={getDataAttribute('conclusion')}>
+              <p className="text-sm text-gray-600 leading-relaxed italic whitespace-pre-wrap">
                 {caseData.conclusion}
               </p>
             </div>
@@ -191,7 +284,7 @@ export default function CaseDetailPage() {
               </span>
             </p>
             <p
-              className="text-xs text-gray-500 leading-relaxed"
+              className="text-xs text-gray-500 leading-relaxed whitespace-pre-wrap"
               data-sanity={getDataAttribute(caseData.tips ? 'tips.content' : 'medicalInfo.content')}
             >
               {caseData.tips?.content || caseData.medicalInfo?.content}
@@ -207,16 +300,16 @@ export default function CaseDetailPage() {
               {caseData.references.map((ref, idx) => (
                 <a
                   key={idx}
-                  href={ref}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href={ref.href}
+                  target={isExternalHref(ref.href) ? '_blank' : undefined}
+                  rel={isExternalHref(ref.href) ? 'noopener noreferrer' : undefined}
                   className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-[#cd9651] transition-colors cursor-pointer"
                 >
                   <div className="w-4 h-4 flex items-center justify-center flex-shrink-0">
                     <i className="ri-link text-xs"></i>
                   </div>
-                  <span className="underline underline-offset-2 break-all" data-sanity={getDataAttribute(`references[${idx}]`)}>
-                    {ref}
+                  <span className="underline underline-offset-2 break-all" data-sanity={getDataAttribute(`references[${idx}].text`)}>
+                    {ref.text || ref.href}
                   </span>
                 </a>
               ))}

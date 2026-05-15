@@ -63,6 +63,12 @@ export const caseArticle = defineType({
     defineField({name: 'fbLink', title: 'Facebook 連結', type: 'url'}),
     defineField({name: 'publishDate', title: '發布日期', type: 'date'}),
     defineField({
+      name: 'beforeAfter',
+      title: 'Before / After 摘要區塊',
+      type: 'caseBeforeAfterSection',
+      description: '選填。若啟用，會顯示在文章內文上方。',
+    }),
+    defineField({
       name: 'body',
       title: '文章內文',
       type: 'richArticleContent',
@@ -128,7 +134,8 @@ export const caseArticle = defineType({
       name: 'references',
       title: '延伸閱讀',
       type: 'array',
-      of: [{type: 'url'}],
+      of: [{type: 'link'}],
+      description: '可選內部頁面或外部網址。舊 URL 資料前台仍保留 fallback，後續 migration 轉成連結項目。',
     }),
     defineField({name: 'seo', title: 'SEO', type: 'seo'}),
   ],

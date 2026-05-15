@@ -1,9 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import FadeIn from '../../../components/base/FadeIn';
-import {
-  getHealthEducationArticleDataAttribute,
-  getHealthEducationArticleDocumentDataAttribute,
-} from '../../../sanity/dataAttributes';
+import {getHealthEducationArticleDocumentDataAttribute} from '../../../sanity/dataAttributes';
+import {getSanityImageUrl} from '../../../sanity/imageUrl';
 import type { HealthEducationArticleContent } from '../../../sanity/types';
 
 interface ArticleCardProps {
@@ -17,14 +15,14 @@ export default function ArticleCard({ article, index = 0 }: ArticleCardProps) {
   const getDataAttribute = (path: string) =>
     article.documentId
       ? getHealthEducationArticleDocumentDataAttribute(article.documentId, path)
-      : getHealthEducationArticleDataAttribute(article.articleId, path);
+      : undefined;
 
   return (
     <FadeIn delay={index * 80} direction="up" duration={1400}>
       <article className="bg-white group cursor-pointer" onClick={() => navigate(`/health-education/${articlePath}`)}>
         <div className="relative w-full h-52 overflow-hidden rounded-lg" data-sanity-edit-group data-sanity-edit-target>
           <img
-            src={article.coverImage.url}
+            src={getSanityImageUrl(article.coverImage, {width: 768, height: 416, fit: 'crop', quality: 85})}
             alt={article.coverImage.alt || article.title}
             className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
             data-sanity={getDataAttribute('coverImage')}

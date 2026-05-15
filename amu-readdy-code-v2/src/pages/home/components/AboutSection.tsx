@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from 'react';
 import FadeIn from '../../../components/base/FadeIn';
 import { useHomePageContent } from '../useHomePageContent';
 import { getHomePageDataAttribute } from '../../../sanity/dataAttributes';
+import {getSanityImageUrl} from '../../../sanity/imageUrl';
 
 export default function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -88,7 +89,7 @@ export default function AboutSection() {
               alt={about.image.alt}
               className="w-full h-full object-cover object-top"
               data-sanity={getHomePageDataAttribute('about.image')}
-              src={about.image.url}
+              src={getSanityImageUrl(about.image, {width: 900, height: 960, fit: 'crop', quality: 86})}
             />
           </div>
         </FadeIn>

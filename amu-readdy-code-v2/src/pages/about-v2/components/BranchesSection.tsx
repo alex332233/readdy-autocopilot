@@ -1,6 +1,7 @@
 import FadeIn from '../../../components/base/FadeIn';
 import type {AboutBranch} from '../../../sanity/types';
 import {getAboutPageDataAttribute} from '../../../sanity/dataAttributes';
+import {getSanityImageUrl} from '../../../sanity/imageUrl';
 
 export default function BranchesSection({
   title,
@@ -44,7 +45,7 @@ export default function BranchesSection({
                 alt={branch.image.alt}
                 className="w-full rounded-3xl shadow-2xl"
                 data-sanity={getAboutPageDataAttribute('branches[0].image.url')}
-                src={branch.image.url}
+                src={getSanityImageUrl(branch.image, {width: 1100, height: 820, fit: 'crop', quality: 86})}
               />
             </div>
           </FadeIn>

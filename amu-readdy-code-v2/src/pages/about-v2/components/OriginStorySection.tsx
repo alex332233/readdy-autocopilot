@@ -1,26 +1,30 @@
 import {useEffect, useState} from 'react';
 import FadeIn from '../../../components/base/FadeIn';
 import {useParallax} from '../../../hooks/useParallax';
-import type {AboutOriginStoryContent, AboutStoryBlock} from '../../../sanity/types';
+import type {AboutOriginStoryContent, AboutStoryBlock, SanityImage} from '../../../sanity/types';
 import {getAboutPageDataAttribute} from '../../../sanity/dataAttributes';
+import {getSanityImageUrl} from '../../../sanity/imageUrl';
 import FullscreenSlider from './FullscreenSlider';
 
 function ParallaxImage({
+  image,
   src,
   alt,
   speed = 0.03,
   dataAttribute,
 }: {
-  src: string;
+  image?: SanityImage;
+  src?: string;
   alt: string;
   speed?: number;
   dataAttribute?: string;
 }) {
   const {ref, offset} = useParallax<HTMLDivElement>({speed});
+  const imageUrl = getSanityImageUrl(image, {width: 900, height: 720, fit: 'crop', quality: 86}) || src || '';
   return (
     <div ref={ref} className="w-full h-full" data-sanity-edit-group data-sanity-edit-target>
       <img
-        src={src}
+        src={imageUrl}
         alt={alt}
         className="w-full h-full object-cover object-top"
         style={{transform: `translateY(${offset}px)`, willChange: 'transform'}}
@@ -68,7 +72,7 @@ function TopBlock({block, index}: {block: AboutStoryBlock; index: number}) {
         <FadeIn delay={0} direction="up" duration={1600}>
           <div className="w-full overflow-hidden" style={{aspectRatio: '3/4', background: '#f5f0e8'}}>
             <ParallaxImage
-              src={block.primaryImage?.url || ''}
+              image={block.primaryImage}
               alt={block.primaryImage?.alt || ''}
               speed={0.03}
               dataAttribute={getAboutPageDataAttribute(`originStory.blocks[${index}].primaryImage`)}
@@ -189,7 +193,7 @@ function TextImageBlock({block, index}: {block: AboutStoryBlock; index: number})
           <FadeIn delay={480} direction="up" duration={1600}>
             <div className="w-full overflow-hidden" style={{aspectRatio: '4/3', background: '#f5f0e8'}}>
               <ParallaxImage
-                src={block.primaryImage?.url || ''}
+                image={block.primaryImage}
                 alt={block.primaryImage?.alt || ''}
                 speed={0.03}
                 dataAttribute={getAboutPageDataAttribute(`originStory.blocks[${index}].primaryImage`)}
@@ -211,7 +215,7 @@ function SplitImagesTextBlock({block, index}: {block: AboutStoryBlock; index: nu
             <div className="relative w-full lg:w-[380px]" style={{height: 'clamp(200px, 45vw, 320px)'}}>
               <div className="absolute overflow-hidden" style={{width: '65%', height: '75%', top: 0, left: 0, background: '#f5f0e8'}}>
                 <ParallaxImage
-                  src={block.primaryImage?.url || ''}
+                  image={block.primaryImage}
                   alt={block.primaryImage?.alt || ''}
                   speed={0.025}
                   dataAttribute={getAboutPageDataAttribute(`originStory.blocks[${index}].primaryImage`)}
@@ -219,7 +223,7 @@ function SplitImagesTextBlock({block, index}: {block: AboutStoryBlock; index: nu
               </div>
               <div className="absolute overflow-hidden" style={{width: '48%', height: '55%', bottom: 0, right: 0, background: '#f5f0e8'}}>
                 <ParallaxImage
-                  src={block.secondaryImage?.url || ''}
+                  image={block.secondaryImage}
                   alt={block.secondaryImage?.alt || ''}
                   speed={0.04}
                   dataAttribute={getAboutPageDataAttribute(`originStory.blocks[${index}].secondaryImage`)}
@@ -274,7 +278,7 @@ function LogoTextBlock({block, index}: {block: AboutStoryBlock; index: number}) 
         <FadeIn delay={0} direction="up" duration={1800}>
           <div className="flex-shrink-0 flex items-center justify-center" style={{width: '260px', height: '260px'}} data-sanity-edit-group data-sanity-edit-target>
             <img
-              src={block.primaryImage?.url || ''}
+              src={getSanityImageUrl(block.primaryImage, {width: 520, height: 520, fit: 'max', quality: 86})}
               alt={block.primaryImage?.alt || ''}
               style={{width: '240px', height: '240px', objectFit: 'contain'}}
               data-sanity={getAboutPageDataAttribute(`originStory.blocks[${index}].primaryImage`)}

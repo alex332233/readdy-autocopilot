@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { FeaturedTreatmentCardContent } from '../../../sanity/types';
 import { getFeaturedTreatmentsPageDataAttribute } from '../../../sanity/dataAttributes';
+import {getSanityImageUrl} from '../../../sanity/imageUrl';
 import { getFeaturedTreatmentDetailPath } from '../treatmentLinks';
 
 interface FeaturedOverviewSectionProps {
@@ -54,7 +55,7 @@ export default function FeaturedOverviewSection({ cards }: FeaturedOverviewSecti
           ...card,
           path: getFeaturedTreatmentDetailPath(card),
           subtitle: meta.subtitle,
-          image: card.image?.url || '',
+          image: card.image,
         };
       }),
     [cards],
@@ -161,7 +162,7 @@ export default function FeaturedOverviewSection({ cards }: FeaturedOverviewSecti
                 >
                   {category.image ? (
                     <img
-                      src={category.image}
+                      src={getSanityImageUrl(category.image, {width: 760, height: 800, fit: 'crop', quality: 86})}
                       alt={category.title}
                       className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover object-top transition-transform duration-700 ease-in-out"
                       style={{ transform: isHovered ? 'scale(1.08)' : 'scale(1)' }}

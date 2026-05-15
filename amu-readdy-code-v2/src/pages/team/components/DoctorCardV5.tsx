@@ -5,6 +5,7 @@ import type {
   DoctorTreatmentTag,
 } from '../../../sanity/types';
 import { getDoctorProfileDocumentDataAttribute } from '../../../sanity/dataAttributes';
+import {getSanityImageUrl} from '../../../sanity/imageUrl';
 
 interface DoctorCardV5Props {
   documentId: string;
@@ -150,7 +151,7 @@ export default function DoctorCardV5({
           <div className="w-full h-72 lg:h-full">
             {image.url ? (
               <img
-                src={image.url}
+                src={getSanityImageUrl(image, {width: 520, height: 640, fit: 'crop', quality: 88})}
                 alt={image.alt || `${name}${title}`}
                 className="w-full h-full object-cover object-top"
                 data-sanity={getDoctorProfileDocumentDataAttribute(documentId, 'image')}

@@ -2,6 +2,7 @@ import FadeIn from '../../../components/base/FadeIn';
 import {useParallax} from '../../../hooks/useParallax';
 import type {AboutCoreValue} from '../../../sanity/types';
 import {getAboutPageDataAttribute} from '../../../sanity/dataAttributes';
+import {getSanityImageUrl} from '../../../sanity/imageUrl';
 
 function ParallaxImage({src, alt, speed = 0.03, dataAttribute}: {src: string; alt: string; speed?: number; dataAttribute: string}) {
   const {ref, offset} = useParallax<HTMLDivElement>({speed});
@@ -34,7 +35,7 @@ export default function CoreValuesSection({values}: {values: AboutCoreValue[]}) 
           >
             <div className="relative w-full lg:w-1/2 overflow-hidden" style={{minHeight: '280px'}}>
               <ParallaxImage
-                src={value.image.url}
+                src={getSanityImageUrl(value.image, {width: 1100, height: 800, fit: 'crop', quality: 86})}
                 alt={value.image.alt}
                 speed={0.03}
                 dataAttribute={getAboutPageDataAttribute(`coreValues[${index}].image`)}
