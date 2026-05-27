@@ -361,23 +361,10 @@ export interface RichArticleDividerBlock {
   style?: 'line';
 }
 
-export interface RichArticleTableRow {
-  _key?: string;
-  _type?: string;
-  cells?: string[];
-}
-
-export interface RichArticleTableBlock {
-  _key: string;
-  _type: 'table';
-  rows: RichArticleTableRow[];
-}
-
 export type RichArticleBlock =
   | RichArticleTextBlock
   | RichArticleImageBlock
-  | RichArticleDividerBlock
-  | RichArticleTableBlock;
+  | RichArticleDividerBlock;
 
 export interface HealthEducationFaqItem {
   question: string;

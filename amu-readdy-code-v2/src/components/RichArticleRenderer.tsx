@@ -111,9 +111,6 @@ const renderTextBlock = (
 
 const isTextBlock = (block: RichArticleBlock): block is RichArticleTextBlock => block._type === 'block';
 
-const getColumnCount = (rows: Array<{ cells?: string[] }>) =>
-  rows.reduce((max, row) => Math.max(max, row.cells?.length || 0), 0);
-
 export default function RichArticleRenderer({ getDataAttribute, blocks }: RichArticleRendererProps) {
   const output: ReactNode[] = [];
   let index = 0;
@@ -196,57 +193,6 @@ export default function RichArticleRenderer({ getDataAttribute, blocks }: RichAr
           data-sanity={getDataAttribute(`body[${index}]`)}
         >
           <hr className="border-0 h-px bg-gradient-to-r from-transparent via-[#cd9651]/40 to-transparent" />
-        </div>,
-      );
-      index += 1;
-      continue;
-    }
-
-    if (block._type === 'table') {
-      const columnCount = getColumnCount(block.rows);
-      const [headerRow, ...bodyRows] = block.rows;
-
-      output.push(
-        <div
-          key={block._key}
-          className="my-8 overflow-x-auto rounded-xl border border-[#eadfce] bg-white"
-          data-sanity={getDataAttribute(`body[${index}]`)}
-        >
-          <table className="min-w-full border-collapse text-left text-sm text-gray-600">
-            {headerRow && (
-              <thead className="bg-[#faf7f2] text-gray-800">
-                <tr>
-                  {Array.from({ length: columnCount }).map((_, cellIndex) => (
-                    <th
-                      key={`${headerRow._key || 'header'}-${cellIndex}`}
-                      className="border-b border-r border-[#eadfce] px-4 py-3 font-semibold leading-relaxed last:border-r-0 whitespace-pre-wrap"
-                      data-sanity={getDataAttribute(`body[${index}].rows[0].cells[${cellIndex}]`)}
-                      scope="col"
-                    >
-                      {headerRow.cells?.[cellIndex] || '\u00a0'}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-            )}
-            <tbody>
-              {bodyRows.map((row, rowIndex) => (
-                <tr key={row._key || `${block._key}-row-${rowIndex}`}>
-                  {Array.from({ length: columnCount }).map((_, cellIndex) => (
-                    <td
-                      key={`${row._key || rowIndex}-${cellIndex}`}
-                      className="border-b border-r border-[#eadfce] px-4 py-3 leading-relaxed last:border-r-0 last:[tr:last-child_&]:border-b-0 whitespace-pre-wrap"
-                      data-sanity={getDataAttribute(
-                        `body[${index}].rows[${rowIndex + 1}].cells[${cellIndex}]`,
-                      )}
-                    >
-                      {row.cells?.[cellIndex] || '\u00a0'}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>,
       );
       index += 1;

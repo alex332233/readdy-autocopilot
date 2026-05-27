@@ -69,9 +69,5 @@ export const richArticleContent = defineType({
     defineArrayMember({
       type: 'richArticleDivider',
     }),
-    defineArrayMember({
-      type: 'table',
-      title: '表格',
-    }),
   ],
 })
