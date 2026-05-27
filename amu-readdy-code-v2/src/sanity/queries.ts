@@ -189,6 +189,7 @@ export const casesPageQuery = groq`
       doctor,
       fbLink,
       publishDate,
+      summary,
       "coverImage": {
         "asset": coverImage.asset,
         "crop": coverImage.crop,
@@ -353,7 +354,9 @@ export const healthEducationArticleQuery = groq`
     _type == "healthEducationArticle" &&
     (
       (defined($articleId) && articleId == $articleId) ||
-      slug.current == $slug
+      slug.current == $slug ||
+      _id == $documentId ||
+      _id == $draftDocumentId
     )
   ]{
     "_draftRank": select(_id in path("drafts.**") => 1, 0),
@@ -437,6 +440,7 @@ export const caseArticleQuery = groq`
     doctor,
     fbLink,
     publishDate,
+    summary,
     "coverImage": {
       "asset": coverImage.asset,
       "crop": coverImage.crop,

@@ -40,6 +40,7 @@ export default function CaseDetailPage() {
   const hasBeforeAfter =
     caseData?.beforeAfter?.enabled && (showBefore || showAfter);
   const coverImageUrl = getSanityImageUrl(caseData?.coverImage, {width: 1920, height: 420, fit: 'crop', quality: 88});
+  const introText = caseData?.summary || caseData?.description || '';
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -196,6 +197,15 @@ export default function CaseDetailPage() {
           </div>
         )}
 
+        {introText && (
+          <p
+            className="text-sm text-gray-500 leading-relaxed mb-10 border-l-2 border-[#cd9651]/30 pl-4 whitespace-pre-wrap"
+            data-sanity={getDataAttribute('summary')}
+          >
+            {introText}
+          </p>
+        )}
+
         {caseData.body && caseData.body.length > 0 ? (
           <RichArticleRenderer
             getDataAttribute={getDataAttribute}
@@ -203,12 +213,6 @@ export default function CaseDetailPage() {
           />
         ) : (
           <>
-            <p
-              className="text-sm text-gray-500 leading-relaxed mb-10 border-l-2 border-[#cd9651]/30 pl-4 whitespace-pre-wrap"
-            >
-              {caseData.description}
-            </p>
-
             {!hasBeforeAfter && <div className="grid md:grid-cols-2 gap-5 mb-10">
               <div className="bg-[#fdf8f8] rounded-xl p-6">
                 <div className="flex items-center gap-2 mb-4">

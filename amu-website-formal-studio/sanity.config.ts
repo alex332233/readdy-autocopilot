@@ -2,6 +2,7 @@ import {visionTool} from '@sanity/vision'
 import {defineConfig} from 'sanity'
 import {presentationTool} from 'sanity/presentation'
 import {structureTool} from 'sanity/structure'
+import {table} from '@sanity/table'
 import {schemaTypes} from './schemaTypes'
 import {studioStructure} from './structure'
 
@@ -27,6 +28,7 @@ export default defineConfig({
       structure: studioStructure,
     }),
     visionTool(),
+    table(),
     presentationTool({
       allowOrigins,
       previewUrl: {

@@ -154,6 +154,7 @@ export interface CaseArticleContent {
   fbLink: string;
   publishDate: string;
   coverImage: SanityImage;
+  summary?: string;
   body?: RichArticleBlock[];
   beforeAfter?: CaseBeforeAfterSection;
   description: string;
@@ -360,10 +361,23 @@ export interface RichArticleDividerBlock {
   style?: 'line';
 }
 
+export interface RichArticleTableRow {
+  _key?: string;
+  _type?: string;
+  cells?: string[];
+}
+
+export interface RichArticleTableBlock {
+  _key: string;
+  _type: 'table';
+  rows: RichArticleTableRow[];
+}
+
 export type RichArticleBlock =
   | RichArticleTextBlock
   | RichArticleImageBlock
-  | RichArticleDividerBlock;
+  | RichArticleDividerBlock
+  | RichArticleTableBlock;
 
 export interface HealthEducationFaqItem {
   question: string;
