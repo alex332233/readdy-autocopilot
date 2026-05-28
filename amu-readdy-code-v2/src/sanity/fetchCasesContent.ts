@@ -178,30 +178,37 @@ const mergeRichArticleBody = (incoming: unknown): RichArticleBlock[] | undefined
 
 const mergeArticle = (incoming: unknown, fallback?: CaseArticleContent): CaseArticleContent => {
   const article = incoming as Partial<CaseArticleContent> | null;
+  const useFallback = !article?.documentId;
+  const legacyDescription = article?.description || (useFallback ? fallback?.description : '') || '';
   return {
     documentId: article?.documentId || fallback?.documentId,
-    caseId: Number(article?.caseId || fallback?.caseId || 0),
-    priorityOrder: article?.priorityOrder ?? fallback?.priorityOrder,
-    slug: article?.slug || fallback?.slug,
+    caseId: Number(article?.caseId || (useFallback ? fallback?.caseId : 0) || 0),
+    priorityOrder: article?.priorityOrder ?? (useFallback ? fallback?.priorityOrder : undefined),
+    slug: article?.slug || (useFallback ? fallback?.slug : undefined),
     title: article?.title || fallback?.title || '',
     category: article?.category || fallback?.category || '',
-    tags: Array.isArray(article?.tags) ? article.tags.filter(Boolean) : fallback?.tags || [],
-    doctor: article?.doctor || fallback?.doctor || '',
-    fbLink: article?.fbLink || fallback?.fbLink || '',
-    publishDate: article?.publishDate || fallback?.publishDate || '',
-    coverImage: mergeImage(article?.coverImage, fallback?.coverImage),
+    tags: Array.isArray(article?.tags) ? article.tags.filter(Boolean) : useFallback ? fallback?.tags || [] : [],
+    doctor: article?.doctor || (useFallback ? fallback?.doctor : '') || '',
+    fbLink: article?.fbLink || (useFallback ? fallback?.fbLink : '') || '',
+    publishDate: article?.publishDate || (useFallback ? fallback?.publishDate : '') || '',
+    coverImage: mergeImage(article?.coverImage, useFallback ? fallback?.coverImage : undefined),
+    summary: article?.summary || legacyDescription,
     body: mergeRichArticleBody(article?.body),
-    beforeAfter: mergeBeforeAfter(article?.beforeAfter, fallback?.beforeAfter),
-    description: article?.description || fallback?.description || '',
-    before: mergeBefore(article?.before, fallback?.before),
-    after: mergeAfter(article?.after, fallback?.after),
-    conclusion: article?.conclusion || fallback?.conclusion || '',
-    tips: mergeInfoBox(article?.tips, fallback?.tips),
-    medicalInfo: mergeInfoBox(article?.medicalInfo, fallback?.medicalInfo),
+    beforeAfter: mergeBeforeAfter(article?.beforeAfter, useFallback ? fallback?.beforeAfter : undefined),
+    description: legacyDescription,
+    before: mergeBefore(article?.before, useFallback ? fallback?.before : undefined),
+    after: mergeAfter(article?.after, useFallback ? fallback?.after : undefined),
+    conclusion: article?.conclusion || (useFallback ? fallback?.conclusion : '') || '',
+    tips: mergeInfoBox(article?.tips, useFallback ? fallback?.tips : undefined),
+    medicalInfo: mergeInfoBox(article?.medicalInfo, useFallback ? fallback?.medicalInfo : undefined),
     references: Array.isArray(article?.references)
-      ? article.references.map((reference, index) => mergeLink(reference, fallback?.references?.[index]))
-      : fallback?.references,
-    seo: mergeSeo(article?.seo, fallback?.seo),
+      ? article.references.map((reference, index) =>
+          mergeLink(reference, useFallback ? fallback?.references?.[index] : undefined),
+        )
+      : useFallback
+        ? fallback?.references
+        : undefined,
+    seo: mergeSeo(article?.seo, useFallback ? fallback?.seo : undefined),
   };
 };
 

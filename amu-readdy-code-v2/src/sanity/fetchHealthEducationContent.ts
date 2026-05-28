@@ -168,46 +168,51 @@ const mergeArticle = (
   fallback?: HealthEducationArticleContent,
 ): HealthEducationArticleContent => {
   const article = incoming as Partial<HealthEducationArticleContent> | null;
+  const useFallback = !article?.documentId;
   return {
     documentId: article?.documentId || fallback?.documentId,
-    articleId: Number(article?.articleId || fallback?.articleId || 0),
-    priorityOrder: article?.priorityOrder ?? fallback?.priorityOrder,
-    slug: article?.slug || fallback?.slug,
+    articleId: Number(article?.articleId || (useFallback ? fallback?.articleId : 0) || 0),
+    priorityOrder: article?.priorityOrder ?? (useFallback ? fallback?.priorityOrder : undefined),
+    slug: article?.slug || (useFallback ? fallback?.slug : undefined),
     title: article?.title || fallback?.title || '',
     category: article?.category || fallback?.category || '',
     subcategory: article?.subcategory || fallback?.subcategory || '',
-    tags: Array.isArray(article?.tags) ? article.tags.filter(Boolean) : fallback?.tags || [],
-    author: article?.author || fallback?.author || '',
-    publishDate: article?.publishDate || fallback?.publishDate || '',
-    updatedDate: article?.updatedDate || fallback?.updatedDate || '',
-    readTime: article?.readTime || fallback?.readTime || '',
-    summary: article?.summary || fallback?.summary || '',
-    coverImage: mergeImage(article?.coverImage, fallback?.coverImage),
+    tags: Array.isArray(article?.tags) ? article.tags.filter(Boolean) : useFallback ? fallback?.tags || [] : [],
+    author: article?.author || (useFallback ? fallback?.author : '') || '',
+    publishDate: article?.publishDate || (useFallback ? fallback?.publishDate : '') || '',
+    updatedDate: article?.updatedDate || (useFallback ? fallback?.updatedDate : '') || '',
+    readTime: article?.readTime || (useFallback ? fallback?.readTime : '') || '',
+    summary: article?.summary || (useFallback ? fallback?.summary : '') || '',
+    coverImage: mergeImage(article?.coverImage, useFallback ? fallback?.coverImage : undefined),
     body: mergeRichArticleBody(article?.body),
     content:
       Array.isArray(article?.content) && article.content.length > 0
         ? article.content.map((section, index) => {
             const incomingSection = section as Partial<HealthEducationArticleContent['content'][number]> | null;
-            const fallbackSection = fallback?.content[index];
+            const fallbackSection = useFallback ? fallback?.content[index] : undefined;
             return {
               heading: incomingSection?.heading || fallbackSection?.heading || '',
               text: incomingSection?.text || fallbackSection?.text || '',
               image: mergeOptionalImage(incomingSection?.image),
             };
           })
-        : fallback?.content || [],
-    faqTitle: article?.faqTitle || fallback?.faqTitle,
+        : useFallback ? fallback?.content || [] : [],
+    faqTitle: article?.faqTitle || (useFallback ? fallback?.faqTitle : undefined),
     faq:
       Array.isArray(article?.faq) && article.faq.length > 0
         ? article.faq
-            .map((item, index) => mergeFaqItem(item, fallback?.faq[index]))
+            .map((item, index) => mergeFaqItem(item, useFallback ? fallback?.faq[index] : undefined))
             .filter((item) => item.question || item.answer)
-        : fallback?.faq || [],
-    tips: article?.tips || fallback?.tips,
+        : useFallback ? fallback?.faq || [] : [],
+    tips: article?.tips || (useFallback ? fallback?.tips : undefined),
     references: Array.isArray(article?.references)
-      ? article.references.map((reference, index) => mergeLink(reference, fallback?.references?.[index]))
-      : fallback?.references,
-    seo: mergeSeo(article?.seo, fallback?.seo),
+      ? article.references.map((reference, index) =>
+          mergeLink(reference, useFallback ? fallback?.references?.[index] : undefined),
+        )
+      : useFallback
+        ? fallback?.references
+        : undefined,
+    seo: mergeSeo(article?.seo, useFallback ? fallback?.seo : undefined),
   };
 };
 
@@ -245,6 +250,7 @@ export async function fetchHealthEducationArticleContent(
   clientOverride?: SanityFetchClient | null,
 ) {
   const slugOrId = params.id || '';
+  const decodedSlugOrId = decodeURIComponent(slugOrId);
   const parsedArticleId = Number(slugOrId);
   const articleId = Number.isFinite(parsedArticleId) ? parsedArticleId : null;
   if (!slugOrId) return null;
@@ -260,7 +266,14 @@ export async function fetchHealthEducationArticleContent(
 
   const [pageData, articleData] = await Promise.all([
     client.fetch(healthEducationPageQuery),
-    client.fetch(healthEducationArticleQuery, {articleId, slug: slugOrId}),
+    client.fetch(healthEducationArticleQuery, {
+      articleId,
+      slug: decodedSlugOrId,
+      documentId: decodedSlugOrId,
+      draftDocumentId: decodedSlugOrId.startsWith('drafts.')
+        ? decodedSlugOrId
+        : `drafts.${decodedSlugOrId}`,
+    }),
   ]);
 
   const page = {

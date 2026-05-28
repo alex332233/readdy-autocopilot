@@ -154,6 +154,7 @@ export interface CaseArticleContent {
   fbLink: string;
   publishDate: string;
   coverImage: SanityImage;
+  summary?: string;
   body?: RichArticleBlock[];
   beforeAfter?: CaseBeforeAfterSection;
   description: string;

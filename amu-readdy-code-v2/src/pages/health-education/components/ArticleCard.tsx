@@ -11,7 +11,7 @@ interface ArticleCardProps {
 
 export default function ArticleCard({ article, index = 0 }: ArticleCardProps) {
   const navigate = useNavigate();
-  const articlePath = article.slug || String(article.articleId);
+  const articlePath = article.slug || article.documentId || String(article.articleId);
   const getDataAttribute = (path: string) =>
     article.documentId
       ? getHealthEducationArticleDocumentDataAttribute(article.documentId, path)
@@ -19,7 +19,7 @@ export default function ArticleCard({ article, index = 0 }: ArticleCardProps) {
 
   return (
     <FadeIn delay={index * 80} direction="up" duration={1400}>
-      <article className="bg-white group cursor-pointer" onClick={() => navigate(`/health-education/${articlePath}`)}>
+      <article className="bg-white group cursor-pointer" onClick={() => navigate(`/health-education/${encodeURIComponent(articlePath)}`)}>
         <div className="relative w-full h-52 overflow-hidden rounded-lg" data-sanity-edit-group data-sanity-edit-target>
           <img
             src={getSanityImageUrl(article.coverImage, {width: 768, height: 416, fit: 'crop', quality: 85})}

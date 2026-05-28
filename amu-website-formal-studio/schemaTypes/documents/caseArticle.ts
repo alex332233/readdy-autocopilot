@@ -63,6 +63,13 @@ export const caseArticle = defineType({
     defineField({name: 'fbLink', title: 'Facebook 連結', type: 'url'}),
     defineField({name: 'publishDate', title: '發布日期', type: 'date'}),
     defineField({
+      name: 'summary',
+      title: '摘要',
+      type: 'text',
+      rows: 4,
+      description: '用於真實見證列表卡片與文章開頭摘要。若舊文章尚未填寫，前台會暫時沿用舊版說明。',
+    }),
+    defineField({
       name: 'beforeAfter',
       title: 'Before / After 摘要區塊',
       type: 'caseBeforeAfterSection',

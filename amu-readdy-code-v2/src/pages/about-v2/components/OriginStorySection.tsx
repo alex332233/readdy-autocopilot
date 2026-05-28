@@ -278,7 +278,7 @@ function LogoTextBlock({block, index}: {block: AboutStoryBlock; index: number}) 
         <FadeIn delay={0} direction="up" duration={1800}>
           <div className="flex-shrink-0 flex items-center justify-center" style={{width: '260px', height: '260px'}} data-sanity-edit-group data-sanity-edit-target>
             <img
-              src={getSanityImageUrl(block.primaryImage, {width: 520, height: 520, fit: 'max', quality: 86})}
+              src={getSanityImageUrl(block.primaryImage, {width: 520, fit: 'max', quality: 86})}
               alt={block.primaryImage?.alt || ''}
               style={{width: '240px', height: '240px', objectFit: 'contain'}}
               data-sanity={getAboutPageDataAttribute(`originStory.blocks[${index}].primaryImage`)}

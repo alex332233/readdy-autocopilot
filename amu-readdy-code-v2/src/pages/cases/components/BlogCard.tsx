@@ -9,8 +9,9 @@ interface BlogCardProps {
 
 export default function BlogCard({ caseData }: BlogCardProps) {
   const navigate = useNavigate();
-  const casePath = caseData.slug || (caseData.caseId ? String(caseData.caseId) : caseData.documentId || '');
+  const casePath = caseData.slug || caseData.documentId || (caseData.caseId ? String(caseData.caseId) : '');
   const coverImageUrl = getSanityImageUrl(caseData.coverImage, {width: 768, height: 416, fit: 'crop', quality: 85});
+  const excerpt = caseData.summary || caseData.description;
   const getDataAttribute = (path: string) =>
     caseData.documentId
       ? getCaseArticleDocumentDataAttribute(caseData.documentId, path)
@@ -68,8 +69,11 @@ export default function BlogCard({ caseData }: BlogCardProps) {
         >
           {caseData.title}
         </h3>
-        <p className="text-xs text-gray-500 leading-relaxed line-clamp-3 mb-4">
-          {caseData.description}
+        <p
+          className="text-xs text-gray-500 leading-relaxed line-clamp-3 mb-4"
+          data-sanity={getDataAttribute('summary')}
+        >
+          {excerpt}
         </p>
         <span className="text-[11px] font-semibold text-gray-700 tracking-widest uppercase border-b border-gray-700 pb-0.5 group-hover:text-[#cd9651] group-hover:border-[#cd9651] transition-colors">
           READ MORE
