@@ -45,9 +45,10 @@ function renderMultilineText(text?: string) {
   ));
 }
 
-function renderParagraph(paragraph: string, dataAttribute?: string, className = '', fontSize = '14px') {
+function renderParagraph(paragraph: string, dataAttribute?: string, className = '', fontSize = '14px', key?: string) {
   return (
     <p
+      key={key}
       className={className}
       data-sanity={dataAttribute}
       style={{
@@ -122,6 +123,9 @@ function TopBlock({block, index}: {block: AboutStoryBlock; index: number}) {
               renderParagraph(
                 paragraph,
                 getAboutPageDataAttribute(`originStory.blocks[${index}].paragraphs[${paragraphIndex}]`),
+                '',
+                '14px',
+                `top-paragraph-${index}-${paragraphIndex}`,
               ),
             )}
           </div>
@@ -185,6 +189,7 @@ function TextImageBlock({block, index}: {block: AboutStoryBlock; index: number})
                   getAboutPageDataAttribute(`originStory.blocks[${index}].paragraphs[${paragraphIndex}]`),
                   '',
                   '15px',
+                  `text-image-paragraph-${index}-${paragraphIndex}`,
                 ),
               )}
             </div>
@@ -261,6 +266,7 @@ function SplitImagesTextBlock({block, index}: {block: AboutStoryBlock; index: nu
                   getAboutPageDataAttribute(`originStory.blocks[${index}].paragraphs[${paragraphIndex}]`),
                   '',
                   '15px',
+                  `split-paragraph-${index}-${paragraphIndex}`,
                 ),
               )}
             </div>
