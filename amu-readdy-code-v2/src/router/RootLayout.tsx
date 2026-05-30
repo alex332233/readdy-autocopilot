@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import SanityVisualEditing from '../sanity/SanityVisualEditing';
 import { setAppNavigate } from './navigation';
 import FloatingLineButton from '../components/FloatingLineButton';
+import { hasTracking, trackPageView } from '../analytics/tracking';
 
 declare global {
   interface Window {
@@ -47,6 +48,12 @@ export default function RootLayout() {
     if (location.hash) return;
     window.scrollTo({top: 0, left: 0, behavior: 'auto'});
   }, [location.pathname, location.hash]);
+
+  useEffect(() => {
+    if (!hasTracking) return;
+
+    trackPageView(`${location.pathname}${location.search}`);
+  }, [location.pathname, location.search]);
 
   return (
     <>
