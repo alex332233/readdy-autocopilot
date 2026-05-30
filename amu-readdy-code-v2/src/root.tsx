@@ -11,6 +11,11 @@ import { I18nextProvider } from "react-i18next";
 import RootLayout from "./router/RootLayout";
 import NoIndexMeta from "./components/NoIndexMeta";
 import i18n from "./i18n";
+import {
+  hasGaTracking,
+  hasMetaPixelTracking,
+  trackingEnv,
+} from "./analytics/tracking";
 import { normalizeSiteSettings } from "./sanity/fetchSiteSettingsContent";
 import { getPreviewState } from "./sanity/previewState.server";
 import { siteSettingsQuery } from "./sanity/queries";
@@ -68,10 +73,53 @@ export function Layout({ children }: { children: React.ReactNode }) {
           href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700;900&display=swap"
           rel="stylesheet"
         />
+        {hasGaTracking ? (
+          <>
+            <script async src={`https://www.googletagmanager.com/gtag/js?id=${trackingEnv.gaMeasurementId}`} />
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){window.dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${trackingEnv.gaMeasurementId}', {send_page_view: false});
+                `,
+              }}
+            />
+          </>
+        ) : null}
+        {hasMetaPixelTracking ? (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                !function(f,b,e,v,n,t,s)
+                {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                n.queue=[];t=b.createElement(e);t.async=!0;
+                t.src=v;s=b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t,s)}(window, document,'script',
+                'https://connect.facebook.net/en_US/fbevents.js');
+                fbq('init', '${trackingEnv.metaPixelId}');
+              `,
+            }}
+          />
+        ) : null}
         <Meta />
         <Links />
       </head>
       <body>
+        {hasMetaPixelTracking ? (
+          <noscript>
+            <img
+              height="1"
+              width="1"
+              style={{display: "none"}}
+              src={`https://www.facebook.com/tr?id=${trackingEnv.metaPixelId}&ev=PageView&noscript=1`}
+              alt=""
+            />
+          </noscript>
+        ) : null}
         <I18nextProvider i18n={i18n}>
           <NoIndexMeta />
           {children}
