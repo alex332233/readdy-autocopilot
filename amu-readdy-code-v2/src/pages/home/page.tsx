@@ -12,6 +12,7 @@ import FAQSection from './components/FAQSection';
 import LocationSection from './components/LocationSection';
 import Footer from './components/Footer';
 import ClinicGallerySection from './components/ClinicGallerySection';
+import { consumePendingSiteScrollTarget } from '../../sanity/siteLinkActions';
 
 export default function HomePage() {
   const [scrolled, setScrolled] = useState(false);
@@ -21,6 +22,7 @@ export default function HomePage() {
       setScrolled(window.scrollY > 50);
     };
     window.addEventListener('scroll', handleScroll);
+    consumePendingSiteScrollTarget();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 

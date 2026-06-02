@@ -114,14 +114,6 @@ export default function TestimonialsSection() {
             <i className="ri-drag-move-line"></i>
             左右滑動查看更多
           </p>
-
-          {/* 查看更多按鈕 */}
-          <div className="text-center mt-8">
-            <button className="inline-flex items-center px-6 py-3 bg-[#cd9651] hover:bg-[#b8843d] text-white rounded-full font-semibold transition-colors duration-300 whitespace-nowrap cursor-pointer text-sm">
-              {testimonials.ctaText}
-              <i className="ri-external-link-line ml-2"></i>
-            </button>
-          </div>
         </FadeIn>
       </div>
     </section>

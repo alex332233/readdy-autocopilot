@@ -14,7 +14,7 @@ import type { HealthEducationArticleContent, HealthEducationPageContent } from '
 export default function HealthEducationDetailPage() {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
-  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const data = useLoaderData() as { page: HealthEducationPageContent; article: HealthEducationArticleContent } | null;
 
   useEffect(() => {

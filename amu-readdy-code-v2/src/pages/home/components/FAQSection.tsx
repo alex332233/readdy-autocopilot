@@ -59,7 +59,7 @@ export default function FAQSection() {
                       }`}
                     >
                       <div className="pl-10">
-                        <p className="text-slate-600 leading-relaxed text-sm">{item.answer}</p>
+                        <p className="text-slate-600 leading-relaxed text-sm whitespace-pre-wrap">{item.answer}</p>
                       </div>
                     </div>
                   </div>
