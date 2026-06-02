@@ -70,9 +70,9 @@ export const defaultSiteSettingsContent: SiteSettingsContent = {
     clinicName: '艾苜中醫診所',
     clinicDescription: '位於台南市北區，交通便利，環境舒適溫馨',
     hours: '週一至週六 09:00–21:00\n週日公休',
-    mapLink: 'https://www.google.com/maps/search/?api=1&query=23.012694,120.200711',
+    mapLink: 'https://maps.app.goo.gl/F1adSc9xbvsCYRgK7',
     mapEmbedUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3672.8234567890123!2d120.200711!3d23.012694!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDAwJzQ1LjciTiAxMjDCsDEyJzAyLjYiRQ!5e0!3m2!1szh-TW!2stw!4v1234567890123',
+      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3672.13381107986!2d120.20432287531365!3d23.018858579176293!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x346e775e9ea37d5f%3A0x721d02051389fcc4!2z6Im-6Iuc5Lit6Yar6Ki65omA!5e0!3m2!1szh-TW!2stw!4v1780370625757!5m2!1szh-TW!2stw',
     image: {
       url: 'https://readdy.ai/api/search-image?query=Modern%20traditional%20Chinese%20medicine%20clinic%20exterior%20and%20interior%2C%20warm%20welcoming%20entrance%2C%20professional%20medical%20facility%20with%20traditional%20elements%2C%20clean%20and%20bright%20environment%20in%20Taiwan&width=600&height=400&seq=clinic-location-001&orientation=landscape',
       alt: '艾苜中醫診所外觀',
