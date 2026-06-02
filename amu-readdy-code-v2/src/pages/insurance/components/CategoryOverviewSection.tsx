@@ -32,11 +32,11 @@ export default function CategoryOverviewSection({categoryRefs, categories}: Prop
   return (
     <section className="bg-[#faf6f0]">
       <div className="w-full">
-        <div className="flex flex-col md:flex-row gap-0 h-[760px] md:h-[520px]">
+        <div className="flex gap-0 h-[520px]">
           {categories.map((cat, index) => (
             <div
               key={`${cat.title}-${index}`}
-              className="relative min-h-[104px] md:min-h-0 overflow-hidden cursor-pointer transition-all duration-700 ease-in-out flex-shrink-0"
+              className="relative overflow-hidden cursor-pointer transition-all duration-700 ease-in-out flex-shrink-0"
               style={{
                 flex: hoveredIndex === index ? '3.5' : '1',
               }}
