@@ -101,6 +101,21 @@ export default function FeaturedOverviewSection({ cards }: FeaturedOverviewSecti
     scrollRef.current.scrollBy({ left: direction === 'left' ? -300 : 300, behavior: 'smooth' });
   };
 
+  const handleCardClick = (index: number, path?: string) => {
+    if (!path) return;
+
+    const shouldOpenFirst =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(max-width: 767px), (hover: none)').matches;
+
+    if (shouldOpenFirst && hoveredIndex !== index) {
+      setHoveredIndex(index);
+      return;
+    }
+
+    navigate(path);
+  };
+
   if (categories.length === 0) return null;
 
   return (
@@ -157,7 +172,7 @@ export default function FeaturedOverviewSection({ cards }: FeaturedOverviewSecti
                   }}
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
-                  onClick={() => category.path && navigate(category.path)}
+                  onClick={() => handleCardClick(index, category.path)}
                   data-sanity={getFeaturedTreatmentsPageDataAttribute(`${fieldBase}.title`)}
                 >
                   {category.image ? (
