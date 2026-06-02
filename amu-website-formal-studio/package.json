@@ -23,6 +23,8 @@
     "seed:case-article-category-refs-drafts": "sanity exec ./scripts/seed-case-article-category-refs-drafts.cli.mjs --with-user-token",
     "seed:team": "sanity exec ./scripts/seed-team.cli.mjs --with-user-token",
     "seed:insurance-taxonomy-refs-drafts": "sanity exec ./scripts/seed-insurance-taxonomy-refs-drafts.cli.mjs --with-user-token",
+    "migrate:publish-taxonomy-refs": "sanity exec ./scripts/publish-taxonomy-refs.cli.mjs --with-user-token",
+    "migrate:publish-taxonomy-refs:apply": "sanity exec ./scripts/publish-taxonomy-refs.cli.mjs --with-user-token -- --apply",
     "unset:insurance-draft-seo": "sanity exec ./scripts/unset-insurance-draft-seo.cli.mjs --with-user-token",
     "seed:health-education": "sanity exec ./scripts/seed-health-education.cli.mjs --with-user-token",
     "seed:site-settings": "sanity exec ./scripts/seed-site-settings.cli.mjs --with-user-token",
