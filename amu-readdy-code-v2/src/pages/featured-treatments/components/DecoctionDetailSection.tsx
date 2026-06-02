@@ -207,7 +207,7 @@ export default function DecoctionDetailSection({ detail }: DecoctionDetailSectio
 
         <TreatmentCasesSection cases={cases} accent="#5a7a6e" getDataAttribute={dataAttribute} />
 
-        <div className="rounded-3xl overflow-hidden relative" style={{ backgroundColor: ACCENT }}>
+        <div className="rounded-3xl overflow-hidden relative mt-10 mb-12 md:mb-0" style={{ backgroundColor: ACCENT }}>
           <div className="relative z-10 py-16 px-10 text-center text-white">
             <h3 className="text-2xl lg:text-3xl font-serif font-normal mb-4" data-sanity={dataAttribute('ctaTitle')}>{detail.cta.title}</h3>
             <p className="text-base text-white/80 mb-8 max-w-xl mx-auto" data-sanity={dataAttribute('ctaDescription')}>{detail.cta.description}</p>

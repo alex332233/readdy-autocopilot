@@ -70,7 +70,7 @@ export default function CaseDetailPage() {
       <Navbar scrolled={scrolled} />
 
       {/* Hero 封面圖 */}
-      <div className="relative w-full h-[420px] mt-24 overflow-hidden bg-stone-200" data-sanity-edit-group data-sanity-edit-target>
+      <div className="relative w-full aspect-[5/3] md:aspect-auto md:h-[420px] mt-24 overflow-hidden bg-stone-200" data-sanity-edit-group data-sanity-edit-target>
         {coverImageUrl && (
           <img
             src={coverImageUrl}
@@ -80,14 +80,14 @@ export default function CaseDetailPage() {
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 px-6 pb-10 max-w-3xl mx-auto">
+        <div className="absolute bottom-0 left-0 right-0 px-6 pb-6 md:pb-10 max-w-3xl mx-auto">
           <span
             className="inline-block text-[10px] font-semibold tracking-widest uppercase bg-[#cd9651] text-white px-3 py-1 rounded-sm mb-3"
             data-sanity={getDataAttribute('category')}
           >
             {caseData.category}
           </span>
-          <h1 className="text-2xl md:text-3xl font-bold text-white leading-snug" data-sanity={getDataAttribute('title')}>
+          <h1 className="text-xl md:text-3xl font-bold text-white leading-snug overflow-hidden [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical]" data-sanity={getDataAttribute('title')}>
             {caseData.title}
           </h1>
         </div>

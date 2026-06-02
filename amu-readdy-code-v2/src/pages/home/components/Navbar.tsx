@@ -168,15 +168,25 @@ export default function Navbar({ scrolled }: NavbarProps) {
 
               return (
                 <div key={`${stegaClean(item.label)}-${index}`}>
-                  <button
-                    onClick={() => setOpenDropdownLabel(isOpen ? null : stegaClean(item.label))}
-                    className="flex items-center justify-between w-full py-2 text-sm font-medium text-stone-600 hover:text-[#4a5d4a] cursor-pointer"
-                  >
-                    <span>{stegaClean(item.label)}</span>
-                    <span className={`w-4 h-4 flex items-center justify-center transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
-                      <i className="ri-arrow-down-s-line text-stone-400"></i>
-                    </span>
-                  </button>
+                  <div className="flex items-center justify-between w-full">
+                    <button
+                      onClick={() => handleNavItem(item)}
+                      className="flex-1 py-2 text-left text-sm font-medium text-stone-600 hover:text-[#4a5d4a] cursor-pointer"
+                    >
+                      {stegaClean(item.label)}
+                    </button>
+                    <button
+                      type="button"
+                      aria-label={`${stegaClean(item.label)}子選單`}
+                      aria-expanded={isOpen}
+                      onClick={() => setOpenDropdownLabel(isOpen ? null : stegaClean(item.label))}
+                      className="w-10 h-10 flex items-center justify-center text-stone-400 cursor-pointer"
+                    >
+                      <span className={`w-4 h-4 flex items-center justify-center transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
+                        <i className="ri-arrow-down-s-line"></i>
+                      </span>
+                    </button>
+                  </div>
                   {isOpen && (
                     <div className="pl-4 space-y-1 mt-1">
                       {item.children?.map((child, childIndex) => (

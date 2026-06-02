@@ -38,7 +38,7 @@ export default function TeamSection() {
           <div className="lg:col-span-8">
             <FadeIn direction="up" delay={150}>
               <div
-                className="relative overflow-hidden rounded-2xl shadow-xl w-full h-[520px]"
+                className="relative overflow-hidden rounded-2xl shadow-xl w-full aspect-[5/3] lg:aspect-auto lg:h-[520px]"
                 data-sanity-edit-group
                 data-sanity-edit-target
               >

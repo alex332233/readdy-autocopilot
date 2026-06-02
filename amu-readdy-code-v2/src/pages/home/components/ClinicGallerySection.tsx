@@ -24,8 +24,8 @@ export default function ClinicGallerySection() {
               data-sanity={getHomePageDataAttribute('gallery.images[0].image')}
             />
           </div>
-          <div className="pointer-events-none absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-500" />
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-400">
+          <div className="pointer-events-none absolute inset-0 bg-black/25 md:bg-black/0 md:group-hover:bg-black/30 transition-all duration-500" />
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-center opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-400">
             <div className="flex flex-col items-center gap-1">
               <span className="text-white text-xl font-light tracking-[0.25em] uppercase" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 {gallery.images[0].label}
@@ -53,8 +53,8 @@ export default function ClinicGallerySection() {
                   data-sanity={getHomePageDataAttribute(`gallery.images[${i + 1}].image`)}
                 />
               </div>
-              <div className="pointer-events-none absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-500" />
-              <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-400">
+              <div className="pointer-events-none absolute inset-0 bg-black/25 md:bg-black/0 md:group-hover:bg-black/30 transition-all duration-500" />
+              <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-center opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-400">
                 <div className="flex flex-col items-center gap-1">
                   <span className="text-white text-lg font-light tracking-[0.25em] uppercase" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                     {img.label}

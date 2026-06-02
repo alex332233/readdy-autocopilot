@@ -67,7 +67,7 @@ export default function WhyChooseSection() {
           {/* 右側圖片區（視差效果） */}
           <FadeIn direction="left" delay={100}>
             <div
-              className="relative h-[500px] lg:h-[600px] rounded-2xl overflow-hidden shadow-xl"
+              className="relative aspect-[5/3] lg:aspect-auto lg:h-[600px] rounded-2xl overflow-hidden shadow-xl"
               data-sanity-edit-group
               data-sanity-edit-target
             >

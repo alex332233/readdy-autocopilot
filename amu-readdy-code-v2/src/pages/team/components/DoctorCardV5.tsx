@@ -43,6 +43,8 @@ const DAYS = [
   { key: 'sun', label: '週日' },
 ] as const;
 
+const MOBILE_DAYS = DAYS.slice(0, 6);
+
 function ScheduleTable({
   documentId,
   schedule,
@@ -62,7 +64,49 @@ function ScheduleTable({
     <div>
       <h4 className="text-sm font-bold text-stone-800 mb-4">門診資訊</h4>
       <div className="rounded-xl overflow-hidden border border-[#e8ddd0] bg-[#faf6f0]">
-        <table className="w-full text-sm">
+        <div className="sm:hidden">
+          <div className="grid grid-cols-[56px_repeat(6,minmax(0,1fr))] border-b border-[#e8ddd0]">
+            <div className="py-3 px-3"></div>
+            {MOBILE_DAYS.map((day) => (
+              <div key={day.key} className="py-3 text-center text-[11px] font-medium text-stone-500">
+                {day.label.replace('週', '')}
+              </div>
+            ))}
+          </div>
+          {sessions.map((session, si) => (
+            <div
+              key={session.key}
+              className={`grid grid-cols-[56px_repeat(6,minmax(0,1fr))] items-stretch ${
+                si < sessions.length - 1 ? 'border-b border-[#e8ddd0]' : ''
+              }`}
+            >
+              <div className="flex items-center gap-1.5 px-3 py-3">
+                <span className="w-2 h-2 rounded-full bg-[#cd9651] flex-shrink-0"></span>
+                <span
+                  className="text-xs font-semibold text-stone-700 leading-tight"
+                  data-sanity={getDoctorProfileDocumentDataAttribute(documentId, `schedule.${session.key}.label`)}
+                >
+                  {session.value.label}
+                </span>
+              </div>
+              {MOBILE_DAYS.map((day) => {
+                const active = session.value[day.key];
+                return (
+                  <div key={day.key} className="flex items-center justify-center py-3">
+                    {active ? (
+                      <div className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#e8f5e9]">
+                        <i className="ri-check-line text-[#4caf50] text-sm"></i>
+                      </div>
+                    ) : (
+                      <span className="text-stone-300 text-base leading-none">—</span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+        <table className="hidden sm:table w-full text-sm">
           <thead>
             <tr className="border-b border-[#e8ddd0]">
               <th className="py-3 px-4 text-left w-24"></th>
@@ -148,7 +192,7 @@ export default function DoctorCardV5({
     <div className="bg-white rounded-2xl overflow-hidden border border-stone-100 shadow-sm hover:shadow-md transition-shadow duration-300">
       <div className="flex flex-col lg:flex-row">
         <div className="relative lg:w-64 xl:w-72 flex-shrink-0 bg-[#f5ede0]" data-sanity-edit-group data-sanity-edit-target>
-          <div className="w-full h-72 lg:h-full">
+          <div className="w-full aspect-[3/4] lg:aspect-auto lg:h-full">
             {image.url ? (
               <img
                 src={getSanityImageUrl(image, {width: 520, height: 640, fit: 'crop', quality: 88})}

@@ -27,7 +27,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="relative">
+    <div className="relative overflow-x-hidden">
       <Navbar scrolled={scrolled} />
       <main>
         <HeroSection />

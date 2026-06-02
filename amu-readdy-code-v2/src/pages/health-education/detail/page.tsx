@@ -51,7 +51,7 @@ export default function HealthEducationDetailPage() {
     <div className="min-h-screen bg-white">
       <Navbar scrolled={scrolled} />
 
-      <div className="relative w-full h-[420px] mt-24 overflow-hidden" data-sanity-edit-group data-sanity-edit-target>
+      <div className="relative w-full aspect-[5/3] md:aspect-auto md:h-[420px] mt-24 overflow-hidden" data-sanity-edit-group data-sanity-edit-target>
         <img
           src={getSanityImageUrl(article.coverImage, {width: 1920, height: 420, fit: 'crop', quality: 88})}
           alt={article.coverImage.alt || article.title}
@@ -59,14 +59,14 @@ export default function HealthEducationDetailPage() {
           data-sanity={getArticleDataAttribute('coverImage')}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent pointer-events-none" />
-        <div className="absolute bottom-0 left-0 right-0 px-6 pb-10 max-w-3xl mx-auto pointer-events-none">
+        <div className="absolute bottom-0 left-0 right-0 px-6 pb-6 md:pb-10 max-w-3xl mx-auto pointer-events-none">
           <span
             className="inline-block text-[10px] font-semibold tracking-widest uppercase bg-[#cd9651] text-white px-3 py-1 rounded-sm mb-3"
             data-sanity={getArticleDataAttribute('subcategory')}
           >
             {article.subcategory}
           </span>
-          <h1 className="text-2xl md:text-3xl font-bold text-white leading-snug" data-sanity={getArticleDataAttribute('title')}>
+          <h1 className="text-xl md:text-3xl font-bold text-white leading-snug overflow-hidden [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical]" data-sanity={getArticleDataAttribute('title')}>
             {article.title}
           </h1>
         </div>
