@@ -139,12 +139,14 @@ export const siteSettings = defineType({
           name: 'mapLink',
           title: 'Google 地圖導航連結',
           type: 'url',
+          description: '放「在 Google 地圖開啟／導航」用的網址，例如 Google Maps 分享連結或 maps.app.goo.gl 短網址。',
           validation: (Rule) => Rule.required().uri({allowRelative: false, scheme: ['http', 'https']}),
         }),
         defineField({
           name: 'mapEmbedUrl',
           title: 'Google 地圖嵌入連結',
           type: 'url',
+          description: '建議只貼 Google Maps iframe 裡 src="..." 的網址，不要貼整段 iframe HTML。若不小心貼到整段 iframe，前台會盡量自動取出 src。',
           validation: (Rule) => Rule.required().uri({allowRelative: false, scheme: ['http', 'https']}),
         }),
         defineField({

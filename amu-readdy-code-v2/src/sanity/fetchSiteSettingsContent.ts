@@ -113,6 +113,41 @@ const mergeSocialLink = (incoming: unknown, fallback?: SocialLinkContent): Socia
   };
 };
 
+const decodeBasicHtmlEntities = (value: string) =>
+  value
+    .replace(/&quot;/g, '"')
+    .replace(/&#34;/g, '"')
+    .replace(/&#x22;/gi, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&#39;/g, "'")
+    .replace(/&#x27;/gi, "'")
+    .replace(/&amp;/g, '&');
+
+const isGoogleMapsEmbedUrl = (value: string) => {
+  try {
+    const url = new URL(value);
+    return (
+      url.protocol === 'https:' &&
+      (url.hostname === 'www.google.com' || url.hostname === 'google.com') &&
+      (url.pathname === '/maps/embed' || url.pathname.startsWith('/maps/embed/'))
+    );
+  } catch {
+    return false;
+  }
+};
+
+const normalizeMapEmbedUrl = (incoming: string | undefined, fallback: string) => {
+  const rawValue = incoming?.trim();
+  if (!rawValue) return fallback;
+
+  const iframeSrcMatch = rawValue.match(/<iframe[^>]+src=(?:"|&quot;|')([^"'&]+(?:&amp;[^"'&]+)*[^"']*)(?:"|&quot;|')/i);
+  const candidate = decodeBasicHtmlEntities(iframeSrcMatch?.[1] || rawValue).trim();
+  const iframeAttributeStart = candidate.search(/["']\s+(?:width|height|style|loading|allowfullscreen|referrerpolicy)\b/i);
+  const urlOnly = (iframeAttributeStart >= 0 ? candidate.slice(0, iframeAttributeStart) : candidate).trim();
+
+  return isGoogleMapsEmbedUrl(urlOnly) ? urlOnly : fallback;
+};
+
 const mergeLocationSection = (
   incoming: unknown,
   fallback: SiteSettingsContent['locationSection'],
@@ -125,7 +160,7 @@ const mergeLocationSection = (
     clinicDescription: section?.clinicDescription || fallback.clinicDescription,
     hours: section?.hours || fallback.hours,
     mapLink: section?.mapLink || fallback.mapLink,
-    mapEmbedUrl: section?.mapEmbedUrl || fallback.mapEmbedUrl,
+    mapEmbedUrl: normalizeMapEmbedUrl(section?.mapEmbedUrl, fallback.mapEmbedUrl),
     image: mergeImage(section?.image, fallback.image),
   };
 };
