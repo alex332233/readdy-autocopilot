@@ -39,6 +39,7 @@
     "clear:health-education-views": "sanity exec ./scripts/clear-health-education-views.cli.mjs --with-user-token"
   },
   "dependencies": {
+    "@sanity/table": "^2.0.1",
     "@sanity/vision": "^5.14.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

@@ -130,6 +130,25 @@ const mergeRichArticleBody = (incoming: unknown): RichArticleBlock[] | undefined
         };
       }
 
+      if (block._type === 'table') {
+        const tableBlock = block as Partial<Extract<RichArticleBlock, {_type: 'table'}>>;
+        const rows = Array.isArray(tableBlock.rows)
+          ? tableBlock.rows
+              .map((row) => ({
+                _key: row?._key,
+                _type: row?._type,
+                cells: Array.isArray(row?.cells) ? row.cells.map((cell) => cell || '') : [],
+              }))
+              .filter((row) => row.cells.length > 0)
+          : [];
+        if (rows.length === 0) return null;
+        return {
+          _key: block._key,
+          _type: 'table' as const,
+          rows,
+        };
+      }
+
       if (block._type === 'block') {
         const textBlock = block as Partial<Extract<RichArticleBlock, {_type: 'block'}>>;
         return {
