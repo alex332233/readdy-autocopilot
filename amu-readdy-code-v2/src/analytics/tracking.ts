@@ -31,3 +31,9 @@ export function trackPageView(path: string) {
 
   window.fbq?.('track', 'PageView');
 }
+
+export function trackGaEvent(eventName: string) {
+  if (typeof window === 'undefined') return;
+
+  window.gtag?.('event', eventName);
+}

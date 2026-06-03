@@ -1,5 +1,6 @@
 
 import FadeIn from '../../../components/base/FadeIn';
+import { trackGaEvent } from '../../../analytics/tracking';
 import { getHomePageDataAttribute } from '../../../sanity/dataAttributes';
 import { useHomePageContent } from '../useHomePageContent';
 
@@ -22,6 +23,11 @@ export default function BookingSection() {
               card.buttonTheme === 'line'
                 ? 'bg-[#06C755] hover:bg-[#05a348]'
                 : 'bg-[#cd9651] hover:bg-[#b8843d]';
+            const gaEventName = card.href.startsWith('tel:')
+              ? 'click_booking_call_now'
+              : card.buttonTheme === 'line'
+                ? 'click_booking_add_line'
+                : undefined;
 
             return (
               <FadeIn key={index} direction="up" delay={100 + index * 100}>
@@ -47,6 +53,9 @@ export default function BookingSection() {
                     href={card.href}
                     target={isExternal ? '_blank' : undefined}
                     rel={isExternal ? 'noopener noreferrer' : undefined}
+                    onClick={() => {
+                      if (gaEventName) trackGaEvent(gaEventName);
+                    }}
                     className={`inline-flex items-center px-6 py-2.5 ${buttonClass} text-white text-sm rounded-full font-medium transition-all duration-300 whitespace-nowrap cursor-pointer`}
                   >
                     <i
