@@ -32,6 +32,8 @@
     "seed:doctor-specialty-types": "sanity exec ./scripts/seed-doctor-specialty-types.cli.mjs --with-user-token",
     "seed:doctor-profile-info-items": "sanity exec ./scripts/seed-doctor-profile-info-items.cli.mjs --with-user-token",
     "seed:doctor-profile-info-items:apply": "sanity exec ./scripts/seed-doctor-profile-info-items.cli.mjs --with-user-token -- --apply",
+    "seed:rich-article-table-titles": "sanity exec ./scripts/seed-rich-article-table-titles.cli.mjs --with-user-token",
+    "seed:rich-article-table-titles:apply": "sanity exec ./scripts/seed-rich-article-table-titles.cli.mjs --with-user-token -- --apply",
     "seed:article-slugs": "sanity exec ./scripts/seed-article-slugs.cli.mjs --with-user-token",
     "normalize:article-dates": "sanity exec ./scripts/normalize-article-dates.cli.mjs --with-user-token",
     "migrate:footer-links": "sanity exec ./scripts/migrate-footer-links-to-footer-site-link.cli.mjs --with-user-token",
