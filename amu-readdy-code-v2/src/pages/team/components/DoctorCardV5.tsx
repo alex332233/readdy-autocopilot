@@ -13,8 +13,9 @@ interface DoctorCardV5Props {
   title: string;
   image: DoctorProfileContent['image'];
   bio?: string;
-  education: string[];
-  experience: string[];
+  education: DoctorProfileContent['education'];
+  experience: DoctorProfileContent['experience'];
+  licenseItems: DoctorProfileContent['licenseItems'];
   specialtyGroups: DoctorSpecialtyGroup[];
   specialTreatments: string[];
   specialTreatmentItems?: DoctorTreatmentTag[];
@@ -44,6 +45,45 @@ const DAYS = [
 ] as const;
 
 const MOBILE_DAYS = DAYS.slice(0, 6);
+
+function ProfileInfoItems({
+  items,
+  documentId,
+  path,
+}: {
+  items: DoctorProfileContent['education'];
+  documentId: string;
+  path: string;
+}) {
+  return (
+    <span data-sanity={getDoctorProfileDocumentDataAttribute(documentId, path)}>
+      {items.map((item, index) => {
+        const text = (
+          <>
+            {index > 0 && '、'}
+            {item.text}
+          </>
+        );
+
+        if (!item.url) {
+          return <span key={item._key || `${path}-${index}`}>{text}</span>;
+        }
+
+        return (
+          <a
+            key={item._key || `${path}-${index}`}
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-inherit no-underline transition-colors hover:text-[#cd9651] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#cd9651]"
+          >
+            {text}
+          </a>
+        );
+      })}
+    </span>
+  );
+}
 
 function ScheduleTable({
   documentId,
@@ -177,6 +217,7 @@ export default function DoctorCardV5({
   bio,
   education,
   experience,
+  licenseItems,
   specialtyGroups,
   specialTreatments,
   specialTreatmentItems,
@@ -272,9 +313,7 @@ export default function DoctorCardV5({
                   <span className="text-[#cd9651] font-medium mt-0.5">•</span>
                   <span>
                     <span className="font-medium text-stone-600">學歷：</span>
-                    <span data-sanity={getDoctorProfileDocumentDataAttribute(documentId, 'education')}>
-                      {education.join('、')}
-                    </span>
+                    <ProfileInfoItems items={education} documentId={documentId} path="educationItems" />
                   </span>
                 </div>
               )}
@@ -283,9 +322,15 @@ export default function DoctorCardV5({
                   <span className="text-[#cd9651] font-medium mt-0.5">•</span>
                   <span>
                     <span className="font-medium text-stone-600">經歷：</span>
-                    <span data-sanity={getDoctorProfileDocumentDataAttribute(documentId, 'experience')}>
-                      {experience.join('、')}
-                    </span>
+                    <ProfileInfoItems items={experience} documentId={documentId} path="experienceItems" />
+                  </span>
+                </div>
+              )}
+              {licenseItems.length > 0 && (
+                <div className="flex items-start gap-1.5 text-sm text-stone-500">
+                  <span className="text-[#cd9651] font-medium mt-0.5">•</span>
+                  <span>
+                    <ProfileInfoItems items={licenseItems} documentId={documentId} path="licenseItems" />
                   </span>
                 </div>
               )}

@@ -212,6 +212,12 @@ export interface DoctorSchedule {
   evening: DoctorScheduleSession;
 }
 
+export interface DoctorProfileInfoItem {
+  _key?: string;
+  text: string;
+  url?: string;
+}
+
 export interface DoctorProfileContent {
   documentId: string;
   doctorId: number;
@@ -220,8 +226,9 @@ export interface DoctorProfileContent {
   title: string;
   bio: string;
   image: SanityImage;
-  education: string[];
-  experience: string[];
+  education: DoctorProfileInfoItem[];
+  experience: DoctorProfileInfoItem[];
+  licenseItems: DoctorProfileInfoItem[];
   specialtyGroups: DoctorSpecialtyGroup[];
   specialTreatments: string[];
   specialTreatmentItems?: DoctorTreatmentTag[];

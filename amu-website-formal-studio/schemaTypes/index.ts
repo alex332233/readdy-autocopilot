@@ -27,6 +27,7 @@ import {caseAfterSection} from './objects/caseAfterSection'
 import {caseBeforeSection} from './objects/caseBeforeSection'
 import {caseInfoBox} from './objects/caseInfoBox'
 import {doctorSummary} from './objects/doctorSummary'
+import {doctorProfileInfoItem} from './objects/doctorProfileInfoItem'
 import {doctorSchedule} from './objects/doctorSchedule'
 import {doctorScheduleSession} from './objects/doctorScheduleSession'
 import {doctorSpecialtyGroup} from './objects/doctorSpecialtyGroup'
@@ -71,6 +72,7 @@ export const schemaTypes = [
   aboutCoreValue,
   aboutBranch,
   serviceItem,
+  doctorProfileInfoItem,
   doctorSummary,
   doctorSpecialtyGroup,
   doctorScheduleSession,

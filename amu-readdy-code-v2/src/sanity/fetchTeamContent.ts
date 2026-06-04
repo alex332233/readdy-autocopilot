@@ -12,6 +12,8 @@ import type {
   TeamPageContent,
 } from './types';
 
+type DoctorProfileInfoInput = string | { _key?: string; text?: string; url?: string } | null | undefined;
+
 type SanityFetchClient = Pick<SanityClient, 'fetch'>;
 
 const mergeImage = (incoming: unknown, fallback?: SanityImage): SanityImage => {
@@ -75,10 +77,38 @@ const mergeSchedule = (incoming: unknown, fallback?: DoctorSchedule): DoctorSche
   };
 };
 
+const mergeProfileInfoItems = (
+  incoming: unknown,
+  fallback?: DoctorProfileContent['education'],
+): DoctorProfileContent['education'] => {
+  const source = Array.isArray(incoming) && incoming.length > 0 ? incoming : fallback || [];
+
+  return source
+    .map((item: DoctorProfileInfoInput) => {
+      if (typeof item === 'string') {
+        const text = item.trim();
+        return text ? {text} : null;
+      }
+
+      const text = item?.text?.trim();
+      if (!text) return null;
+
+      const url = item.url?.trim();
+      return {
+        _key: item._key,
+        text,
+        ...(url ? {url} : {}),
+      };
+    })
+    .filter((item): item is DoctorProfileContent['education'][number] => Boolean(item));
+};
+
 const mergeDoctorProfile = (incoming: unknown, fallback?: DoctorProfileContent): DoctorProfileContent => {
   const doctor = incoming as
     | (Partial<DoctorProfileContent> & {
         _id?: string;
+        educationItems?: unknown[];
+        experienceItems?: unknown[];
         insuranceSpecialtyGroups?: unknown[];
         featuredTreatmentItems?: unknown[];
       })
@@ -109,8 +139,19 @@ const mergeDoctorProfile = (incoming: unknown, fallback?: DoctorProfileContent):
     title: doctor?.title || fallback?.title || '',
     bio: doctor?.bio || fallback?.bio || '',
     image: doctor?.image ? mergeImage(doctor.image) : {url: '', alt: ''},
-    education: Array.isArray(doctor?.education) ? doctor.education.filter(Boolean) : fallback?.education || [],
-    experience: Array.isArray(doctor?.experience) ? doctor.experience.filter(Boolean) : fallback?.experience || [],
+    education: mergeProfileInfoItems(
+      Array.isArray(doctor?.educationItems) && doctor.educationItems.length > 0
+        ? doctor.educationItems
+        : doctor?.education,
+      fallback?.education,
+    ),
+    experience: mergeProfileInfoItems(
+      Array.isArray(doctor?.experienceItems) && doctor.experienceItems.length > 0
+        ? doctor.experienceItems
+        : doctor?.experience,
+      fallback?.experience,
+    ),
+    licenseItems: mergeProfileInfoItems(doctor?.licenseItems, fallback?.licenseItems),
     specialtyGroups,
     specialTreatments,
     specialTreatmentItems,

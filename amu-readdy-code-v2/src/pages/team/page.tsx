@@ -34,6 +34,7 @@ export default function TeamPage() {
                 bio={doctor.bio}
                 education={doctor.education}
                 experience={doctor.experience}
+                licenseItems={doctor.licenseItems}
                 specialtyGroups={doctor.specialtyGroups}
                 specialTreatments={doctor.specialTreatments}
                 specialTreatmentItems={doctor.specialTreatmentItems}

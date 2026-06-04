@@ -251,7 +251,10 @@ export const teamPageQuery = groq`
         "alt": image.alt
       },
       education,
+      educationItems,
       experience,
+      experienceItems,
+      licenseItems,
       "insuranceSpecialtyGroups": insuranceSpecialtyRefs[]{
         _key,
         "slug": @->key,
