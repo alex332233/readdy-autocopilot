@@ -72,6 +72,15 @@ export const richArticleContent = defineType({
     defineArrayMember({
       type: 'table',
       title: '表格',
+      preview: {
+        select: {
+          rows: 'rows',
+        },
+        prepare: ({rows = []}) => ({
+          title: '表格',
+          subtitle: Array.isArray(rows) ? `${rows.length} 列` : undefined,
+        }),
+      },
     }),
   ],
 })
