@@ -76,16 +76,16 @@ export const caseArticle = defineType({
       description: '選填。若啟用，會顯示在文章內文上方。',
     }),
     defineField({
-      name: 'body',
-      title: '文章內文',
-      type: 'richArticleContent',
-    }),
-    defineField({
       name: 'coverImage',
       title: '封面圖',
       type: 'image',
       options: {hotspot: true},
       fields: [defineField({name: 'alt', title: '替代文字', type: 'string'})],
+    }),
+    defineField({
+      name: 'body',
+      title: '文章內文',
+      type: 'richArticleContent',
     }),
     defineField({
       name: 'description',

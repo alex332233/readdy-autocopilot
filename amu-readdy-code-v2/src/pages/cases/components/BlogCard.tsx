@@ -23,17 +23,25 @@ export default function BlogCard({ caseData }: BlogCardProps) {
       onClick={() => casePath && navigate(`/cases/${encodeURIComponent(casePath)}`)}
     >
       {/* 封面圖 */}
-      <div className="relative w-full h-52 overflow-hidden" data-sanity-edit-group data-sanity-edit-target>
+      <div className="relative w-full h-52 overflow-hidden">
         {coverImageUrl ? (
-          <img
-            src={coverImageUrl}
-            alt={caseData.title}
-            className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-            data-sanity={getDataAttribute('coverImage')}
-          />
+          <div
+            className="w-full h-full"
+            data-sanity-edit-group
+            data-sanity-edit-target
+          >
+            <img
+              src={coverImageUrl}
+              alt={caseData.title}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              data-sanity={getDataAttribute('coverImage')}
+            />
+          </div>
         ) : (
           <div
             className="w-full h-full bg-stone-100 flex items-center justify-center text-stone-300"
+            data-sanity-edit-group
+            data-sanity-edit-target
             data-sanity={getDataAttribute('coverImage')}
           >
             <i className="ri-image-line text-2xl"></i>

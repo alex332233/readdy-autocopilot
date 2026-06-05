@@ -15,6 +15,7 @@ export default function HealthEducationDetailPage() {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
   const data = useLoaderData() as { page: HealthEducationPageContent; article: HealthEducationArticleContent } | null;
 
   useEffect(() => {
@@ -22,6 +23,15 @@ export default function HealthEducationDetailPage() {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+    const updateViewport = () => setIsMobileViewport(mediaQuery.matches);
+
+    updateViewport();
+    mediaQuery.addEventListener('change', updateViewport);
+    return () => mediaQuery.removeEventListener('change', updateViewport);
   }, []);
 
   if (!data) {
@@ -46,18 +56,38 @@ export default function HealthEducationDetailPage() {
       ? getHealthEducationArticleDocumentDataAttribute(article.documentId, path)
       : undefined;
   const isExternalHref = (href: string) => /^https?:\/\//i.test(href);
+  const desktopCoverImageUrl = getSanityImageUrl(article.coverImage, {
+    width: 1600,
+    height: 720,
+    fit: 'crop',
+    quality: 88,
+  });
+  const mobileCoverImageUrl = getSanityImageUrl(article.coverImage, {
+    width: 1000,
+    height: 600,
+    fit: 'crop',
+    quality: 88,
+  });
+  const coverImageUrl = isMobileViewport
+    ? mobileCoverImageUrl || desktopCoverImageUrl
+    : desktopCoverImageUrl || mobileCoverImageUrl;
 
   return (
     <div className="min-h-screen bg-white">
       <Navbar scrolled={scrolled} />
 
-      <div className="relative w-full aspect-[5/3] md:aspect-auto md:h-[420px] mt-24 overflow-hidden" data-sanity-edit-group data-sanity-edit-target>
-        <img
-          src={getSanityImageUrl(article.coverImage, {width: 1920, height: 420, fit: 'crop', quality: 88})}
-          alt={article.coverImage.alt || article.title}
-          className="w-full h-full object-cover object-top"
-          data-sanity={getArticleDataAttribute('coverImage')}
-        />
+      <div className="relative w-full aspect-[5/3] md:aspect-auto md:h-[clamp(420px,38vw,600px)] mt-24 overflow-hidden">
+        <div
+          className="w-full h-full"
+          data-sanity-edit-group
+        >
+          <img
+            src={coverImageUrl}
+            alt={article.coverImage.alt || article.title}
+            className="w-full h-full object-cover"
+            data-sanity={getArticleDataAttribute('coverImage')}
+          />
+        </div>
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent pointer-events-none" />
         <div className="absolute bottom-0 left-0 right-0 px-6 pb-6 md:pb-10 max-w-3xl mx-auto pointer-events-none">
           <span

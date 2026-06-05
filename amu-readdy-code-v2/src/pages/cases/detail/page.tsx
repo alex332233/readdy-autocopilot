@@ -12,6 +12,7 @@ export default function CaseDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
 
   const content = useLoaderData() as { page: CasesPageContent; article: CaseArticleContent } | null;
   const caseData = content?.article || null;
@@ -39,7 +40,21 @@ export default function CaseDetailPage() {
   const showAfter = hasText(caseData?.beforeAfter?.after?.title) || afterPhases.length > 0;
   const hasBeforeAfter =
     caseData?.beforeAfter?.enabled && (showBefore || showAfter);
-  const coverImageUrl = getSanityImageUrl(caseData?.coverImage, {width: 1920, height: 420, fit: 'crop', quality: 88});
+  const desktopCoverImageUrl = getSanityImageUrl(caseData?.coverImage, {
+    width: 1600,
+    height: 720,
+    fit: 'crop',
+    quality: 88,
+  });
+  const mobileCoverImageUrl = getSanityImageUrl(caseData?.coverImage, {
+    width: 1000,
+    height: 600,
+    fit: 'crop',
+    quality: 88,
+  });
+  const coverImageUrl = isMobileViewport
+    ? mobileCoverImageUrl || desktopCoverImageUrl
+    : desktopCoverImageUrl || mobileCoverImageUrl;
   const introText = caseData?.summary || caseData?.description || '';
 
   useEffect(() => {
@@ -48,6 +63,15 @@ export default function CaseDetailPage() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [id]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+    const updateViewport = () => setIsMobileViewport(mediaQuery.matches);
+
+    updateViewport();
+    mediaQuery.addEventListener('change', updateViewport);
+    return () => mediaQuery.removeEventListener('change', updateViewport);
+  }, []);
 
   if (!caseData) {
     return (
@@ -70,24 +94,29 @@ export default function CaseDetailPage() {
       <Navbar scrolled={scrolled} />
 
       {/* Hero 封面圖 */}
-      <div className="relative w-full aspect-[5/3] md:aspect-auto md:h-[420px] mt-24 overflow-hidden bg-stone-200" data-sanity-edit-group data-sanity-edit-target>
+      <div className="relative w-full aspect-[5/3] md:aspect-auto md:h-[clamp(420px,38vw,600px)] mt-24 overflow-hidden bg-stone-200">
         {coverImageUrl && (
-          <img
-            src={coverImageUrl}
-            alt={caseData.title}
-            className="w-full h-full object-cover object-top"
-            data-sanity={getDataAttribute('coverImage')}
-          />
+          <div
+            className="w-full h-full"
+            data-sanity-edit-group
+          >
+            <img
+              src={coverImageUrl}
+              alt={caseData.title}
+              className="w-full h-full object-cover"
+              data-sanity={getDataAttribute('coverImage')}
+            />
+          </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 px-6 pb-6 md:pb-10 max-w-3xl mx-auto">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 left-0 right-0 px-6 pb-6 md:pb-10 max-w-3xl mx-auto pointer-events-none">
           <span
-            className="inline-block text-[10px] font-semibold tracking-widest uppercase bg-[#cd9651] text-white px-3 py-1 rounded-sm mb-3"
+            className="inline-block text-[10px] font-semibold tracking-widest uppercase bg-[#cd9651] text-white px-3 py-1 rounded-sm mb-3 pointer-events-auto"
             data-sanity={getDataAttribute('category')}
           >
             {caseData.category}
           </span>
-          <h1 className="text-xl md:text-3xl font-bold text-white leading-snug overflow-hidden [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical]" data-sanity={getDataAttribute('title')}>
+          <h1 className="text-xl md:text-3xl font-bold text-white leading-snug overflow-hidden [display:-webkit-box] [-webkit-line-clamp:3] [-webkit-box-orient:vertical] pointer-events-auto" data-sanity={getDataAttribute('title')}>
             {caseData.title}
           </h1>
         </div>
