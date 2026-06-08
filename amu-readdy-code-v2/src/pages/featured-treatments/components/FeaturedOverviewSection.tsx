@@ -31,6 +31,7 @@ const overviewMeta: Record<string, { subtitle: string }> = {
 };
 
 const HOVER_EXTRA = 80;
+const touchFirstCardQuery = '(max-width: 767px), (hover: none), (pointer: coarse)';
 
 const getCardFieldBase = (card: FeaturedTreatmentCardContent, index: number) =>
   card._key ? `cards[_key=="${card._key}"]` : `cards[${index}]`;
@@ -106,7 +107,7 @@ export default function FeaturedOverviewSection({ cards }: FeaturedOverviewSecti
 
     const shouldOpenFirst =
       typeof window !== 'undefined' &&
-      window.matchMedia('(max-width: 767px), (hover: none)').matches;
+      window.matchMedia(touchFirstCardQuery).matches;
 
     if (shouldOpenFirst && hoveredIndex !== index) {
       setHoveredIndex(index);
@@ -170,8 +171,12 @@ export default function FeaturedOverviewSection({ cards }: FeaturedOverviewSecti
                     cursor: category.path ? 'pointer' : 'default',
                     transition: 'width 0.45s cubic-bezier(0.4, 0, 0.2, 1)',
                   }}
-                  onMouseEnter={() => setHoveredIndex(index)}
-                  onMouseLeave={() => setHoveredIndex(null)}
+                  onPointerEnter={(event) => {
+                    if (event.pointerType === 'mouse') setHoveredIndex(index);
+                  }}
+                  onPointerLeave={(event) => {
+                    if (event.pointerType === 'mouse') setHoveredIndex(null);
+                  }}
                   onClick={() => handleCardClick(index, category.path)}
                   data-sanity={getFeaturedTreatmentsPageDataAttribute(`${fieldBase}.title`)}
                 >

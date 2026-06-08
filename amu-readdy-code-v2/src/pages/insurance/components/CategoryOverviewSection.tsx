@@ -8,13 +8,15 @@ interface Props {
   categories: InsuranceOverviewCard[];
 }
 
+const touchFirstCardQuery = '(max-width: 767px), (hover: none), (pointer: coarse)';
+
 export default function CategoryOverviewSection({categoryRefs, categories}: Props) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const handleClick = (index: number) => {
     const shouldOpenFirst =
       typeof window !== 'undefined' &&
-      window.matchMedia('(max-width: 767px), (hover: none)').matches;
+      window.matchMedia(touchFirstCardQuery).matches;
 
     if (shouldOpenFirst && hoveredIndex !== index) {
       setHoveredIndex(index);
@@ -40,8 +42,12 @@ export default function CategoryOverviewSection({categoryRefs, categories}: Prop
               style={{
                 flex: hoveredIndex === index ? '3.5' : '1',
               }}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
+              onPointerEnter={(event) => {
+                if (event.pointerType === 'mouse') setHoveredIndex(index);
+              }}
+              onPointerLeave={(event) => {
+                if (event.pointerType === 'mouse') setHoveredIndex(null);
+              }}
               onClick={() => handleClick(index)}
             >
               <div className="absolute inset-0" data-sanity-edit-group data-sanity-edit-target>
